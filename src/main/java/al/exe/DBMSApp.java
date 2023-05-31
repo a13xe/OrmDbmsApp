@@ -383,7 +383,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            brands = session.createQuery("FROM Brand").list();
+            brands = session.createQuery("FROM ClassBrand").list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -403,7 +403,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            chipsets = session.createQuery("FROM Chipset").list();
+            chipsets = session.createQuery("FROM ClassChipset").list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -423,7 +423,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            cpus = session.createQuery("FROM CPU").list();
+            cpus = session.createQuery("FROM ClassCPU").list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -443,7 +443,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            gpus = session.createQuery("FROM GPU").list();
+            gpus = session.createQuery("FROM ClassGPU").list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -463,7 +463,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            pcbs = session.createQuery("FROM Motherboard").list();
+            pcbs = session.createQuery("FROM ClassPCB").list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -483,7 +483,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            sockets = session.createQuery("FROM Socket").list();
+            sockets = session.createQuery("FROM ClassSocket").list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -503,7 +503,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            socketToChipsets = session.createQuery("FROM SocketToChipset").list();
+            socketToChipsets = session.createQuery("FROM ClassSocketToChipset").list();
             transaction.commit();
         } 
         catch (Exception e) 
