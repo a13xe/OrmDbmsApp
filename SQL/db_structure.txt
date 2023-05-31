@@ -1,0 +1,45 @@
+database `pc` structure:
+
+table `brand`:
+- id (INT)
+- name (VARCHAR(255))
+
+table `chipset`:
+- id (INT)
+- name (VARCHAR(255))
+
+table `cpu`:
+- id (INT)
+- model (VARCHAR(255))
+- price (DOUBLE)
+- cores (INT)
+- threads (INT)
+- frequency (INT)
+- brand_id (INT)
+- socket_id (INT)
+
+table `gpu`:
+- id (INT)
+- model (VARCHAR(255))
+- price (DOUBLE)
+- cores (INT)
+- memory (INT)
+- frequency (INT)
+- brand_id (INT)
+
+table `mbrd`:
+- id (INT)
+- model (VARCHAR(255))
+- price (DOUBLE)
+- brand_id (INT)
+- socket_id (INT)
+- chipset_id (INT)
+
+table `socket`:
+- id (INT)
+- name (VARCHAR(255))
+
+table `socket_to_chipset`:
+- id (INT)
+- socket_id (INT)
+- chipset_id (INT)
