@@ -97,6 +97,17 @@ public class DBMSApp extends JFrame
     private JButton addSocketToChipsetButton;
     private JButton deleteSocketToChipsetButton;
     private JButton updateSocketToChipsetButton;
+    // CPU Fields
+    private JTextField cpuModelField;
+    private JTextField cpuPriceField;
+    private JTextField cpuCoresField;
+    private JTextField cpuThreadsField;
+    private JTextField cpuFrequencyField;
+    private JTextField cpuBrandIdField;
+    private JTextField cpuSocketIdField;
+    // Brand Fields
+    private JTextField brandIdField;
+    private JTextField brandNameField;
     // Hibernate
     private SessionFactory sessionFactory;
     private Session session;
@@ -133,13 +144,13 @@ public class DBMSApp extends JFrame
         transaction = null;
 
         // Create table models
-        cpuTableModel = new DefaultTableModel(new Object[]{"Model", "Price", "Cores", "Threads", "Frequency", "Brand ID", "Socket ID"}, 0);
-        gpuTableModel = new DefaultTableModel(new Object[]{"Model", "Price", "Cores", "Memory", "Frequency", "Brand ID"}, 0);
-        pcbTableModel = new DefaultTableModel(new Object[]{"Model", "Price", "Brand ID", "Socket ID", "Chipset ID"}, 0);
+        cpuTableModel = new DefaultTableModel(new Object[]{"Model", "Price", "Cores", "Threads", "Frequency", "Brand", "Socket"}, 0);
+        gpuTableModel = new DefaultTableModel(new Object[]{"Model", "Price", "Cores", "Memory", "Frequency", "Brand"}, 0);
+        pcbTableModel = new DefaultTableModel(new Object[]{"Model", "Price", "Brand", "Socket", "Chipset"}, 0);
         brandTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
         socketTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
         chipsetTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
-        socketToChipsetTableModel = new DefaultTableModel(new Object[]{"Socket ID", "Chipset ID"}, 0);
+        socketToChipsetTableModel = new DefaultTableModel(new Object[]{"Socket ID", "Chipset"}, 0);
 
         // Create tables
         cpuTable = new JTable(cpuTableModel);
@@ -170,9 +181,6 @@ public class DBMSApp extends JFrame
         addBrandButton = new JButton("Add Brand");
         deleteBrandButton = new JButton("Delete Brand");
         updateBrandButton = new JButton("Update Brand");
-        addBrandButton = new JButton("Add Brand");
-        deleteBrandButton = new JButton("Delete Brand");
-        updateBrandButton = new JButton("Update Brand");
 
         addChipsetButton = new JButton("Add Chipset");
         deleteChipsetButton = new JButton("Delete Chipset");
@@ -198,41 +206,47 @@ public class DBMSApp extends JFrame
         deleteSocketToChipsetButton = new JButton("Delete Socket to Chipset");
         updateSocketToChipsetButton = new JButton("Update Socket to Chipset");
 
+        // Create CPU Fields
+        cpuModelField = new JTextField(20);
+        cpuPriceField = new JTextField(10);
+        cpuCoresField = new JTextField(5);
+        cpuThreadsField = new JTextField(5);
+        cpuFrequencyField = new JTextField(5);
+        cpuBrandIdField = new JTextField(5);
+        cpuSocketIdField = new JTextField(5);
+        // Create Brand fields
+        brandIdField = new JTextField();
+        brandNameField = new JTextField();
+
         // Add tables and buttons to panels
         JPanel brandPanel = new JPanel(new BorderLayout());
         brandPanel.add(brandScrollPane, BorderLayout.CENTER);
-        brandPanel.add(createButtonPanel(
-                addBrandButton, deleteBrandButton, updateBrandButton), BorderLayout.SOUTH);
+        brandPanel.add(createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton), BorderLayout.SOUTH);
 
         JPanel chipsetPanel = new JPanel(new BorderLayout());
         chipsetPanel.add(chipsetScrollPane, BorderLayout.CENTER);
-        chipsetPanel.add(createButtonPanel(
-                addChipsetButton, deleteChipsetButton, updateChipsetButton), BorderLayout.SOUTH);
+        chipsetPanel.add(createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton), BorderLayout.SOUTH);
 
         JPanel cpuPanel = new JPanel(new BorderLayout());
         cpuPanel.add(cpuScrollPane, BorderLayout.CENTER);
-        cpuPanel.add(createButtonPanel(
-                addCPUButton, deleteCPUButton, updateCPUButton), BorderLayout.SOUTH);
+        cpuPanel.add(createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton), BorderLayout.SOUTH);
 
         JPanel gpuPanel = new JPanel(new BorderLayout());
         gpuPanel.add(gpuScrollPane, BorderLayout.CENTER);
-        gpuPanel.add(createButtonPanel(
-                addGPUButton, deleteGPUButton, updateGPUButton), BorderLayout.SOUTH);
+        gpuPanel.add(createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton), BorderLayout.SOUTH);
 
         JPanel pcbPanel = new JPanel(new BorderLayout());
         pcbPanel.add(pcbScrollPane, BorderLayout.CENTER);
-        pcbPanel.add(createButtonPanel(
-                addPCBButton, deletePCBButton, updatePCBButton), BorderLayout.SOUTH);
+        pcbPanel.add(createButtonPanel(addPCBButton, deletePCBButton, updatePCBButton), BorderLayout.SOUTH);
 
         JPanel socketPanel = new JPanel(new BorderLayout());
         socketPanel.add(socketScrollPane, BorderLayout.CENTER);
-        socketPanel.add(createButtonPanel(
-                addSocketButton, deleteSocketButton, updateSocketButton), BorderLayout.SOUTH);
+        socketPanel.add(createButtonPanel(addSocketButton, deleteSocketButton, updateSocketButton), BorderLayout.SOUTH);
 
         JPanel socketToChipsetPanel = new JPanel(new BorderLayout());
         socketToChipsetPanel.add(socketToChipsetScrollPane, BorderLayout.CENTER);
-        socketToChipsetPanel.add(createButtonPanel(
-                addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton), BorderLayout.SOUTH);
+        socketToChipsetPanel.add(createButtonPanel(addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton), BorderLayout.SOUTH);
+        
         // Add panels to tabbed pane
         tabbedPane.addTab("CPU (Processors)", cpuPanel);
         tabbedPane.addTab("GPU (Graphics)", gpuPanel);
@@ -262,11 +276,37 @@ public class DBMSApp extends JFrame
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Add listeners
-        addBrandButton.addActionListener(new ActionListener() {
+        // addBrandButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         // Add brand logic
+        //         // You need to implement the addBrand() method
+        //         addBrand();
+        //     }
+        // });
+
+        // deleteBrandButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         // Delete brand logic
+        //         // You need to implement the deleteBrand() method
+        //         deleteBrand();
+        //     }
+        // });
+
+        // updateBrandButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         // Update brand logic
+        //         // You need to implement the updateBrand() method
+        //         updateBrand();
+        //     }
+        // });
+
+         // Add listeners to buttons
+         addBrandButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add brand logic
-                // You need to implement the addBrand() method
                 addBrand();
             }
         });
@@ -274,8 +314,6 @@ public class DBMSApp extends JFrame
         deleteBrandButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Delete brand logic
-                // You need to implement the deleteBrand() method
                 deleteBrand();
             }
         });
@@ -283,18 +321,137 @@ public class DBMSApp extends JFrame
         updateBrandButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Update brand logic
-                // You need to implement the updateBrand() method
                 updateBrand();
             }
         });
 
-        //////////////////////////////////////////////
-        //                                          //
-        //    // Add listeners for other buttons    //
-        //                                          //
-        //////////////////////////////////////////////
-            
+        addChipsetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addChipset();
+            }
+        });
+
+        deleteChipsetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteChipset();
+            }
+        });
+
+        updateChipsetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateChipset();
+            }
+        });
+
+        addCPUButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addCPU();
+            }
+        });
+
+        deleteCPUButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteCPU();
+            }
+        });
+
+        updateCPUButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCPU();
+            }
+        });
+
+        addGPUButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addGPU();
+            }
+        });
+
+        deleteGPUButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteGPU();
+            }
+        });
+
+        updateGPUButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateGPU();
+            }
+        });
+
+        addPCBButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addMotherboard();
+            }
+        });
+
+        deletePCBButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteMotherboard();
+            }
+        });
+
+        updatePCBButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateMotherboard();
+            }
+        });
+
+        addSocketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addSocket();
+            }
+        });
+
+        deleteSocketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteSocket();
+            }
+        });
+
+        updateSocketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateSocket();
+            }
+        });
+
+        addSocketToChipsetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addSocketToChipset();
+            }
+        });
+
+        deleteSocketToChipsetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteSocketToChipset();
+            }
+        });
+
+        updateSocketToChipsetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateSocketToChipset();
+            }
+        });
+
+
         /////////////////////////////////////////////
         //  ________  ______   _______    ______   //
         // /        |/      \ /       \  /      \  //
@@ -311,12 +468,51 @@ public class DBMSApp extends JFrame
         // Populate tables
         populateTables();
 
-        // Set table selection listeners
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______   ________  __        ________   ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        //  /      \ /        |/  |      /        | /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // /$$$$$$  |$$$$$$$$/ $$ |      $$$$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$/ /$$$$$$  |$$  \ $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ \__$$/ $$ |__    $$ |      $$ |__    $$ |  $$/    $$ |     $$ |  $$ |  $$ |$$$  \$$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$      \ $$    |   $$ |      $$    |   $$ |         $$ |     $$ |  $$ |  $$ |$$$$  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        //  $$$$$$  |$$$$$/    $$ |      $$$$$/    $$ |   __    $$ |     $$ |  $$ |  $$ |$$ $$ $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // /  \__$$ |$$ |_____ $$ |_____ $$ |_____ $$ \__/  |   $$ |    _$$ |_ $$ \__$$ |$$ |$$$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$    $$/ $$       |$$       |$$       |$$    $$/    $$ |   / $$   |$$    $$/ $$ | $$$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        //  $$$$$$/  $$$$$$$$/ $$$$$$$$/ $$$$$$$$/  $$$$$$/     $$/    $$$$$$/  $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                                                        //
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Set table selection listener
         brandTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 // Brand table selection logic
                 // You can implement the selection logic here or create separate methods
+                int selectedRow = brandTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    String id = brandTableModel.getValueAt(selectedRow, 0).toString();
+                    String name = brandTableModel.getValueAt(selectedRow, 1).toString();
+                    brandIdField.setText(id);
+                    brandNameField.setText(name);
+                }
+            }
+        });
+
+        
+        // Add selection listener to CPU table
+        cpuTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int selectedRow = cpuTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Update CPU fields with selected row data
+                    cpuModelField.setText(cpuTableModel.getValueAt(selectedRow, 1).toString());
+                    cpuPriceField.setText(cpuTableModel.getValueAt(selectedRow, 2).toString());
+                    cpuCoresField.setText(cpuTableModel.getValueAt(selectedRow, 3).toString());
+                    cpuThreadsField.setText(cpuTableModel.getValueAt(selectedRow, 4).toString());
+                    cpuFrequencyField.setText(cpuTableModel.getValueAt(selectedRow, 5).toString());
+                    cpuBrandIdField.setText(cpuTableModel.getValueAt(selectedRow, 6).toString());
+                    cpuSocketIdField.setText(cpuTableModel.getValueAt(selectedRow, 7).toString());
+                }
             }
         });
 
@@ -324,6 +520,35 @@ public class DBMSApp extends JFrame
         tabbedPane.setSelectedIndex(0);
 
         setVisible(true);
+    }
+
+    // Helper method to create a panel with buttons
+    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton) {
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(addButton);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(updateButton);
+        return buttonPanel;
+    }
+
+    // Helper method to create a panel with CPU fields
+    private JPanel createCPUFieldsPanel() {
+        JPanel fieldsPanel = new JPanel(new GridLayout(7, 2));
+        fieldsPanel.add(new JLabel("Model:"));
+        fieldsPanel.add(cpuModelField);
+        fieldsPanel.add(new JLabel("Price:"));
+        fieldsPanel.add(cpuPriceField);
+        fieldsPanel.add(new JLabel("Cores:"));
+        fieldsPanel.add(cpuCoresField);
+        fieldsPanel.add(new JLabel("Threads:"));
+        fieldsPanel.add(cpuThreadsField);
+        fieldsPanel.add(new JLabel("Frequency:"));
+        fieldsPanel.add(cpuFrequencyField);
+        fieldsPanel.add(new JLabel("Brand ID:"));
+        fieldsPanel.add(cpuBrandIdField);
+        fieldsPanel.add(new JLabel("Socket ID:"));
+        fieldsPanel.add(cpuSocketIdField);
+        return fieldsPanel;
     }
 
 
@@ -340,62 +565,42 @@ public class DBMSApp extends JFrame
     //                                                                                                                                                                                                                                  //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Populate the tables with data from the database
-    private void populateTables() 
-    {
+    private void populateTables() {
+        // Populate the tables with data from the database
+        // You need to implement the necessary methods to retrieve data from the database
         List<ClassBrand> brands = retrieveBrands();
-        for (ClassBrand brand : brands) 
-        {
-            brandTableModel.addRow(new Object[]{brand.getId(), brand.getName()});
+        for (ClassBrand brand : brands) {
+            brandTableModel.addRow(new Object[]{brand.getName()});
         }
-
+    
         List<ClassChipset> chipsets = retrieveChipsets();
-        for (ClassChipset chipset : chipsets) 
-        {
-            chipsetTableModel.addRow(new Object[]{chipset.getId(), chipset.getName()});
+        for (ClassChipset chipset : chipsets) {
+            chipsetTableModel.addRow(new Object[]{chipset.getName()});
         }
-
+    
+        List<ClassSocket> sockets = retrieveSockets();
+        for (ClassSocket socket : sockets) {
+            socketTableModel.addRow(new Object[]{socket.getName()});
+        }
+    
+        List<ClassSocketToChipset> socketToChipsets = retrieveSocketToChipsets();
+        for (ClassSocketToChipset socketToChipset : socketToChipsets) {
+            socketToChipsetTableModel.addRow(new Object[]{socketToChipset.getSocket().getName(), socketToChipset.getChipset().getName()});
+        }
+    
         List<ClassCPU> cpus = retrieveCPUs();
-        for (ClassCPU cpu : cpus) 
-        {
-            cpuTableModel.addRow(new Object[]{cpu.getId(), cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(),
-                    cpu.getFrequency(), cpu.getBrand().getId(), cpu.getSocket().getId()});
+        for (ClassCPU cpu : cpus) {
+            cpuTableModel.addRow(new Object[]{cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(), cpu.getFrequency(), cpu.getBrand().getName(), cpu.getSocket().getName()});
         }
 
         List<ClassGPU> gpus = retrieveGPUs();
-        for (ClassGPU gpu : gpus) 
-        {
-            gpuTableModel.addRow(new Object[]{gpu.getId(), gpu.getModel(), gpu.getPrice(), gpu.getCores(), gpu.getMemory(),
-                    gpu.getFrequency(), gpu.getBrand().getId()});
+        for (ClassGPU gpu : gpus) {
+            gpuTableModel.addRow(new Object[]{gpu.getModel(), gpu.getPrice(), gpu.getCores(), gpu.getMemory(), gpu.getFrequency(), gpu.getBrand().getName()});
         }
-
-        List<ClassPCB> pcbs = retrievePCBs();
-        for (ClassPCB pcb : pcbs) 
-        {
-            pcbTableModel.addRow(new Object[]{pcb.getId(), pcb.getModel(), pcb.getPrice(),
-                    pcb.getBrand().getId(), pcb.getSocket().getId(), pcb.getChipset().getId()});
+    
+        List<ClassPCB> motherboards = retrievePCBs();
+        for (ClassPCB motherboard : motherboards) {pcbTableModel.addRow(new Object[]{motherboard.getModel(), motherboard.getPrice(), motherboard.getBrand().getName(), motherboard.getSocket().getName(), motherboard.getChipset().getName()});
         }
-
-        List<ClassSocket> sockets = retrieveSockets();
-        for (ClassSocket socket : sockets) 
-        {
-            socketTableModel.addRow(new Object[]{socket.getId(), socket.getName()});
-        }
-
-        List<ClassSocketToChipset> socketToChipsets = retrieveSocketToChipsets();
-        for (ClassSocketToChipset socketToChipset : socketToChipsets) 
-        {
-            socketToChipsetTableModel.addRow(new Object[]{socketToChipset.getId(), socketToChipset.getSocket().getId(),
-                    socketToChipset.getChipset().getId()});
-        }
-    }
-
-    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton) 
-    {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        panel.add(addButton);
-        panel.add(deleteButton);
-        panel.add(updateButton);
-        return panel;
     }
 
     
@@ -564,12 +769,12 @@ public class DBMSApp extends JFrame
     // $$/   $$/ $$$$$$$/  $$$$$$$/ $$/       $$$$$$$/  $$$$$$$$/ $$$$$$$$/ $$$$$$$$/    $$/    $$$$$$$$/ $$/        $$$$$$/  $$/       $$$$$$$/  $$/   $$/    $$/    $$$$$$$$/       $$/      $$/ $$$$$$$$/    $$/    $$/   $$/  $$$$$$/  $$$$$$$/   $$$$$$/   //
     //                                                                                                                                                                                                                                                          //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // add/delete/update methods
     private void addBrand() 
     {
         // Create a new brand object
         ClassBrand brand = new ClassBrand();
         brand.setName("New Brand");
-
         try 
         {
             transaction = session.beginTransaction();
@@ -639,6 +844,79 @@ public class DBMSApp extends JFrame
         }
     }
 
+
+    private void addChipset() {
+        // Implement chipset addition logic
+    }
+
+    private void deleteChipset() {
+        // Implement chipset deletion logic
+    }
+
+    private void updateChipset() {
+        // Implement chipset update logic
+    }
+
+    private void addCPU() {
+        // Implement CPU addition logic
+    }
+
+    private void deleteCPU() {
+        // Implement CPU deletion logic
+    }
+
+    private void updateCPU() {
+        // Implement CPU update logic
+    }
+
+    private void addGPU() {
+        // Implement GPU addition logic
+    }
+
+    private void deleteGPU() {
+        // Implement GPU deletion logic
+    }
+
+    private void updateGPU() {
+        // Implement GPU update logic
+    }
+
+    private void addMotherboard() {
+        // Implement motherboard addition logic
+    }
+
+    private void deleteMotherboard() {
+        // Implement motherboard deletion logic
+    }
+
+    private void updateMotherboard() {
+        // Implement motherboard update logic
+    }
+
+    private void addSocket() {
+        // Implement socket addition logic
+    }
+
+    private void deleteSocket() {
+        // Implement socket deletion logic
+    }
+
+    private void updateSocket() {
+        // Implement socket update logic
+    }
+
+    private void addSocketToChipset() {
+        // Implement socket-to-chipset addition logic
+    }
+
+    private void deleteSocketToChipset() {
+        // Implement socket-to-chipset deletion logic
+    }
+
+    private void updateSocketToChipset() {
+        // Implement socket-to-chipset update logic
+    }
+
     /////////////////////////////////////////////////////////////////
     //                                                             //
     //    // Methods to add/delete/update data for other tables    //
@@ -659,8 +937,16 @@ public class DBMSApp extends JFrame
     /////////////////////////////////////////////
 
 
-    public static void main(String[] args) 
-    {
-        SwingUtilities.invokeLater(DBMSApp::new);
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new DBMSApp();
+            }
+        });
     }
+
+    // public static void main(String[] args) 
+    // {
+    //     SwingUtilities.invokeLater(DBMSApp::new);
+    // }
 }
