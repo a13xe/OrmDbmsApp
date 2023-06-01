@@ -103,8 +103,8 @@ public class DBMSApp extends JFrame
     private JTextField cpuCoresField;
     private JTextField cpuThreadsField;
     private JTextField cpuFrequencyField;
-    private JTextField cpuBrandIdField;
-    private JTextField cpuSocketIdField;
+    private JComboBox<String> brandComboBox;
+    private JComboBox<String> socketComboBox;
     // Brand Fields
     private JTextField brandIdField;
     private JTextField brandNameField;
@@ -131,7 +131,7 @@ public class DBMSApp extends JFrame
         // Initialize window
         setTitle("DBMS App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 750);
+        setSize(900, 550);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -207,18 +207,47 @@ public class DBMSApp extends JFrame
         updateSocketToChipsetButton = new JButton("Update Socket to Chipset");
 
         // Create CPU Fields
-        cpuModelField = new JTextField(20);
+        cpuModelField = new JTextField(255);
         cpuPriceField = new JTextField(10);
         cpuCoresField = new JTextField(5);
         cpuThreadsField = new JTextField(5);
-        cpuFrequencyField = new JTextField(5);
-        cpuBrandIdField = new JTextField(5);
-        cpuSocketIdField = new JTextField(5);
+        cpuFrequencyField = new JTextField(10);
+        brandComboBox = new JComboBox<>();
+        socketComboBox = new JComboBox<>();
         // Create Brand fields
         brandIdField = new JTextField();
         brandNameField = new JTextField();
 
-        // Add tables and buttons to panels
+
+        /////////////////////////
+        //                     //
+        //    cpuInputPanel    //
+        //                     //
+        /////////////////////////
+        JPanel cpuInputPanel = new JPanel(new GridLayout(7, 2));
+        cpuInputPanel.add(new JLabel("Model:"));
+        cpuInputPanel.add(cpuModelField);
+        cpuInputPanel.add(new JLabel("Price:"));
+        cpuInputPanel.add(cpuPriceField);
+        cpuInputPanel.add(new JLabel("Cores:"));
+        cpuInputPanel.add(cpuCoresField);
+        cpuInputPanel.add(new JLabel("Threads:"));
+        cpuInputPanel.add(cpuThreadsField);
+        cpuInputPanel.add(new JLabel("Frequency:"));
+        cpuInputPanel.add(cpuFrequencyField);
+        cpuInputPanel.add(new JLabel("Brand:"));
+        cpuInputPanel.add(brandComboBox);
+        cpuInputPanel.add(new JLabel("Socket:"));
+        cpuInputPanel.add(socketComboBox);
+
+        // Add CPU button panel
+        JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton);
+
+        ////////////////////////////////////////////
+        //                                        //
+        //    Add tables and buttons to panels    //
+        //                                        //
+        ////////////////////////////////////////////
         JPanel brandPanel = new JPanel(new BorderLayout());
         brandPanel.add(brandScrollPane, BorderLayout.CENTER);
         brandPanel.add(createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton), BorderLayout.SOUTH);
@@ -227,9 +256,14 @@ public class DBMSApp extends JFrame
         chipsetPanel.add(chipsetScrollPane, BorderLayout.CENTER);
         chipsetPanel.add(createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton), BorderLayout.SOUTH);
 
+        // JPanel cpuPanel = new JPanel(new BorderLayout());
+        // cpuPanel.add(cpuScrollPane, BorderLayout.CENTER);
+        // cpuPanel.add(createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton), BorderLayout.SOUTH);
+        // Add CPU panel
         JPanel cpuPanel = new JPanel(new BorderLayout());
         cpuPanel.add(cpuScrollPane, BorderLayout.CENTER);
-        cpuPanel.add(createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton), BorderLayout.SOUTH);
+        cpuPanel.add(cpuButtonPanel, BorderLayout.SOUTH);
+        cpuPanel.add(cpuInputPanel, BorderLayout.NORTH);
 
         JPanel gpuPanel = new JPanel(new BorderLayout());
         gpuPanel.add(gpuScrollPane, BorderLayout.CENTER);
@@ -261,6 +295,33 @@ public class DBMSApp extends JFrame
         // Populate tables
         populateTables();
         
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______    ______   __       __  _______    ______         _______    ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______         //
+        //  /      \  /      \ /  \     /  |/       \  /      \       /       \  /      \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \        //
+        // /$$$$$$  |/$$$$$$  |$$  \   /$$ |$$$$$$$  |/$$$$$$  |      $$$$$$$  |/$$$$$$  |$$ |  $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  |       //
+        // $$ |  $$/ $$ |  $$ |$$$  \ /$$$ |$$ |__$$ |$$ |  $$ |      $$ |__$$ |$$ |  $$ |$$  \/$$/       $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/        //
+        // $$ |      $$ |  $$ |$$$$  /$$$$ |$$    $$< $$ |  $$ |      $$    $$< $$ |  $$ | $$  $$<        $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \        //
+        // $$ |   __ $$ |  $$ |$$ $$ $$/$$ |$$$$$$$  |$$ |  $$ |      $$$$$$$  |$$ |  $$ |  $$$$  \       $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  |       //
+        // $$ \__/  |$$ \__$$ |$$ |$$$/ $$ |$$ |__$$ |$$ \__$$ |      $$ |__$$ |$$ \__$$ | $$ /$$  |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ |       //
+        // $$    $$/ $$    $$/ $$ | $/  $$ |$$    $$/ $$    $$/       $$    $$/ $$    $$/ $$ |  $$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/        //
+        //  $$$$$$/   $$$$$$/  $$/      $$/ $$$$$$$/   $$$$$$/        $$$$$$$/   $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/         //
+        //                                                                                                                                                                                               //
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        brandComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Brand combo box selection logic
+            }
+        });
+
+        socketComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Socket combo box selection logic
+            }
+        });
+
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //   ______    ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
@@ -452,23 +513,6 @@ public class DBMSApp extends JFrame
         });
 
 
-        /////////////////////////////////////////////
-        //  ________  ______   _______    ______   //
-        // /        |/      \ /       \  /      \  //
-        // $$$$$$$$//$$$$$$  |$$$$$$$  |/$$$$$$  | //
-        //    $$ |  $$ |  $$ |$$ |  $$ |$$ |  $$ | //
-        //    $$ |  $$ |  $$ |$$ |  $$ |$$ |  $$ | //
-        //    $$ |  $$ |  $$ |$$ |  $$ |$$ |  $$ | //
-        //    $$ |  $$ \__$$ |$$ |__$$ |$$ \__$$ | //
-        //    $$ |  $$    $$/ $$    $$/ $$    $$/  //
-        //    $$/    $$$$$$/  $$$$$$$/   $$$$$$/   //
-        //                                         //
-        /////////////////////////////////////////////
-
-        // Populate tables
-        populateTables();
-
-
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //   ______   ________  __        ________   ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
         //  /      \ /        |/  |      /        | /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
@@ -510,8 +554,8 @@ public class DBMSApp extends JFrame
                     cpuCoresField.setText(cpuTableModel.getValueAt(selectedRow, 3).toString());
                     cpuThreadsField.setText(cpuTableModel.getValueAt(selectedRow, 4).toString());
                     cpuFrequencyField.setText(cpuTableModel.getValueAt(selectedRow, 5).toString());
-                    cpuBrandIdField.setText(cpuTableModel.getValueAt(selectedRow, 6).toString());
-                    cpuSocketIdField.setText(cpuTableModel.getValueAt(selectedRow, 7).toString());
+                    brandComboBox.getSelectedItem();
+                    socketComboBox.getSelectedItem();
                 }
             }
         });
@@ -522,34 +566,7 @@ public class DBMSApp extends JFrame
         setVisible(true);
     }
 
-    // Helper method to create a panel with buttons
-    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton) {
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.add(addButton);
-        buttonPanel.add(deleteButton);
-        buttonPanel.add(updateButton);
-        return buttonPanel;
-    }
 
-    // Helper method to create a panel with CPU fields
-    private JPanel createCPUFieldsPanel() {
-        JPanel fieldsPanel = new JPanel(new GridLayout(7, 2));
-        fieldsPanel.add(new JLabel("Model:"));
-        fieldsPanel.add(cpuModelField);
-        fieldsPanel.add(new JLabel("Price:"));
-        fieldsPanel.add(cpuPriceField);
-        fieldsPanel.add(new JLabel("Cores:"));
-        fieldsPanel.add(cpuCoresField);
-        fieldsPanel.add(new JLabel("Threads:"));
-        fieldsPanel.add(cpuThreadsField);
-        fieldsPanel.add(new JLabel("Frequency:"));
-        fieldsPanel.add(cpuFrequencyField);
-        fieldsPanel.add(new JLabel("Brand ID:"));
-        fieldsPanel.add(cpuBrandIdField);
-        fieldsPanel.add(new JLabel("Socket ID:"));
-        fieldsPanel.add(cpuSocketIdField);
-        return fieldsPanel;
-    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -756,7 +773,6 @@ public class DBMSApp extends JFrame
         return socketToChipsets;
     }
 
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //   ______   _______   _______        __  _______   ________  __        ________  ________  ________        __  __    __  _______   _______    ______   ________  ________        __       __  ________  ________  __    __   ______   _______    ______   //
     //  /      \ /       \ /       \      /  |/       \ /        |/  |      /        |/        |/        |      /  |/  |  /  |/       \ /       \  /      \ /        |/        |      /  \     /  |/        |/        |/  |  /  | /      \ /       \  /      \  //
@@ -858,15 +874,66 @@ public class DBMSApp extends JFrame
     }
 
     private void addCPU() {
-        // Implement CPU addition logic
-    }
+        // Get input values from text fields and combo boxes
+        String model = cpuModelField.getText();
+        double price = Double.parseDouble(cpuPriceField.getText());
+        int cores = Integer.parseInt(cpuCoresField.getText());
+        int threads = Integer.parseInt(cpuThreadsField.getText());
+        int frequency = Integer.parseInt(cpuFrequencyField.getText());
+        ClassBrand selectedBrand = getSelectedBrand();
+        ClassSocket selectedSocket = getSelectedSocket();
 
+        // Create a new CPU object with the input values
+        ClassCPU cpu = new ClassCPU(model, price, cores, threads, frequency, selectedBrand, selectedSocket);
+
+        // Add the CPU to the database (implement this based on your database access code)
+        // ...
+
+        // Clear input fields after adding the CPU
+        clearCPUInputFields();
+
+        // Refresh the CPU table
+        refreshCPUTable();
+    }
     private void deleteCPU() {
-        // Implement CPU deletion logic
+        int selectedRow = cpuTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int cpuId = (int) cpuTableModel.getValueAt(selectedRow, 0);
+
+            // Delete the CPU from the database (implement this based on your database access code)
+            // ...
+
+            // Refresh the CPU table
+            refreshCPUTable();
+        }
     }
 
     private void updateCPU() {
-        // Implement CPU update logic
+        int selectedRow = cpuTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int cpuId = (int) cpuTableModel.getValueAt(selectedRow, 0);
+
+            // Get input values from text fields and combo boxes
+            String model = cpuModelField.getText();
+            double price = Double.parseDouble(cpuPriceField.getText());
+            int cores = Integer.parseInt(cpuCoresField.getText());
+            int threads = Integer.parseInt(cpuThreadsField.getText());
+            int frequency = Integer.parseInt(cpuFrequencyField.getText());
+            ClassBrand selectedBrand = getSelectedBrand();
+            ClassSocket selectedSocket = getSelectedSocket();
+
+            // Create a new CPU object with the updated values
+            ClassCPU cpu = new ClassCPU(model, price, cores, threads, frequency, selectedBrand, selectedSocket);
+
+            // Update the CPU in the database (implement this based on your database access code)
+            // ...
+
+            // Clear input fields after updating the CPU
+            clearCPUInputFields();
+
+            // Refresh the CPU table
+            refreshCPUTable();
+        }
     }
 
     private void addGPU() {
@@ -917,26 +984,98 @@ public class DBMSApp extends JFrame
         // Implement socket-to-chipset update logic
     }
 
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //    // Methods to add/delete/update data for other tables    //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  __    __  ________  __        _______   ________  _______         __       __  ________  ________  __    __   ______   _______    ______   //
+    // /  |  /  |/        |/  |      /       \ /        |/       \       /  \     /  |/        |/        |/  |  /  | /      \ /       \  /      \  //
+    // $$ |  $$ |$$$$$$$$/ $$ |      $$$$$$$  |$$$$$$$$/ $$$$$$$  |      $$  \   /$$ |$$$$$$$$/ $$$$$$$$/ $$ |  $$ |/$$$$$$  |$$$$$$$  |/$$$$$$  | //
+    // $$ |__$$ |$$ |__    $$ |      $$ |__$$ |$$ |__    $$ |__$$ |      $$$  \ /$$$ |$$ |__       $$ |   $$ |__$$ |$$ |  $$ |$$ |  $$ |$$ \__$$/  //
+    // $$    $$ |$$    |   $$ |      $$    $$/ $$    |   $$    $$<       $$$$  /$$$$ |$$    |      $$ |   $$    $$ |$$ |  $$ |$$ |  $$ |$$      \  //
+    // $$$$$$$$ |$$$$$/    $$ |      $$$$$$$/  $$$$$/    $$$$$$$  |      $$ $$ $$/$$ |$$$$$/       $$ |   $$$$$$$$ |$$ |  $$ |$$ |  $$ | $$$$$$  | //
+    // $$ |  $$ |$$ |_____ $$ |_____ $$ |      $$ |_____ $$ |  $$ |      $$ |$$$/ $$ |$$ |_____    $$ |   $$ |  $$ |$$ \__$$ |$$ |__$$ |/  \__$$ | //
+    // $$ |  $$ |$$       |$$       |$$ |      $$       |$$ |  $$ |      $$ | $/  $$ |$$       |   $$ |   $$ |  $$ |$$    $$/ $$    $$/ $$    $$/  //
+    // $$/   $$/ $$$$$$$$/ $$$$$$$$/ $$/       $$$$$$$$/ $$/   $$/       $$/      $$/ $$$$$$$$/    $$/    $$/   $$/  $$$$$$/  $$$$$$$/   $$$$$$/   //
+    //                                                                                                                                             //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void clearCPUInputFields() 
+    {
+        cpuModelField.setText("");
+        cpuPriceField.setText("");
+        cpuCoresField.setText("");
+        cpuThreadsField.setText("");
+        cpuFrequencyField.setText("");
+        brandComboBox.setSelectedIndex(-1);
+        socketComboBox.setSelectedIndex(-1);
+    }
+
+    private void refreshCPUTable() 
+    {   // Clear the CPU table
+        cpuTableModel.setRowCount(0);
+        // Retrieve and populate the CPU table with updated data (implement this based on your database access code)
+        List<ClassCPU> cpus = retrieveCPUs();
+        for (ClassCPU cpu : cpus) 
+        {
+            cpuTableModel.addRow(new Object[]{cpu.getId(), cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(), cpu.getFrequency(), cpu.getBrand().getId(), cpu.getSocket().getId()});
+        }
+    }
+
+    // Helper method to create a panel with buttons
+    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton) 
+    {
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(addButton);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(updateButton);
+        return buttonPanel;
+    }
+
+    private ClassSocket getSelectedSocket() 
+    {
+        String selectedSocketName = (String) socketComboBox.getSelectedItem();
+        // Retrieve the selected socket from the database based on the socket name
+        ClassSocket selectedSocket = null; // Replace with your actual database access code
+        List<ClassSocket> sockets = retrieveSockets();
+        for (ClassSocket socket : sockets) 
+        {
+            if (socket.getName().equals(selectedSocketName)) 
+            {
+                selectedSocket = socket;
+                break;
+            }
+        }
+        return selectedSocket;
+    }
     
-    /////////////////////////////////////////////
-    //  ________  ______   _______    ______   //
-    // /        |/      \ /       \  /      \  //
-    // $$$$$$$$//$$$$$$  |$$$$$$$  |/$$$$$$  | //
-    //    $$ |  $$ |  $$ |$$ |  $$ |$$ |  $$ | //
-    //    $$ |  $$ |  $$ |$$ |  $$ |$$ |  $$ | //
-    //    $$ |  $$ |  $$ |$$ |  $$ |$$ |  $$ | //
-    //    $$ |  $$ \__$$ |$$ |__$$ |$$ \__$$ | //
-    //    $$ |  $$    $$/ $$    $$/ $$    $$/  //
-    //    $$/    $$$$$$/  $$$$$$$/   $$$$$$/   //
-    //                                         //
-    /////////////////////////////////////////////
+    private ClassBrand getSelectedBrand() 
+    {
+        String selectedBrandName = (String) brandComboBox.getSelectedItem();
+        // Retrieve the selected socket from the database based on the socket name
+        ClassBrand selectedBrand = null; // Replace with your actual database access code
+        List<ClassBrand> brands = retrieveBrands();
+        for (ClassBrand brand : brands) 
+        {
+            if (brand.getName().equals(selectedBrandName)) 
+            {
+                selectedBrand = brand;
+                break;
+            }
+        }
+        return selectedBrand;
+    }
+    
 
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  _______   __    __  __    __        __  _______   ________  _______   __    __   ______         _______   _______    ______    ______   _______    ______   __       __  //
+    // /       \ /  |  /  |/  \  /  |      /  |/       \ /        |/       \ /  |  /  | /      \       /       \ /       \  /      \  /      \ /       \  /      \ /  \     /  | //
+    // $$$$$$$  |$$ |  $$ |$$  \ $$ |     /$$/ $$$$$$$  |$$$$$$$$/ $$$$$$$  |$$ |  $$ |/$$$$$$  |      $$$$$$$  |$$$$$$$  |/$$$$$$  |/$$$$$$  |$$$$$$$  |/$$$$$$  |$$  \   /$$ | //
+    // $$ |__$$ |$$ |  $$ |$$$  \$$ |    /$$/  $$ |  $$ |$$ |__    $$ |__$$ |$$ |  $$ |$$ | _$$/       $$ |__$$ |$$ |__$$ |$$ |  $$ |$$ | _$$/ $$ |__$$ |$$ |__$$ |$$$  \ /$$$ | //
+    // $$    $$< $$ |  $$ |$$$$  $$ |   /$$/   $$ |  $$ |$$    |   $$    $$< $$ |  $$ |$$ |/    |      $$    $$/ $$    $$< $$ |  $$ |$$ |/    |$$    $$< $$    $$ |$$$$  /$$$$ | //
+    // $$$$$$$  |$$ |  $$ |$$ $$ $$ |  /$$/    $$ |  $$ |$$$$$/    $$$$$$$  |$$ |  $$ |$$ |$$$$ |      $$$$$$$/  $$$$$$$  |$$ |  $$ |$$ |$$$$ |$$$$$$$  |$$$$$$$$ |$$ $$ $$/$$ | //
+    // $$ |  $$ |$$ \__$$ |$$ |$$$$ | /$$/     $$ |__$$ |$$ |_____ $$ |__$$ |$$ \__$$ |$$ \__$$ |      $$ |      $$ |  $$ |$$ \__$$ |$$ \__$$ |$$ |  $$ |$$ |  $$ |$$ |$$$/ $$ | //
+    // $$ |  $$ |$$    $$/ $$ | $$$ |/$$/      $$    $$/ $$       |$$    $$/ $$    $$/ $$    $$/       $$ |      $$ |  $$ |$$    $$/ $$    $$/ $$ |  $$ |$$ |  $$ |$$ | $/  $$ | //
+    // $$/   $$/  $$$$$$/  $$/   $$/ $$/       $$$$$$$/  $$$$$$$$/ $$$$$$$/   $$$$$$/   $$$$$$/        $$/       $$/   $$/  $$$$$$/   $$$$$$/  $$/   $$/ $$/   $$/ $$/      $$/  //
+    //                                                                                                                                                                           //
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
