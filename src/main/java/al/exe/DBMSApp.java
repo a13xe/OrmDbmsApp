@@ -133,13 +133,13 @@ public class DBMSApp extends JFrame
         transaction = null;
 
         // Create table models
-        brandTableModel = new DefaultTableModel(new Object[]{"ID", "Name"}, 0);
-        chipsetTableModel = new DefaultTableModel(new Object[]{"ID", "Name"}, 0);
-        cpuTableModel = new DefaultTableModel(new Object[]{"ID", "Model", "Price", "Cores", "Threads", "Frequency", "Brand ID", "Socket ID"}, 0);
-        gpuTableModel = new DefaultTableModel(new Object[]{"ID", "Model", "Price", "Cores", "Memory", "Frequency", "Brand ID"}, 0);
-        pcbTableModel = new DefaultTableModel(new Object[]{"ID", "Model", "Price", "Brand ID", "Socket ID", "Chipset ID"}, 0);
-        socketTableModel = new DefaultTableModel(new Object[]{"ID", "Name"}, 0);
-        socketToChipsetTableModel = new DefaultTableModel(new Object[]{"ID", "Socket ID", "Chipset ID"}, 0);
+        cpuTableModel = new DefaultTableModel(new Object[]{"Model", "Price", "Cores", "Threads", "Frequency", "Brand ID", "Socket ID"}, 0);
+        gpuTableModel = new DefaultTableModel(new Object[]{"Model", "Price", "Cores", "Memory", "Frequency", "Brand ID"}, 0);
+        pcbTableModel = new DefaultTableModel(new Object[]{"Model", "Price", "Brand ID", "Socket ID", "Chipset ID"}, 0);
+        brandTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
+        socketTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
+        chipsetTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
+        socketToChipsetTableModel = new DefaultTableModel(new Object[]{"Socket ID", "Chipset ID"}, 0);
 
         // Create tables
         cpuTable = new JTable(cpuTableModel);
@@ -158,12 +158,12 @@ public class DBMSApp extends JFrame
         socketToChipsetTable.setDefaultEditor(Object.class, null);
 
         // Add tables to scroll panes
-        JScrollPane brandScrollPane = new JScrollPane(brandTable);
-        JScrollPane chipsetScrollPane = new JScrollPane(chipsetTable);
         JScrollPane cpuScrollPane = new JScrollPane(cpuTable);
         JScrollPane gpuScrollPane = new JScrollPane(gpuTable);
         JScrollPane pcbScrollPane = new JScrollPane(pcbTable);
+        JScrollPane brandScrollPane = new JScrollPane(brandTable);
         JScrollPane socketScrollPane = new JScrollPane(socketTable);
+        JScrollPane chipsetScrollPane = new JScrollPane(chipsetTable);
         JScrollPane socketToChipsetScrollPane = new JScrollPane(socketToChipsetTable);
 
         // Create buttons
@@ -234,9 +234,9 @@ public class DBMSApp extends JFrame
         socketToChipsetPanel.add(createButtonPanel(
                 addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton), BorderLayout.SOUTH);
         // Add panels to tabbed pane
-        tabbedPane.addTab("Processors (CPU)", cpuPanel);
-        tabbedPane.addTab("Graphics (GPU)", gpuPanel);
-        tabbedPane.addTab("Motherboards (PCB)", pcbPanel);
+        tabbedPane.addTab("CPU (Processors)", cpuPanel);
+        tabbedPane.addTab("GPU (Graphics)", gpuPanel);
+        tabbedPane.addTab("PCB (Motherboards)", pcbPanel);
         tabbedPane.addTab("Brands", brandPanel);
         tabbedPane.addTab("Sockets", socketPanel);
         tabbedPane.addTab("Chipsets", chipsetPanel);
@@ -246,6 +246,20 @@ public class DBMSApp extends JFrame
         add(tabbedPane);
         // Populate tables
         populateTables();
+        
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______    ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        //  /      \  /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // /$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$/ /$$$$$$  |$$  \ $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ |__$$ |$$ |  $$/    $$ |     $$ |  $$ |  $$ |$$$  \$$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$    $$ |$$ |         $$ |     $$ |  $$ |  $$ |$$$$  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$$$$$$$ |$$ |   __    $$ |     $$ |  $$ |  $$ |$$ $$ $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ |  $$ |$$ \__/  |   $$ |    _$$ |_ $$ \__$$ |$$ |$$$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$ |  $$ |$$    $$/    $$ |   / $$   |$$    $$/ $$ | $$$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        // $$/   $$/  $$$$$$/     $$/    $$$$$$/  $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                          //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Add listeners
         addBrandButton.addActionListener(new ActionListener() {
