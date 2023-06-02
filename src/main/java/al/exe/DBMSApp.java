@@ -10,6 +10,10 @@ import java.io.FileOutputStream;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
 import javax.swing.*;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -18,7 +22,6 @@ import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import java.util.List;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Element;
@@ -28,13 +31,10 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import java.util.logging.Logger;
-import java.util.logging.FileHandler;
-import java.util.logging.SimpleFormatter;
 // Hibernate
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 // Necessary classes
 import al.exe.ClassCPU;
@@ -44,6 +44,7 @@ import al.exe.ClassBrand;
 import al.exe.ClassSocket;
 import al.exe.ClassChipset;
 import al.exe.ClassSocketToChipset;
+import al.exe.HibernateUtil;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,13 +69,13 @@ public class DBMSApp extends JFrame
     private JTable brandTable, chipsetTable, cpuTable, gpuTable, pcbTable, socketTable, socketToChipsetTable;
     private DefaultTableModel brandTableModel, chipsetTableModel, cpuTableModel, gpuTableModel, pcbTableModel, socketTableModel, socketToChipsetTableModel;
     // Buttons
-    private JButton addCPUButton, deleteCPUButton, updateCPUButton;
-    private JButton addGPUButton, deleteGPUButton, updateGPUButton;
-    private JButton addPCBButton, deletePCBButton, updatePCBButton;
-    private JButton addBrandButton, deleteBrandButton, updateBrandButton;
-    private JButton addSocketButton, deleteSocketButton, updateSocketButton;
-    private JButton addChipsetButton, deleteChipsetButton, updateChipsetButton;
-    private JButton addCompatibleButton, deleteCompatibleButton, updateCompatibleButton;
+    private JButton addCPUButton, deleteCPUButton, updateCPUButton, dbExportCPUButton;
+    private JButton addGPUButton, deleteGPUButton, updateGPUButton, dbExportGPUButton;
+    private JButton addPCBButton, deletePCBButton, updatePCBButton, dbExportPCBButton;
+    private JButton addBrandButton, deleteBrandButton, updateBrandButton, dbExportBrandButton;
+    private JButton addSocketButton, deleteSocketButton, updateSocketButton, dbExportSocketButton;
+    private JButton addChipsetButton, deleteChipsetButton, updateChipsetButton, dbExportChipsetButton;
+    private JButton addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton, dbExportSocketToChipsetButton;
     // CPU Fields
     private JTextField cpuModelField;
     private JTextField cpuPriceField;
@@ -167,36 +168,44 @@ public class DBMSApp extends JFrame
         JScrollPane brandScrollPane = new JScrollPane(brandTable);
         JScrollPane socketScrollPane = new JScrollPane(socketTable);
         JScrollPane chipsetScrollPane = new JScrollPane(chipsetTable);
-        JScrollPane compatibilityScrollPane = new JScrollPane(socketToChipsetTable);
+        JScrollPane socketToChipsetScrollPane = new JScrollPane(socketToChipsetTable);
 
         // Create buttons
         addBrandButton = new JButton("Add Brand");
         deleteBrandButton = new JButton("Delete Brand");
         updateBrandButton = new JButton("Update Brand");
+        dbExportBrandButton = new JButton("Export to DB");
+
 
         addChipsetButton = new JButton("Add Chipset");
         deleteChipsetButton = new JButton("Delete Chipset");
         updateChipsetButton = new JButton("Update Chipset");
+        dbExportChipsetButton = new JButton("Export to DB");
 
         addCPUButton = new JButton("Add CPU");
         deleteCPUButton = new JButton("Delete CPU");
         updateCPUButton = new JButton("Update CPU");
+        dbExportCPUButton = new JButton("Export to DB");
 
         addGPUButton = new JButton("Add GPU");
         deleteGPUButton = new JButton("Delete GPU");
         updateGPUButton = new JButton("Update GPU");
+        dbExportGPUButton = new JButton("Export to DB");
 
         addPCBButton = new JButton("Add PCB");
         deletePCBButton = new JButton("Delete PCB");
         updatePCBButton = new JButton("Update PCB");
+        dbExportPCBButton = new JButton("Export to DB");
 
         addSocketButton = new JButton("Add Socket");
         deleteSocketButton = new JButton("Delete Socket");
         updateSocketButton = new JButton("Update Socket");
+        dbExportSocketButton = new JButton("Export to DB");
 
-        addCompatibleButton = new JButton("Add Socket to Chipset");
-        deleteCompatibleButton = new JButton("Delete Socket to Chipset");
-        updateCompatibleButton = new JButton("Update Socket to Chipset");
+        addSocketToChipsetButton = new JButton("Add Socket to Chipset");
+        deleteSocketToChipsetButton = new JButton("Delete Socket to Chipset");
+        updateSocketToChipsetButton = new JButton("Update Socket to Chipset");
+        dbExportSocketToChipsetButton = new JButton("Export to DB");
 
         /////////////////////////////////////////
         //                                     //
@@ -255,6 +264,14 @@ public class DBMSApp extends JFrame
         cpuInputPanel.add(cpuBrandComboBox);
         cpuInputPanel.add(new JLabel("Socket:"));
         cpuInputPanel.add(cpuSocketComboBox);
+        List<ClassBrand> brands = retrieveBrands();
+        for (ClassBrand brand : brands) {
+            cpuBrandComboBox.addItem(brand.getName());
+        }
+        List<ClassSocket> sockets = retrieveSockets();
+        for (ClassSocket socket : sockets) {
+            cpuSocketComboBox.addItem(socket.getName());
+        }
         // gpu panel
         JPanel gpuInputPanel = new JPanel(new GridLayout(6, 2));
         gpuInputPanel.add(new JLabel("Model:"));
@@ -288,30 +305,30 @@ public class DBMSApp extends JFrame
         // socket panel
         JPanel socketInputPanel = new JPanel(new GridLayout(1, 2));
         socketInputPanel.add(new JLabel("Socket Name:"));
-        socketInputPanel.add(brandNameField);
+        socketInputPanel.add(socketNameField);
         // chipset panel
         JPanel chipsetInputPanel = new JPanel(new GridLayout(1, 2));
         chipsetInputPanel.add(new JLabel("Chipset Name:"));
-        chipsetInputPanel.add(brandNameField);
+        chipsetInputPanel.add(chipsetNameField);
         // compatibility panel
-        JPanel compatibilityInputPanel = new JPanel(new GridLayout(2, 2));
-        compatibilityInputPanel.add(new JLabel("Socket Name:"));
-        compatibilityInputPanel.add(compatibilitySocketComboBox);
-        compatibilityInputPanel.add(new JLabel("Chipset Name:"));
-        compatibilityInputPanel.add(compatibilityChipsetComboBox);
+        JPanel socketToChipsetInputPanel = new JPanel(new GridLayout(2, 2));
+        socketToChipsetInputPanel.add(new JLabel("Socket Name:"));
+        socketToChipsetInputPanel.add(compatibilitySocketComboBox);
+        socketToChipsetInputPanel.add(new JLabel("Chipset Name:"));
+        socketToChipsetInputPanel.add(compatibilityChipsetComboBox);
 
         /////////////////////////
         //                     //
         //    Button panels    //
         //                     //
         /////////////////////////
-        JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton);
-        JPanel gpuButtonPanel = createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton);
-        JPanel pcbButtonPanel = createButtonPanel(addPCBButton, deletePCBButton, updatePCBButton);
-        JPanel brandButtonPanel = createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton);
-        JPanel socketButtonPanel = createButtonPanel(addSocketButton, deleteSocketButton, updateSocketButton);
-        JPanel chipsetButtonPanel = createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton);
-        JPanel compatibilityButtonPanel = createButtonPanel(addCompatibleButton, deleteCompatibleButton, updateCompatibleButton);
+        JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton, dbExportCPUButton);
+        JPanel gpuButtonPanel = createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton, dbExportGPUButton);
+        JPanel pcbButtonPanel = createButtonPanel(addPCBButton, deletePCBButton, updatePCBButton, dbExportPCBButton);
+        JPanel brandButtonPanel = createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton, dbExportBrandButton);
+        JPanel socketButtonPanel = createButtonPanel(addSocketButton, deleteSocketButton, updateSocketButton, dbExportSocketButton);
+        JPanel chipsetButtonPanel = createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton, dbExportChipsetButton);
+        JPanel socketToChipsetButtonPanel = createButtonPanel(addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton, dbExportSocketToChipsetButton);
 
         ////////////////////////////////////////////
         //                                        //
@@ -349,10 +366,13 @@ public class DBMSApp extends JFrame
         socketPanel.add(socketButtonPanel, BorderLayout.SOUTH);
         socketPanel.add(socketInputPanel, BorderLayout.NORTH);
         // Add Compatibility panel
-        JPanel compatibilityPanel = new JPanel(new BorderLayout());
-        compatibilityPanel.add(compatibilityScrollPane, BorderLayout.CENTER);
-        compatibilityPanel.add(compatibilityButtonPanel, BorderLayout.SOUTH);
-        compatibilityPanel.add(compatibilityInputPanel, BorderLayout.NORTH);
+        JPanel socketToChipsetPanel = new JPanel(new BorderLayout());
+        socketToChipsetPanel.add(socketToChipsetScrollPane, BorderLayout.CENTER);
+        socketToChipsetPanel.add(socketToChipsetButtonPanel, BorderLayout.SOUTH);
+        socketToChipsetPanel.add(socketToChipsetInputPanel, BorderLayout.NORTH);
+
+
+
         
         // Add panels to tabbed pane
         tabbedPane.addTab("CPU (Processors)", cpuPanel);
@@ -361,7 +381,7 @@ public class DBMSApp extends JFrame
         tabbedPane.addTab("Brands", brandPanel);
         tabbedPane.addTab("Sockets", socketPanel);
         tabbedPane.addTab("Chipsets", chipsetPanel);
-        tabbedPane.addTab("Compatible", compatibilityPanel);
+        tabbedPane.addTab("Compatible", socketToChipsetPanel);
 
         // Add tabbed pane to content pane
         add(tabbedPane);
@@ -381,19 +401,15 @@ public class DBMSApp extends JFrame
         //  $$$$$$/   $$$$$$/  $$/      $$/ $$$$$$$/   $$$$$$/        $$$$$$$/   $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/         //
         //                                                                                                                                                                                               //
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        cpuBrandComboBox.addActionListener(new ActionListener() {
+        // Add listener for brand combo box
+        cpuBrandComboBox.addActionListener(new ActionListener() 
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                // Brand combo box selection logic
+            public void actionPerformed(ActionEvent e) 
+            {
             }
         });
-
-        cpuSocketComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Socket combo box selection logic
-            }
-        });
+        
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -409,35 +425,11 @@ public class DBMSApp extends JFrame
         //                                                                                                                                                          //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        // Add listeners
-        // addBrandButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         // Add brand logic
-        //         // You need to implement the addBrand() method
-        //         addBrand();
-        //     }
-        // });
-
-        // deleteBrandButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         // Delete brand logic
-        //         // You need to implement the deleteBrand() method
-        //         deleteBrand();
-        //     }
-        // });
-
-        // updateBrandButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         // Update brand logic
-        //         // You need to implement the updateBrand() method
-        //         updateBrand();
-        //     }
-        // });
-
-         // Add listeners to buttons
+        /////////////////
+        //             //
+        //    BRAND    //
+        //             //
+        /////////////////
          addBrandButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -459,6 +451,11 @@ public class DBMSApp extends JFrame
             }
         });
 
+        ///////////////////
+        //               //
+        //    CHIPSET    //
+        //               //
+        ///////////////////
         addChipsetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -480,6 +477,11 @@ public class DBMSApp extends JFrame
             }
         });
 
+        ///////////////
+        //           //
+        //    CPU    //
+        //           //
+        ///////////////
         addCPUButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -501,6 +503,11 @@ public class DBMSApp extends JFrame
             }
         });
 
+        ///////////////
+        //           //
+        //    GPU    //
+        //           //
+        ///////////////
         addGPUButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -522,6 +529,11 @@ public class DBMSApp extends JFrame
             }
         });
 
+        ///////////////////////
+        //                   //
+        //    Motherboard    //
+        //                   //
+        ///////////////////////
         addPCBButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -543,6 +555,11 @@ public class DBMSApp extends JFrame
             }
         });
 
+        //////////////////
+        //              //
+        //    SOCKET    //
+        //              //
+        //////////////////
         addSocketButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -564,21 +581,27 @@ public class DBMSApp extends JFrame
             }
         });
 
-        addCompatibleButton.addActionListener(new ActionListener() {
+        /////////////////////////////
+        //                         //
+        //    SOCKET TO CHIPSET    //
+        //                         //
+        /////////////////////////////
+
+        addSocketToChipsetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addSocketToChipset();
             }
         });
 
-        deleteCompatibleButton.addActionListener(new ActionListener() {
+        deleteSocketToChipsetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteSocketToChipset();
             }
         });
 
-        updateCompatibleButton.addActionListener(new ActionListener() {
+        updateSocketToChipsetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateSocketToChipset();
@@ -612,7 +635,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        
         // Add selection listener to CPU table
         cpuTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -620,13 +642,32 @@ public class DBMSApp extends JFrame
                 int selectedRow = cpuTable.getSelectedRow();
                 if (selectedRow != -1) {
                     // Update CPU fields with selected row data
-                    cpuModelField.setText(cpuTableModel.getValueAt(selectedRow, 1).toString());
-                    cpuPriceField.setText(cpuTableModel.getValueAt(selectedRow, 2).toString());
-                    cpuCoresField.setText(cpuTableModel.getValueAt(selectedRow, 3).toString());
-                    cpuThreadsField.setText(cpuTableModel.getValueAt(selectedRow, 4).toString());
-                    cpuFrequencyField.setText(cpuTableModel.getValueAt(selectedRow, 5).toString());
-                    cpuBrandComboBox.getSelectedItem();
-                    cpuSocketComboBox.getSelectedItem();
+                    cpuModelField.setText(cpuTableModel.getValueAt(selectedRow, 0).toString());
+                    cpuPriceField.setText(cpuTableModel.getValueAt(selectedRow, 1).toString());
+                    cpuCoresField.setText(cpuTableModel.getValueAt(selectedRow, 2).toString());
+                    cpuThreadsField.setText(cpuTableModel.getValueAt(selectedRow, 3).toString());
+                    cpuFrequencyField.setText(cpuTableModel.getValueAt(selectedRow, 4).toString());
+                    
+                    // Get the values from the table model
+                    String brand = cpuTableModel.getValueAt(selectedRow, 5).toString();
+                    String socket = cpuTableModel.getValueAt(selectedRow, 6).toString();
+
+                    // Set the selected item in the comboboxes
+                    for (int i = 0; i < cpuBrandComboBox.getItemCount(); i++) {
+                        String item = cpuBrandComboBox.getItemAt(i).toString();
+                        if (item.equals(brand)) {
+                            cpuBrandComboBox.setSelectedItem(item);
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < cpuSocketComboBox.getItemCount(); i++) {
+                        String item = cpuSocketComboBox.getItemAt(i).toString();
+                        if (item.equals(socket)) {
+                            cpuSocketComboBox.setSelectedItem(item);
+                            break;
+                        }
+                    }
                 }
             }
         });
@@ -932,128 +973,190 @@ public class DBMSApp extends JFrame
     }
 
 
-    private void addChipset() {
-        // Implement chipset addition logic
+    private void addChipset() 
+    {
     }
 
-    private void deleteChipset() {
-        // Implement chipset deletion logic
+    private void deleteChipset() 
+    {
     }
 
-    private void updateChipset() {
-        // Implement chipset update logic
+    private void updateChipset() 
+    {
     }
 
-    private void addCPU() {
-        // Get input values from text fields and combo boxes
-        String model = cpuModelField.getText();
-        double price = Double.parseDouble(cpuPriceField.getText());
-        int cores = Integer.parseInt(cpuCoresField.getText());
-        int threads = Integer.parseInt(cpuThreadsField.getText());
-        int frequency = Integer.parseInt(cpuFrequencyField.getText());
-        ClassBrand selectedBrand = getSelectedBrand();
-        ClassSocket selectedSocket = getSelectedSocket();
-
-        // Create a new CPU object with the input values
-        ClassCPU cpu = new ClassCPU(model, price, cores, threads, frequency, selectedBrand, selectedSocket);
-
-        // Add the CPU to the database (implement this based on your database access code)
-        // ...
-
-        // Clear input fields after adding the CPU
-        clearCPUInputFields();
-
-        // Refresh the CPU table
-        refreshCPUTable();
+    private void addCPU() 
+    {
     }
-    private void deleteCPU() {
-        int selectedRow = cpuTable.getSelectedRow();
-        if (selectedRow != -1) {
-            int cpuId = (int) cpuTableModel.getValueAt(selectedRow, 0);
 
-            // Delete the CPU from the database (implement this based on your database access code)
-            // ...
+    private void deleteCPU() 
+    {
+    }
 
-            // Refresh the CPU table
-            refreshCPUTable();
+    private void updateCPU() 
+    {
+    }
+
+    private void addGPU() 
+    {
+    }
+
+    private void deleteGPU() 
+    {
+    }
+
+    private void updateGPU() 
+    {
+    }
+
+    private void addMotherboard() 
+    {
+    }
+
+    private void deleteMotherboard() 
+    {
+    }
+
+    private void updateMotherboard() 
+    {
+    }
+
+    private void addSocket() 
+    {
+    }
+
+    private void deleteSocket() 
+    {
+    }
+
+    private void updateSocket() 
+    {
+    }
+
+    private void addSocketToChipset() 
+    {
+    }
+
+    private void deleteSocketToChipset() 
+    {
+    }
+
+    private void updateSocketToChipset() 
+    {
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //   ______    ______   __       __  _______    ______   _______    ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+    //  /      \  /      \ /  \     /  |/       \  /      \ /       \  /      \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+    // /$$$$$$  |/$$$$$$  |$$  \   /$$ |$$$$$$$  |/$$$$$$  |$$$$$$$  |/$$$$$$  |$$ |  $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+    // $$ |  $$/ $$ |  $$ |$$$  \ /$$$ |$$ |__$$ |$$ |  $$ |$$ |__$$ |$$ |  $$ |$$  \/$$/       $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+    // $$ |      $$ |  $$ |$$$$  /$$$$ |$$    $$< $$ |  $$ |$$    $$< $$ |  $$ | $$  $$<        $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+    // $$ |   __ $$ |  $$ |$$ $$ $$/$$ |$$$$$$$  |$$ |  $$ |$$$$$$$  |$$ |  $$ |  $$$$  \       $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+    // $$ \__/  |$$ \__$$ |$$ |$$$/ $$ |$$ |__$$ |$$ \__$$ |$$ |__$$ |$$ \__$$ | $$ /$$  |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+    // $$    $$/ $$    $$/ $$ | $/  $$ |$$    $$/ $$    $$/ $$    $$/ $$    $$/ $$ |  $$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+    //  $$$$$$/   $$$$$$/  $$/      $$/ $$$$$$$/   $$$$$$/  $$$$$$$/   $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+    //                                                                                                                                                                                   //
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //  _______   _______         ________  __    __  _______    ______   _______   ________  //
+    // /       \ /       \       /        |/  |  /  |/       \  /      \ /       \ /        | //
+    // $$$$$$$  |$$$$$$$  |      $$$$$$$$/ $$ |  $$ |$$$$$$$  |/$$$$$$  |$$$$$$$  |$$$$$$$$/  //
+    // $$ |  $$ |$$ |__$$ |      $$ |__    $$  \/$$/ $$ |__$$ |$$ |  $$ |$$ |__$$ |   $$ |    //
+    // $$ |  $$ |$$    $$<       $$    |    $$  $$<  $$    $$/ $$ |  $$ |$$    $$<    $$ |    //
+    // $$ |  $$ |$$$$$$$  |      $$$$$/      $$$$  \ $$$$$$$/  $$ |  $$ |$$$$$$$  |   $$ |    //
+    // $$ |__$$ |$$ |__$$ |      $$ |_____  $$ /$$  |$$ |      $$ \__$$ |$$ |  $$ |   $$ |    //
+    // $$    $$/ $$    $$/       $$       |$$ |  $$ |$$ |      $$    $$/ $$ |  $$ |   $$ |    //
+    // $$$$$$$/  $$$$$$$/        $$$$$$$$/ $$/   $$/ $$/        $$$$$$/  $$/   $$/    $$/     //
+    //                                                                                        //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    private void exportToDB() 
+    {
+        exportBrandChanges();
+        // exportChipsetChanges();
+        // exportCPUChanges();
+        // exportGPUChanges();
+        // exportMotherboardChanges();
+        // exportSocketChanges();
+        // exportSocketToChipsetChanges();
+    }
+
+    private void exportBrandChanges() 
+    {   // Iterate through the brand table and export changes to the database
+        for (int row = 0; row < brandTableModel.getRowCount(); row++) 
+        {
+            int id = (int) brandTableModel.getValueAt(row, 0);
+            String name = (String) brandTableModel.getValueAt(row, 1);
+            // Update or insert the brand based on the ID
+            if (id > 0) 
+            {   // Update existing brand with ID
+                updateBrand(id, name);
+            } 
+            else 
+            {   // Insert new brand
+                insertBrand(name);
+            }
         }
     }
 
-    private void updateCPU() {
-        int selectedRow = cpuTable.getSelectedRow();
-        if (selectedRow != -1) {
-            int cpuId = (int) cpuTableModel.getValueAt(selectedRow, 0);
 
-            // Get input values from text fields and combo boxes
-            String model = cpuModelField.getText();
-            double price = Double.parseDouble(cpuPriceField.getText());
-            int cores = Integer.parseInt(cpuCoresField.getText());
-            int threads = Integer.parseInt(cpuThreadsField.getText());
-            int frequency = Integer.parseInt(cpuFrequencyField.getText());
-            ClassBrand selectedBrand = getSelectedBrand();
-            ClassSocket selectedSocket = getSelectedSocket();
-
-            // Create a new CPU object with the updated values
-            ClassCPU cpu = new ClassCPU(model, price, cores, threads, frequency, selectedBrand, selectedSocket);
-
-            // Update the CPU in the database (implement this based on your database access code)
-            // ...
-
-            // Clear input fields after updating the CPU
-            clearCPUInputFields();
-
-            // Refresh the CPU table
-            refreshCPUTable();
+    // Implement similar export methods for other tables
+    private void updateBrand(int id, String name) {
+        Session session = null;
+        Transaction transaction = null;
+    
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+    
+            ClassBrand brand = session.get(ClassBrand.class, id);
+            if (brand != null) {
+                brand.setName(name);
+                session.update(brand);
+            }
+    
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+    
+    private void insertBrand(String name) {
+        Session session = null;
+        Transaction transaction = null;
+    
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+    
+            ClassBrand brand = new ClassBrand();
+            brand.setName(name);
+            session.save(brand);
+    
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
-    private void addGPU() {
-        // Implement GPU addition logic
-    }
-
-    private void deleteGPU() {
-        // Implement GPU deletion logic
-    }
-
-    private void updateGPU() {
-        // Implement GPU update logic
-    }
-
-    private void addMotherboard() {
-        // Implement motherboard addition logic
-    }
-
-    private void deleteMotherboard() {
-        // Implement motherboard deletion logic
-    }
-
-    private void updateMotherboard() {
-        // Implement motherboard update logic
-    }
-
-    private void addSocket() {
-        // Implement socket addition logic
-    }
-
-    private void deleteSocket() {
-        // Implement socket deletion logic
-    }
-
-    private void updateSocket() {
-        // Implement socket update logic
-    }
-
-    private void addSocketToChipset() {
-        // Implement socket-to-chipset addition logic
-    }
-
-    private void deleteSocketToChipset() {
-        // Implement socket-to-chipset deletion logic
-    }
-
-    private void updateSocketToChipset() {
-        // Implement socket-to-chipset update logic
-    }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1068,7 +1171,7 @@ public class DBMSApp extends JFrame
     // $$/   $$/ $$$$$$$$/ $$$$$$$$/ $$/       $$$$$$$$/ $$/   $$/       $$/      $$/ $$$$$$$$/    $$/    $$/   $$/  $$$$$$/  $$$$$$$/   $$$$$$/   //
     //                                                                                                                                             //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void clearCPUInputFields() 
+    private void clearCPUFields() 
     {
         cpuModelField.setText("");
         cpuPriceField.setText("");
@@ -1077,6 +1180,8 @@ public class DBMSApp extends JFrame
         cpuFrequencyField.setText("");
         cpuBrandComboBox.setSelectedIndex(-1);
         cpuSocketComboBox.setSelectedIndex(-1);
+        // cpuBrandComboBox.setSelectedIndex(0);
+        // cpuSocketComboBox.setSelectedIndex(0);
     }
 
     private void refreshCPUTable() 
@@ -1086,17 +1191,18 @@ public class DBMSApp extends JFrame
         List<ClassCPU> cpus = retrieveCPUs();
         for (ClassCPU cpu : cpus) 
         {
-            cpuTableModel.addRow(new Object[]{cpu.getId(), cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(), cpu.getFrequency(), cpu.getBrand().getId(), cpu.getSocket().getId()});
+            cpuTableModel.addRow(new Object[]{cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(), cpu.getFrequency(), cpu.getBrand().getName(), cpu.getSocket().getName()});
         }
     }
 
     // Helper method to create a panel with buttons
-    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton) 
+    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton, JButton dbexport) 
     {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(updateButton);
+        buttonPanel.add(dbexport);
         return buttonPanel;
     }
 
@@ -1154,9 +1260,4 @@ public class DBMSApp extends JFrame
             }
         });
     }
-
-    // public static void main(String[] args) 
-    // {
-    //     SwingUtilities.invokeLater(DBMSApp::new);
-    // }
 }
