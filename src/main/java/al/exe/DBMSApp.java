@@ -445,6 +445,20 @@ public class DBMSApp extends JFrame
         populateTables();
 
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______   ________  ______   _______   ________                   ______    ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        //  /      \ /        |/      \ /       \ /        |                 /      \  /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // /$$$$$$  |$$$$$$$$//$$$$$$  |$$$$$$$  |$$$$$$$$/        __       /$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$/ /$$$$$$  |$$  \ $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ \__$$/    $$ |  $$ |__$$ |$$ |__$$ |   $$ |         /  |      $$ |__$$ |$$ |  $$/    $$ |     $$ |  $$ |  $$ |$$$  \$$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$      \    $$ |  $$    $$ |$$    $$<    $$ |         $$/       $$    $$ |$$ |         $$ |     $$ |  $$ |  $$ |$$$$  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        //  $$$$$$  |   $$ |  $$$$$$$$ |$$$$$$$  |   $$ |          __       $$$$$$$$ |$$ |   __    $$ |     $$ |  $$ |  $$ |$$ $$ $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // /  \__$$ |   $$ |  $$ |  $$ |$$ |  $$ |   $$ |         /  |      $$ |  $$ |$$ \__/  |   $$ |    _$$ |_ $$ \__$$ |$$ |$$$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$    $$/    $$ |  $$ |  $$ |$$ |  $$ |   $$ |         $$/       $$ |  $$ |$$    $$/    $$ |   / $$   |$$    $$/ $$ | $$$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        //  $$$$$$/     $$/   $$/   $$/ $$/   $$/    $$/                    $$/   $$/  $$$$$$/     $$/    $$$$$$/  $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                                                                                           //
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //   ______   _______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
         //  /      \ /       \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
@@ -457,8 +471,6 @@ public class DBMSApp extends JFrame
         //  $$$$$$/  $$/        $$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                              //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        // Add CPU listener
         addCPUButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
@@ -484,7 +496,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        // Update CPU listener
         updateCPUButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
@@ -542,7 +553,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        // Delete CPU listener
         deleteCPUButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
@@ -572,7 +582,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        // CPU data PDF export listener
         pdfExportCPUButton.addActionListener(new ActionListener() 
         {
             @Override
@@ -676,7 +685,6 @@ public class DBMSApp extends JFrame
         //  $$$$$$/  $$/        $$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                              //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Add GPU listener
         addGPUButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
@@ -701,7 +709,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        // Update GPU listener
         updateGPUButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
@@ -757,7 +764,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        // Delete GPU listener
         deleteGPUButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
@@ -787,7 +793,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        // GPU data PDF export listener
         pdfExportGPUButton.addActionListener(new ActionListener() 
         {
             @Override
@@ -893,7 +898,6 @@ public class DBMSApp extends JFrame
         // $$/        $$$$$$/  $$$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                              //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         addPCBButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
@@ -917,7 +921,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        // Update GPU listener
         updatePCBButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
@@ -968,7 +971,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        // Delete GPU listener
         deletePCBButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
@@ -998,7 +1000,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        // GPU data PDF export listener
         pdfExportPCBButton.addActionListener(new ActionListener() 
         {
             @Override
@@ -1071,13 +1072,13 @@ public class DBMSApp extends JFrame
                         }
                         document.add(pdfTable);
                         document.close();
-                        JOptionPane.showMessageDialog(gpuPanel, "Exported table data to " + fileName);
+                        JOptionPane.showMessageDialog(pcbPanel, "Exported table data to " + fileName);
                     }
                 }
                 catch (Exception ex)
                 {
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(gpuPanel, "Error exporting table data to PDF");
+                    JOptionPane.showMessageDialog(pcbPanel, "Error exporting table data to PDF");
                 }
             }
         });
@@ -1091,6 +1092,980 @@ public class DBMSApp extends JFrame
         });
 
         
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  _______   _______    ______   __    __  _______         __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        // /       \ /       \  /      \ /  \  /  |/       \       /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // $$$$$$$  |$$$$$$$  |/$$$$$$  |$$  \ $$ |$$$$$$$  |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ |__$$ |$$ |__$$ |$$ |__$$ |$$$  \$$ |$$ |  $$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$    $$< $$    $$< $$    $$ |$$$$  $$ |$$ |  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$$$$$$  |$$$$$$$  |$$$$$$$$ |$$ $$ $$ |$$ |  $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ |__$$ |$$ |  $$ |$$ |  $$ |$$ |$$$$ |$$ |__$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$    $$/ $$ |  $$ |$$ |  $$ |$$ | $$$ |$$    $$/       $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        // $$$$$$$/  $$/   $$/ $$/   $$/ $$/   $$/ $$$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                  //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        addBrandButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to add new data to the table PCB");
+                if (brandNameField.getText().isBlank())
+                {
+                    JOptionPane.showMessageDialog(brandPanel, "You must fill all text fields first!");
+                }
+                else
+                {
+                    String name = brandNameField.getText();
+                    Object[] rowData = {name};
+                    brandTableModel.addRow(rowData);
+                }
+            }
+        });
+
+        updateBrandButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to update data");
+                int row = brandTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        try 
+                        {
+                            checkIfEmpty(brandNameField);
+                            String name = brandNameField.getText();
+                            brandTable.setValueAt(name, row, 0);
+                        }
+                        catch(NullPointerException ex) 
+                        {
+                            JOptionPane.showMessageDialog(brandPanel, "You must fill all text fields first!");
+                        }
+                        catch(TextFieldException myEx) 
+                        {
+                            JOptionPane.showMessageDialog(brandPanel, "You must fill all text fields first!");
+                        }
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(brandPanel, "Сan't update any record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        deleteBrandButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to delete record in your table");
+                int row = brandTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        System.out.println("User clicked YES");
+                        brandTableModel.removeRow(row);
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(brandPanel, "Сan't delete record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        pdfExportBrandButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to export data to PDF document");
+                try 
+                {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // Set default folder to current directory
+                    fileChooser.setCurrentDirectory(new File("."));
+                    // Set default file name
+                    fileChooser.setSelectedFile(new File("../../../../../exported_Brands.pdf"));
+                    int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) 
+                    {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String fileName = selectedFile.getAbsolutePath();
+                        // Append .pdf extension if necessary
+                        if (!fileName.endsWith(".pdf")) 
+                        {
+                            fileName += ".pdf";
+                        }
+                        Document document = new Document();
+                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        document.open();
+                        PdfPTable pdfTable = new PdfPTable(brandTable.getColumnCount());
+                        
+                        // Create font for table headers
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        String[] headersPdfExport = {"\nBrand name\n\n"};
+
+                        // Set column headers
+                        for (int i = 0; i < brandTable.getColumnCount(); i++) 
+                        {
+                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
+                            header.setBackgroundColor(BaseColor.ORANGE);
+                            header.setBorderWidth(2);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            // Give more weight to the first row
+                            pdfTable.addCell(header);
+                        }
+                        
+                        // Create font for table data
+                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
+                        
+                        // Set custom widths for each row 
+                        float[] columnWidths = {1f};
+                        pdfTable.setWidths(columnWidths);
+                        
+                        // Add table data
+                        for (int i = 0; i < brandTable.getRowCount(); i++) 
+                        {
+                            for (int j = 0; j < brandTable.getColumnCount(); j++) 
+                            {
+                                PdfPCell data = new PdfPCell(new Phrase(brandTable.getValueAt(i, j).toString(), dataFont));
+                                if (i % 2 == 1)
+                                {
+                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                                }
+                                else
+                                {
+                                    data.setBackgroundColor(BaseColor.WHITE);
+                                }
+                                data.setBorderWidth(1);
+                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                pdfTable.addCell(data);
+                            }
+                        }
+                        document.add(pdfTable);
+                        document.close();
+                        JOptionPane.showMessageDialog(brandPanel, "Exported table data to " + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(brandPanel, "Error exporting table data to PDF");
+                }
+            }
+        });
+        
+        commitBrandButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+            }
+        });
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______    ______    ______   __    __  ________  ________        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        //  /      \  /      \  /      \ /  |  /  |/        |/        |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // /$$$$$$  |/$$$$$$  |/$$$$$$  |$$ | /$$/ $$$$$$$$/ $$$$$$$$/       $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ \__$$/ $$ |  $$ |$$ |  $$/ $$ |/$$/  $$ |__       $$ |         $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$      \ $$ |  $$ |$$ |      $$  $$<   $$    |      $$ |         $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        //  $$$$$$  |$$ |  $$ |$$ |   __ $$$$$  \  $$$$$/       $$ |         $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // /  \__$$ |$$ \__$$ |$$ \__/  |$$ |$$  \ $$ |_____    $$ |         $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$    $$/ $$    $$/ $$    $$/ $$ | $$  |$$       |   $$ |         $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        //  $$$$$$/   $$$$$$/   $$$$$$/  $$/   $$/ $$$$$$$$/    $$/          $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                            //
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        addSocketButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to add new data to the table PCB");
+                if (socketNameField.getText().isBlank())
+                {
+                    JOptionPane.showMessageDialog(socketPanel, "You must fill all text fields first!");
+                }
+                else
+                {
+                    String name = socketNameField.getText();
+                    Object[] rowData = {name};
+                    socketTableModel.addRow(rowData);
+                }
+            }
+        });
+
+        updateSocketButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to update data");
+                int row = socketTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(socketPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        try 
+                        {
+                            checkIfEmpty(socketNameField);
+                            String name = socketNameField.getText();
+                            socketTable.setValueAt(name, row, 0);
+                        }
+                        catch(NullPointerException ex) 
+                        {
+                            JOptionPane.showMessageDialog(socketPanel, "You must fill all text fields first!");
+                        }
+                        catch(TextFieldException myEx) 
+                        {
+                            JOptionPane.showMessageDialog(socketPanel, "You must fill all text fields first!");
+                        }
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(socketPanel, "Сan't update any record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        deleteSocketButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to delete record in your table");
+                int row = socketTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(socketPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        System.out.println("User clicked YES");
+                        socketTableModel.removeRow(row);
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(socketPanel, "Сan't delete record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        pdfExportSocketButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to export data to PDF document");
+                try 
+                {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // Set default folder to current directory
+                    fileChooser.setCurrentDirectory(new File("."));
+                    // Set default file name
+                    fileChooser.setSelectedFile(new File("../../../../../exported_Sockets.pdf"));
+                    int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) 
+                    {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String fileName = selectedFile.getAbsolutePath();
+                        // Append .pdf extension if necessary
+                        if (!fileName.endsWith(".pdf")) 
+                        {
+                            fileName += ".pdf";
+                        }
+                        Document document = new Document();
+                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        document.open();
+                        PdfPTable pdfTable = new PdfPTable(socketTable.getColumnCount());
+                        
+                        // Create font for table headers
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        String[] headersPdfExport = {"\nSocket name\n\n"};
+
+                        // Set column headers
+                        for (int i = 0; i < socketTable.getColumnCount(); i++) 
+                        {
+                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
+                            header.setBackgroundColor(BaseColor.ORANGE);
+                            header.setBorderWidth(2);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            // Give more weight to the first row
+                            pdfTable.addCell(header);
+                        }
+                        
+                        // Create font for table data
+                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
+                        
+                        // Set custom widths for each row 
+                        float[] columnWidths = {1f};
+                        pdfTable.setWidths(columnWidths);
+                        
+                        // Add table data
+                        for (int i = 0; i < socketTable.getRowCount(); i++) 
+                        {
+                            for (int j = 0; j < socketTable.getColumnCount(); j++) 
+                            {
+                                PdfPCell data = new PdfPCell(new Phrase(socketTable.getValueAt(i, j).toString(), dataFont));
+                                if (i % 2 == 1)
+                                {
+                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                                }
+                                else
+                                {
+                                    data.setBackgroundColor(BaseColor.WHITE);
+                                }
+                                data.setBorderWidth(1);
+                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                pdfTable.addCell(data);
+                            }
+                        }
+                        document.add(pdfTable);
+                        document.close();
+                        JOptionPane.showMessageDialog(socketPanel, "Exported table data to " + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(socketPanel, "Error exporting table data to PDF");
+                }
+            }
+        });
+        
+        commitSocketButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+            }
+        });
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______   __    __  ______  _______    ______   ________  ________        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        //  /      \ /  |  /  |/      |/       \  /      \ /        |/        |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // /$$$$$$  |$$ |  $$ |$$$$$$/ $$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$$$/       $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ |  $$/ $$ |__$$ |  $$ |  $$ |__$$ |$$ \__$$/ $$ |__       $$ |         $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$ |      $$    $$ |  $$ |  $$    $$/ $$      \ $$    |      $$ |         $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$ |   __ $$$$$$$$ |  $$ |  $$$$$$$/   $$$$$$  |$$$$$/       $$ |         $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ \__/  |$$ |  $$ | _$$ |_ $$ |      /  \__$$ |$$ |_____    $$ |         $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$    $$/ $$ |  $$ |/ $$   |$$ |      $$    $$/ $$       |   $$ |         $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        //  $$$$$$/  $$/   $$/ $$$$$$/ $$/        $$$$$$/  $$$$$$$$/    $$/          $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                                    //
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        addChipsetButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to add new data to the table PCB");
+                if (chipsetNameField.getText().isBlank())
+                {
+                    JOptionPane.showMessageDialog(chipsetPanel, "You must fill all text fields first!");
+                }
+                else
+                {
+                    String name = chipsetNameField.getText();
+                    Object[] rowData = {name};
+                    chipsetTableModel.addRow(rowData);
+                }
+            }
+        });
+
+        updateChipsetButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to update data");
+                int row = chipsetTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(chipsetPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        try 
+                        {
+                            checkIfEmpty(chipsetNameField);
+                            String name = chipsetNameField.getText();
+                            chipsetTable.setValueAt(name, row, 0);
+                        }
+                        catch(NullPointerException ex) 
+                        {
+                            JOptionPane.showMessageDialog(chipsetPanel, "You must fill all text fields first!");
+                        }
+                        catch(TextFieldException myEx) 
+                        {
+                            JOptionPane.showMessageDialog(chipsetPanel, "You must fill all text fields first!");
+                        }
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(chipsetPanel, "Сan't update any record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        deleteChipsetButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to delete record in your table");
+                int row = chipsetTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(chipsetPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        System.out.println("User clicked YES");
+                        chipsetTableModel.removeRow(row);
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(chipsetPanel, "Сan't delete record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        pdfExportChipsetButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to export data to PDF document");
+                try 
+                {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // Set default folder to current directory
+                    fileChooser.setCurrentDirectory(new File("."));
+                    // Set default file name
+                    fileChooser.setSelectedFile(new File("../../../../../exported_Chipsets.pdf"));
+                    int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) 
+                    {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String fileName = selectedFile.getAbsolutePath();
+                        // Append .pdf extension if necessary
+                        if (!fileName.endsWith(".pdf"))
+                        {
+                            fileName += ".pdf";
+                        }
+                        Document document = new Document();
+                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        document.open();
+                        PdfPTable pdfTable = new PdfPTable(chipsetTable.getColumnCount());
+                        
+                        // Create font for table headers
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        String[] headersPdfExport = {"\nChipset name\n\n"};
+
+                        // Set column headers
+                        for (int i = 0; i < chipsetTable.getColumnCount(); i++) 
+                        {
+                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
+                            header.setBackgroundColor(BaseColor.ORANGE);
+                            header.setBorderWidth(2);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            // Give more weight to the first row
+                            pdfTable.addCell(header);
+                        }
+                        
+                        // Create font for table data
+                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
+                        
+                        // Set custom widths for each row 
+                        float[] columnWidths = {1f};
+                        pdfTable.setWidths(columnWidths);
+                        
+                        // Add table data
+                        for (int i = 0; i < chipsetTable.getRowCount(); i++) 
+                        {
+                            for (int j = 0; j < chipsetTable.getColumnCount(); j++) 
+                            {
+                                PdfPCell data = new PdfPCell(new Phrase(chipsetTable.getValueAt(i, j).toString(), dataFont));
+                                if (i % 2 == 1)
+                                {
+                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                                }
+                                else
+                                {
+                                    data.setBackgroundColor(BaseColor.WHITE);
+                                }
+                                data.setBorderWidth(1);
+                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                pdfTable.addCell(data);
+                            }
+                        }
+                        document.add(pdfTable);
+                        document.close();
+                        // JOptionPane.showMessageDialog(chipsetPanel, "Exported table data to " + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(chipsetPanel, "Error exporting table data to PDF");
+                }
+            }
+        });
+        
+        commitChipsetButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+            }
+        });
+
+
+
+        
+        addPCBButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to add new data to the table PCB");
+                if (pcbModelField.getText().isBlank() || pcbPriceField.getText().isBlank())
+                {
+                    JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
+                }
+                else
+                {
+                    String model = pcbModelField.getText();
+                    double price = Double.parseDouble(pcbPriceField.getText());
+                    String brand = pcbBrandComboBox.getSelectedItem().toString();
+                    String socket = pcbSocketComboBox.getSelectedItem().toString();
+                    String chipset= pcbChipsetComboBox.getSelectedItem().toString();
+                    Object[] rowData = {model, price, brand, socket, chipset};
+                    pcbTableModel.addRow(rowData);
+                }
+            }
+        });
+
+        updatePCBButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to update data");
+                int row = pcbTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        try 
+                        {
+                            checkIfEmpty(pcbModelField);
+                            checkIfEmpty(pcbPriceField);
+                            String model = pcbModelField.getText();
+                            double price = Double.parseDouble(pcbPriceField.getText());
+                            String brand = pcbBrandComboBox.getSelectedItem().toString();
+                            String socket = pcbSocketComboBox.getSelectedItem().toString();
+                            String chipset = pcbChipsetComboBox.getSelectedItem().toString();
+                            pcbTable.setValueAt(model, row, 0);
+                            pcbTable.setValueAt(price, row, 1);
+                            pcbTable.setValueAt(brand, row, 2);
+                            pcbTable.setValueAt(socket, row, 3);
+                            pcbTable.setValueAt(chipset, row, 4);
+                        }
+                        catch(NullPointerException ex) 
+                        {
+                            JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
+                        }
+                        catch(TextFieldException myEx) 
+                        {
+                            JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
+                        }
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(pcbPanel, "Сan't update any record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        deletePCBButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to delete record in your table");
+                int row = pcbTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        System.out.println("User clicked YES");
+                        pcbTableModel.removeRow(row);
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(pcbPanel, "Сan't delete record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        pdfExportPCBButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to export data to PDF document");
+                try 
+                {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // Set default folder to current directory
+                    fileChooser.setCurrentDirectory(new File("."));
+                    // Set default file name
+                    fileChooser.setSelectedFile(new File("../../../../../exported_PCBs.pdf"));
+                    int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) 
+                    {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String fileName = selectedFile.getAbsolutePath();
+                        // Append .pdf extension if necessary
+                        if (!fileName.endsWith(".pdf")) 
+                        {
+                            fileName += ".pdf";
+                        }
+                        Document document = new Document();
+                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        document.open();
+                        PdfPTable pdfTable = new PdfPTable(pcbTable.getColumnCount());
+                        
+                        // Create font for table headers
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        String[] headersPdfExport = {"\nModel\n\n", "\nPrice", "\nBrand", "\nSocket", "\nChipset"};
+
+                        // Set column headers
+                        for (int i = 0; i < pcbTable.getColumnCount(); i++) 
+                        {
+                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
+                            header.setBackgroundColor(BaseColor.ORANGE);
+                            header.setBorderWidth(2);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            // Give more weight to the first row
+                            pdfTable.addCell(header);
+                        }
+                        
+                        // Create font for table data
+                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
+                        
+                        // Set custom widths for each row 
+                        float[] columnWidths = {0.26f, 0.13f, 0.11f, 0.13f, 0.16f};
+                        pdfTable.setWidths(columnWidths);
+                        
+                        // Add table data
+                        for (int i = 0; i < pcbTable.getRowCount(); i++) 
+                        {
+                            for (int j = 0; j < pcbTable.getColumnCount(); j++) 
+                            {
+                                PdfPCell data = new PdfPCell(new Phrase(pcbTable.getValueAt(i, j).toString(), dataFont));
+                                if (i % 2 == 1)
+                                {
+                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                                }
+                                else
+                                {
+                                    data.setBackgroundColor(BaseColor.WHITE);
+                                }
+                                data.setBorderWidth(1);
+                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                pdfTable.addCell(data);
+                            }
+                        }
+                        document.add(pdfTable);
+                        document.close();
+                        JOptionPane.showMessageDialog(pcbPanel, "Exported table data to " + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(pcbPanel, "Error exporting table data to PDF");
+                }
+            }
+        });
+        
+        commitPCBButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+            }
+        });
+        
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______    ______    ______   __    __  ________  ________        ________  ______          ______   __    __  ______  _______    ______   ________  ________        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        //  /      \  /      \  /      \ /  |  /  |/        |/        |      /        |/      \        /      \ /  |  /  |/      |/       \  /      \ /        |/        |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // /$$$$$$  |/$$$$$$  |/$$$$$$  |$$ | /$$/ $$$$$$$$/ $$$$$$$$/       $$$$$$$$//$$$$$$  |      /$$$$$$  |$$ |  $$ |$$$$$$/ $$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$$$/       $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ \__$$/ $$ |  $$ |$$ |  $$/ $$ |/$$/  $$ |__       $$ |            $$ |  $$ |  $$ |      $$ |  $$/ $$ |__$$ |  $$ |  $$ |__$$ |$$ \__$$/ $$ |__       $$ |         $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$      \ $$ |  $$ |$$ |      $$  $$<   $$    |      $$ |            $$ |  $$ |  $$ |      $$ |      $$    $$ |  $$ |  $$    $$/ $$      \ $$    |      $$ |         $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        //  $$$$$$  |$$ |  $$ |$$ |   __ $$$$$  \  $$$$$/       $$ |            $$ |  $$ |  $$ |      $$ |   __ $$$$$$$$ |  $$ |  $$$$$$$/   $$$$$$  |$$$$$/       $$ |         $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // /  \__$$ |$$ \__$$ |$$ \__/  |$$ |$$  \ $$ |_____    $$ |            $$ |  $$ \__$$ |      $$ \__/  |$$ |  $$ | _$$ |_ $$ |      /  \__$$ |$$ |_____    $$ |         $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$    $$/ $$    $$/ $$    $$/ $$ | $$  |$$       |   $$ |            $$ |  $$    $$/       $$    $$/ $$ |  $$ |/ $$   |$$ |      $$    $$/ $$       |   $$ |         $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        //  $$$$$$/   $$$$$$/   $$$$$$/  $$/   $$/ $$$$$$$$/    $$/             $$/    $$$$$$/         $$$$$$/  $$/   $$/ $$$$$$/ $$/        $$$$$$/  $$$$$$$$/    $$/          $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                                                                                                                               //
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        addSocketToChipsetButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to add new data to the table PCB");
+                String socket = compatibilitySocketComboBox.getSelectedItem().toString();
+                String chipset= compatibilityChipsetComboBox.getSelectedItem().toString();
+                Object[] rowData = {socket, chipset};
+                socketToChipsetTableModel.addRow(rowData);
+            }
+        });
+
+        updateSocketToChipsetButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to update data");
+                int row = socketToChipsetTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(socketToChipsetPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        try 
+                        {
+                            String socket = compatibilitySocketComboBox.getSelectedItem().toString();
+                            String chipset = compatibilityChipsetComboBox.getSelectedItem().toString();
+                            socketToChipsetTable.setValueAt(socket, row, 0);
+                            socketToChipsetTable.setValueAt(chipset, row, 1);
+                        }
+                        catch(NullPointerException ex) 
+                        {
+                            JOptionPane.showMessageDialog(socketToChipsetPanel, "You must fill all text fields first!");
+                        }
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(socketToChipsetPanel, "Сan't update any record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        deleteSocketToChipsetButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to delete record in your table");
+                int row = socketToChipsetTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(socketToChipsetPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        System.out.println("User clicked YES");
+                        socketToChipsetTableModel.removeRow(row);
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(socketToChipsetPanel, "Сan't delete record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        pdfExportSocketToChipsetButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to export data to PDF document");
+                try 
+                {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // Set default folder to current directory
+                    fileChooser.setCurrentDirectory(new File("."));
+                    // Set default file name
+                    fileChooser.setSelectedFile(new File("../../../../../exported_Compatibilities.pdf"));
+                    int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) 
+                    {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String fileName = selectedFile.getAbsolutePath();
+                        // Append .pdf extension if necessary
+                        if (!fileName.endsWith(".pdf")) 
+                        {
+                            fileName += ".pdf";
+                        }
+                        Document document = new Document();
+                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        document.open();
+                        PdfPTable pdfTable = new PdfPTable(socketToChipsetTable.getColumnCount());
+                        
+                        // Create font for table headers
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        String[] headersPdfExport = {"\nSocket\n\n", "\nChipset"};
+
+                        // Set column headers
+                        for (int i = 0; i < socketToChipsetTable.getColumnCount(); i++) 
+                        {
+                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
+                            header.setBackgroundColor(BaseColor.ORANGE);
+                            header.setBorderWidth(2);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            // Give more weight to the first row
+                            pdfTable.addCell(header);
+                        }
+                        
+                        // Create font for table data
+                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
+                        
+                        // Set custom widths for each row 
+                        float[] columnWidths = {0.5f, 0.5f};
+                        pdfTable.setWidths(columnWidths);
+                        
+                        // Add table data
+                        for (int i = 0; i < socketToChipsetTable.getRowCount(); i++) 
+                        {
+                            for (int j = 0; j < socketToChipsetTable.getColumnCount(); j++) 
+                            {
+                                PdfPCell data = new PdfPCell(new Phrase(socketToChipsetTable.getValueAt(i, j).toString(), dataFont));
+                                if (i % 2 == 1)
+                                {
+                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                                }
+                                else
+                                {
+                                    data.setBackgroundColor(BaseColor.WHITE);
+                                }
+                                data.setBorderWidth(1);
+                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                pdfTable.addCell(data);
+                            }
+                        }
+                        document.add(pdfTable);
+                        document.close();
+                        JOptionPane.showMessageDialog(socketToChipsetPanel, "Exported table data to " + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(socketToChipsetPanel, "Error exporting table data to PDF");
+                }
+            }
+        });
+        
+        commitSocketToChipsetButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+            }
+        });
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  ________  __    __  _______                    ______    ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        // /        |/  \  /  |/       \                  /      \  /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // $$$$$$$$/ $$  \ $$ |$$$$$$$  |       __       /$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$/ /$$$$$$  |$$  \ $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ |__    $$$  \$$ |$$ |  $$ |      /  |      $$ |__$$ |$$ |  $$/    $$ |     $$ |  $$ |  $$ |$$$  \$$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$    |   $$$$  $$ |$$ |  $$ |      $$/       $$    $$ |$$ |         $$ |     $$ |  $$ |  $$ |$$$$  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$$$$/    $$ $$ $$ |$$ |  $$ |       __       $$$$$$$$ |$$ |   __    $$ |     $$ |  $$ |  $$ |$$ $$ $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ |_____ $$ |$$$$ |$$ |__$$ |      /  |      $$ |  $$ |$$ \__/  |   $$ |    _$$ |_ $$ \__$$ |$$ |$$$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$       |$$ | $$$ |$$    $$/       $$/       $$ |  $$ |$$    $$/    $$ |   / $$   |$$    $$/ $$ | $$$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        // $$$$$$$$/ $$/   $$/ $$$$$$$/                  $$/   $$/  $$$$$$/     $$/    $$$$$$/  $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                                                                        //
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //   ______   ________  __        ________   ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
         //  /      \ /        |/  |      /        | /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
