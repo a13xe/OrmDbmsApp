@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
@@ -443,20 +444,20 @@ public class DBMSApp extends JFrame
         // Populate tables
         populateTables();
 
-        
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //   ______   _______   _______        __  _______   ________  __        ________  ________  ________        __  __    __  _______   _______    ______   ________  ________        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
-        //  /      \ /       \ /       \      /  |/       \ /        |/  |      /        |/        |/        |      /  |/  |  /  |/       \ /       \  /      \ /        |/        |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
-        // /$$$$$$  |$$$$$$$  |$$$$$$$  |    /$$/ $$$$$$$  |$$$$$$$$/ $$ |      $$$$$$$$/ $$$$$$$$/ $$$$$$$$/      /$$/ $$ |  $$ |$$$$$$$  |$$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$$$/       $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
-        // $$ |__$$ |$$ |  $$ |$$ |  $$ |   /$$/  $$ |  $$ |$$ |__    $$ |      $$ |__       $$ |   $$ |__        /$$/  $$ |  $$ |$$ |__$$ |$$ |  $$ |$$ |__$$ |   $$ |   $$ |__          $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
-        // $$    $$ |$$ |  $$ |$$ |  $$ |  /$$/   $$ |  $$ |$$    |   $$ |      $$    |      $$ |   $$    |      /$$/   $$ |  $$ |$$    $$/ $$ |  $$ |$$    $$ |   $$ |   $$    |         $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
-        // $$$$$$$$ |$$ |  $$ |$$ |  $$ | /$$/    $$ |  $$ |$$$$$/    $$ |      $$$$$/       $$ |   $$$$$/      /$$/    $$ |  $$ |$$$$$$$/  $$ |  $$ |$$$$$$$$ |   $$ |   $$$$$/          $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
-        // $$ |  $$ |$$ |__$$ |$$ |__$$ |/$$/     $$ |__$$ |$$ |_____ $$ |_____ $$ |_____    $$ |   $$ |_____  /$$/     $$ \__$$ |$$ |      $$ |__$$ |$$ |  $$ |   $$ |   $$ |_____       $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
-        // $$ |  $$ |$$    $$/ $$    $$//$$/      $$    $$/ $$       |$$       |$$       |   $$ |   $$       |/$$/      $$    $$/ $$ |      $$    $$/ $$ |  $$ |   $$ |   $$       |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
-        // $$/   $$/ $$$$$$$/  $$$$$$$/ $$/       $$$$$$$/  $$$$$$$$/ $$$$$$$$/ $$$$$$$$/    $$/    $$$$$$$$/ $$/        $$$$$$/  $$/       $$$$$$$/  $$/   $$/    $$/    $$$$$$$$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
-        //                                                                                                                                                                                                                                                                         //
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______   _______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        //  /      \ /       \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // /$$$$$$  |$$$$$$$  |$$ |  $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ |  $$/ $$ |__$$ |$$ |  $$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$ |      $$    $$/ $$ |  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$ |   __ $$$$$$$/  $$ |  $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ \__/  |$$ |      $$ \__$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$    $$/ $$ |      $$    $$/       $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        //  $$$$$$/  $$/        $$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                              //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         // Add CPU listener
         addCPUButton.addActionListener(new ActionListener() 
         {
@@ -482,6 +483,7 @@ public class DBMSApp extends JFrame
                 }
             }
         });
+
         // Update CPU listener
         updateCPUButton.addActionListener(new ActionListener() 
         {
@@ -497,7 +499,7 @@ public class DBMSApp extends JFrame
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        try 
+                        try
                         {
                             checkIfEmpty(cpuModelField);
                             checkIfEmpty(cpuPriceField);
@@ -512,11 +514,11 @@ public class DBMSApp extends JFrame
                             int frequency = Integer.parseInt(cpuFrequencyField.getText());
                             String socket = cpuSocketComboBox.getSelectedItem().toString();
                             cpuTableModel.setValueAt(model, row, 0);
-                            cpuTableModel.setValueAt(brand, row, 1);
-                            cpuTableModel.setValueAt(price, row, 2);
-                            cpuTableModel.setValueAt(cores, row, 3);
-                            cpuTableModel.setValueAt(threads, row, 4);
-                            cpuTableModel.setValueAt(frequency, row, 5);
+                            cpuTableModel.setValueAt(price, row, 1);
+                            cpuTableModel.setValueAt(cores, row, 2);
+                            cpuTableModel.setValueAt(threads, row, 3);
+                            cpuTableModel.setValueAt(frequency, row, 4);
+                            cpuTableModel.setValueAt(brand, row, 5);
                             cpuTableModel.setValueAt(socket, row, 6);
                         }
                         catch(NullPointerException ex) 
@@ -584,7 +586,7 @@ public class DBMSApp extends JFrame
                     // Set default folder to current directory
                     fileChooser.setCurrentDirectory(new File("."));
                     // Set default file name
-                    fileChooser.setSelectedFile(new File("../../../../../ExportedPDFs/cpu_exp.pdf"));
+                    fileChooser.setSelectedFile(new File("../../../../../exported_CPUs.pdf"));
                     int result = fileChooser.showSaveDialog(null);
                     if (result == JFileChooser.APPROVE_OPTION) 
                     {
@@ -643,263 +645,452 @@ public class DBMSApp extends JFrame
                         }
                         document.add(pdfTable);
                         document.close();
-                        JOptionPane.showMessageDialog(null, "Exported table data to " + fileName);
+                        JOptionPane.showMessageDialog(cpuPanel, "Exported table data to " + fileName);
                     }
                 }
                 catch (Exception ex)
                 {
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error exporting table data to PDF");
+                    JOptionPane.showMessageDialog(cpuPanel, "Error exporting table data to PDF");
                 }
             }
         });
 
-        
         commitCPUButton.addActionListener(new ActionListener() 
         {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                // Export CPU data from the JTable to the database
-                int rowCount = cpuTableModel.getRowCount();
-                for (int i = 0; i < rowCount; i++) 
-                {
-                    String model = (String) cpuTableModel.getValueAt(i, 0);
-                    double price = (double) cpuTableModel.getValueAt(i, 1);
-                    int cores = (int) cpuTableModel.getValueAt(i, 2);
-                    int threads = (int) cpuTableModel.getValueAt(i, 3);
-                    int frequency = (int) cpuTableModel.getValueAt(i, 4);
-                    int brandId = (int) cpuTableModel.getValueAt(i, 5);
-                    int socketId = (int) cpuTableModel.getValueAt(i, 6);
-                    // Export the CPU data to the database
-                }
-
-                // Display a message indicating that the data has been committed
-                JOptionPane.showMessageDialog(null, "CPU table has been committed to the database.");
             }
         });
 
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______   _______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        //  /      \ /       \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // /$$$$$$  |$$$$$$$  |$$ |  $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ | _$$/ $$ |__$$ |$$ |  $$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$ |/    |$$    $$/ $$ |  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$ |$$$$ |$$$$$$$/  $$ |  $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ \__$$ |$$ |      $$ \__$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$    $$/ $$ |      $$    $$/       $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        //  $$$$$$/  $$/        $$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                              //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Add GPU listener
+        addGPUButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to add new data to the table GPU");
+                if (gpuModelField.getText().isBlank() || gpuPriceField.getText().isBlank() || gpuFrequencyField.getText().isBlank() || gpuCoresField.getText().isBlank() || gpuMemoryField.getText().isBlank())
+                {
+                    JOptionPane.showMessageDialog(gpuPanel, "You must fill all text fields first!");
+                }
+                else
+                {
+                    String model = gpuModelField.getText();
+                    double price = Double.parseDouble(gpuPriceField.getText());
+                    int cores = Integer.parseInt(gpuCoresField.getText());
+                    int memory = Integer.parseInt(gpuMemoryField.getText());
+                    int frequency = Integer.parseInt(gpuFrequencyField.getText());
+                    String brand = gpuBrandComboBox.getSelectedItem().toString();
+                    Object[] rowData = {model, price, cores, memory, frequency, brand};
+                    gpuTableModel.addRow(rowData);
+                }
+            }
+        });
+
+        // Update GPU listener
+        updateGPUButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to update data");
+                int row = gpuTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(gpuPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        try 
+                        {
+                            checkIfEmpty(gpuModelField);
+                            checkIfEmpty(gpuPriceField);
+                            checkIfEmpty(gpuCoresField);
+                            checkIfEmpty(gpuMemoryField);
+                            checkIfEmpty(gpuFrequencyField);
+                            String model = gpuModelField.getText();
+                            String brand = gpuBrandComboBox.getSelectedItem().toString();
+                            double price = Double.parseDouble(gpuPriceField.getText());
+                            int cores = Integer.parseInt(gpuCoresField.getText());
+                            int memory = Integer.parseInt(gpuMemoryField.getText());
+                            int frequency = Integer.parseInt(gpuFrequencyField.getText());
+                            gpuTable.setValueAt(model, row, 0);
+                            gpuTable.setValueAt(price, row, 1);
+                            gpuTable.setValueAt(cores, row, 2);
+                            gpuTable.setValueAt(memory, row, 3);
+                            gpuTable.setValueAt(frequency, row, 4);
+                            gpuTable.setValueAt(brand, row, 5);
+                        }
+                        catch(NullPointerException ex) 
+                        {
+                            JOptionPane.showMessageDialog(gpuPanel, "You must fill all text fields first!");
+                        }
+                        catch(TextFieldException myEx) 
+                        {
+                            JOptionPane.showMessageDialog(gpuPanel, "You must fill all text fields first!");
+                        }
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(gpuPanel, "Сan't update any record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        // Delete GPU listener
+        deleteGPUButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to delete record in your table");
+                int row = gpuTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(gpuPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        System.out.println("User clicked YES");
+                        gpuTableModel.removeRow(row);
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(gpuPanel, "Сan't delete record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        // GPU data PDF export listener
+        pdfExportGPUButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to export data to PDF document");
+                try 
+                {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // Set default folder to current directory
+                    fileChooser.setCurrentDirectory(new File("."));
+                    // Set default file name
+                    fileChooser.setSelectedFile(new File("../../../../../exported_GPUs.pdf"));
+                    int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) 
+                    {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String fileName = selectedFile.getAbsolutePath();
+                        // Append .pdf extension if necessary
+                        if (!fileName.endsWith(".pdf")) 
+                        {
+                            fileName += ".pdf";
+                        }
+                        Document document = new Document();
+                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        document.open();
+                        PdfPTable pdfTable = new PdfPTable(gpuTable.getColumnCount());
+                        
+                        // Create font for table headers
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        String[] headersPdfExport = {"\nModel\n\n", "\nPrice", "\nCores", "\nThreads", "\nFrequency", "\nBrand"};
+
+                        // Set column headers
+                        for (int i = 0; i < gpuTable.getColumnCount(); i++) 
+                        {
+                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
+                            header.setBackgroundColor(BaseColor.ORANGE);
+                            header.setBorderWidth(2);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            // Give more weight to the first row
+                            pdfTable.addCell(header);
+                        }
+                        
+                        // Create font for table data
+                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
+                        
+                        // Set custom widths for each row 
+                        float[] columnWidths = {0.25f, 0.12f, 0.1f, 0.12f, 0.15f, 0.1f};
+                        pdfTable.setWidths(columnWidths);
+                        
+                        // Add table data
+                        for (int i = 0; i < gpuTable.getRowCount(); i++) 
+                        {
+                            for (int j = 0; j < gpuTable.getColumnCount(); j++) 
+                            {
+                                PdfPCell data = new PdfPCell(new Phrase(gpuTable.getValueAt(i, j).toString(), dataFont));
+                                if (i % 2 == 1)
+                                {
+                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                                }
+                                else
+                                {
+                                    data.setBackgroundColor(BaseColor.WHITE);
+                                }
+                                data.setBorderWidth(1);
+                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                pdfTable.addCell(data);
+                            }
+                        }
+                        document.add(pdfTable);
+                        document.close();
+                        JOptionPane.showMessageDialog(gpuPanel, "Exported table data to " + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(gpuPanel, "Error exporting table data to PDF");
+                }
+            }
+        });
 
         
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //   ______    ______   __       __  _______    ______         _______    ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______         //
-        //  /      \  /      \ /  \     /  |/       \  /      \       /       \  /      \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \        //
-        // /$$$$$$  |/$$$$$$  |$$  \   /$$ |$$$$$$$  |/$$$$$$  |      $$$$$$$  |/$$$$$$  |$$ |  $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  |       //
-        // $$ |  $$/ $$ |  $$ |$$$  \ /$$$ |$$ |__$$ |$$ |  $$ |      $$ |__$$ |$$ |  $$ |$$  \/$$/       $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/        //
-        // $$ |      $$ |  $$ |$$$$  /$$$$ |$$    $$< $$ |  $$ |      $$    $$< $$ |  $$ | $$  $$<        $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \        //
-        // $$ |   __ $$ |  $$ |$$ $$ $$/$$ |$$$$$$$  |$$ |  $$ |      $$$$$$$  |$$ |  $$ |  $$$$  \       $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  |       //
-        // $$ \__/  |$$ \__$$ |$$ |$$$/ $$ |$$ |__$$ |$$ \__$$ |      $$ |__$$ |$$ \__$$ | $$ /$$  |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ |       //
-        // $$    $$/ $$    $$/ $$ | $/  $$ |$$    $$/ $$    $$/       $$    $$/ $$    $$/ $$ |  $$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/        //
-        //  $$$$$$/   $$$$$$/  $$/      $$/ $$$$$$$/   $$$$$$/        $$$$$$$/   $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/         //
-        //                                                                                                                                                                                               //
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Add listener for brand combo box
-        cpuBrandComboBox.addActionListener(new ActionListener() 
+        commitGPUButton.addActionListener(new ActionListener() 
         {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
             }
         });
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  _______    ______   _______         __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        // /       \  /      \ /       \       /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // $$$$$$$  |/$$$$$$  |$$$$$$$  |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ |__$$ |$$ |  $$/ $$ |__$$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$    $$/ $$ |      $$    $$<       $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$$$$$$/  $$ |   __ $$$$$$$  |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ |      $$ \__/  |$$ |__$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$ |      $$    $$/ $$    $$/       $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        // $$/        $$$$$$/  $$$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                              //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        addPCBButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to add new data to the table PCB");
+                if (pcbModelField.getText().isBlank() || pcbPriceField.getText().isBlank())
+                {
+                    JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
+                }
+                else
+                {
+                    String model = pcbModelField.getText();
+                    double price = Double.parseDouble(pcbPriceField.getText());
+                    String brand = pcbBrandComboBox.getSelectedItem().toString();
+                    String socket = pcbSocketComboBox.getSelectedItem().toString();
+                    String chipset= pcbChipsetComboBox.getSelectedItem().toString();
+                    Object[] rowData = {model, price, brand, socket, chipset};
+                    pcbTableModel.addRow(rowData);
+                }
+            }
+        });
+
+        // Update GPU listener
+        updatePCBButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to update data");
+                int row = pcbTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        try 
+                        {
+                            checkIfEmpty(pcbModelField);
+                            checkIfEmpty(pcbPriceField);
+                            String model = pcbModelField.getText();
+                            double price = Double.parseDouble(pcbPriceField.getText());
+                            String brand = pcbBrandComboBox.getSelectedItem().toString();
+                            String socket = pcbSocketComboBox.getSelectedItem().toString();
+                            String chipset = pcbChipsetComboBox.getSelectedItem().toString();
+                            pcbTable.setValueAt(model, row, 0);
+                            pcbTable.setValueAt(price, row, 1);
+                            pcbTable.setValueAt(brand, row, 2);
+                            pcbTable.setValueAt(socket, row, 3);
+                            pcbTable.setValueAt(chipset, row, 4);
+                        }
+                        catch(NullPointerException ex) 
+                        {
+                            JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
+                        }
+                        catch(TextFieldException myEx) 
+                        {
+                            JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
+                        }
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(pcbPanel, "Сan't update any record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        // Delete GPU listener
+        deletePCBButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to delete record in your table");
+                int row = pcbTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        System.out.println("User clicked YES");
+                        pcbTableModel.removeRow(row);
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(pcbPanel, "Сan't delete record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        // GPU data PDF export listener
+        pdfExportPCBButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to export data to PDF document");
+                try 
+                {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // Set default folder to current directory
+                    fileChooser.setCurrentDirectory(new File("."));
+                    // Set default file name
+                    fileChooser.setSelectedFile(new File("../../../../../exported_PCBs.pdf"));
+                    int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) 
+                    {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String fileName = selectedFile.getAbsolutePath();
+                        // Append .pdf extension if necessary
+                        if (!fileName.endsWith(".pdf")) 
+                        {
+                            fileName += ".pdf";
+                        }
+                        Document document = new Document();
+                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        document.open();
+                        PdfPTable pdfTable = new PdfPTable(pcbTable.getColumnCount());
+                        
+                        // Create font for table headers
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        String[] headersPdfExport = {"\nModel\n\n", "\nPrice", "\nBrand", "\nSocket", "\nChipset"};
+
+                        // Set column headers
+                        for (int i = 0; i < pcbTable.getColumnCount(); i++) 
+                        {
+                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
+                            header.setBackgroundColor(BaseColor.ORANGE);
+                            header.setBorderWidth(2);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            // Give more weight to the first row
+                            pdfTable.addCell(header);
+                        }
+                        
+                        // Create font for table data
+                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
+                        
+                        // Set custom widths for each row 
+                        float[] columnWidths = {0.26f, 0.13f, 0.11f, 0.13f, 0.16f};
+                        pdfTable.setWidths(columnWidths);
+                        
+                        // Add table data
+                        for (int i = 0; i < pcbTable.getRowCount(); i++) 
+                        {
+                            for (int j = 0; j < pcbTable.getColumnCount(); j++) 
+                            {
+                                PdfPCell data = new PdfPCell(new Phrase(pcbTable.getValueAt(i, j).toString(), dataFont));
+                                if (i % 2 == 1)
+                                {
+                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                                }
+                                else
+                                {
+                                    data.setBackgroundColor(BaseColor.WHITE);
+                                }
+                                data.setBorderWidth(1);
+                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                pdfTable.addCell(data);
+                            }
+                        }
+                        document.add(pdfTable);
+                        document.close();
+                        JOptionPane.showMessageDialog(gpuPanel, "Exported table data to " + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(gpuPanel, "Error exporting table data to PDF");
+                }
+            }
+        });
         
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //   ______    ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
-        //  /      \  /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
-        // /$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$/ /$$$$$$  |$$  \ $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
-        // $$ |__$$ |$$ |  $$/    $$ |     $$ |  $$ |  $$ |$$$  \$$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
-        // $$    $$ |$$ |         $$ |     $$ |  $$ |  $$ |$$$$  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
-        // $$$$$$$$ |$$ |   __    $$ |     $$ |  $$ |  $$ |$$ $$ $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
-        // $$ |  $$ |$$ \__/  |   $$ |    _$$ |_ $$ \__$$ |$$ |$$$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
-        // $$ |  $$ |$$    $$/    $$ |   / $$   |$$    $$/ $$ | $$$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
-        // $$/   $$/  $$$$$$/     $$/    $$$$$$/  $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
-        //                                                                                                                                                          //
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /////////////////
-        //             //
-        //    BRAND    //
-        //             //
-        /////////////////
-         addBrandButton.addActionListener(new ActionListener() {
+        commitPCBButton.addActionListener(new ActionListener() 
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                addBrand();
+            public void actionPerformed(ActionEvent e) 
+            {
             }
         });
 
-        deleteBrandButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteBrand();
-            }
-        });
-
-        updateBrandButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateBrand();
-            }
-        });
-
-        ///////////////////
-        //               //
-        //    CHIPSET    //
-        //               //
-        ///////////////////
-        addChipsetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addChipset();
-            }
-        });
-
-        deleteChipsetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteChipset();
-            }
-        });
-
-        updateChipsetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateChipset();
-            }
-        });
-
-        ///////////////
-        //           //
-        //    CPU    //
-        //           //
-        ///////////////
-        addCPUButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addCPU();
-            }
-        });
-
-        deleteCPUButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteCPU();
-            }
-        });
-
-        updateCPUButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateCPU();
-            }
-        });
-
-        ///////////////
-        //           //
-        //    GPU    //
-        //           //
-        ///////////////
-        addGPUButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addGPU();
-            }
-        });
-
-        deleteGPUButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteGPU();
-            }
-        });
-
-        updateGPUButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateGPU();
-            }
-        });
-
-        ///////////////////////
-        //                   //
-        //    Motherboard    //
-        //                   //
-        ///////////////////////
-        addPCBButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addMotherboard();
-            }
-        });
-
-        deletePCBButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteMotherboard();
-            }
-        });
-
-        updatePCBButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateMotherboard();
-            }
-        });
-
-        //////////////////
-        //              //
-        //    SOCKET    //
-        //              //
-        //////////////////
-        addSocketButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addSocket();
-            }
-        });
-
-        deleteSocketButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteSocket();
-            }
-        });
-
-        updateSocketButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateSocket();
-            }
-        });
-
-        /////////////////////////////
-        //                         //
-        //    SOCKET TO CHIPSET    //
-        //                         //
-        /////////////////////////////
-        addSocketToChipsetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addSocketToChipset();
-            }
-        });
-
-        deleteSocketToChipsetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteSocketToChipset();
-            }
-        });
-
-        updateSocketToChipsetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateSocketToChipset();
-            }
-        });
-
-
+        
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //   ______   ________  __        ________   ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
         //  /      \ /        |/  |      /        | /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
@@ -1414,80 +1605,7 @@ public class DBMSApp extends JFrame
         }
     }
 
-
-    private void addChipset() 
-    {
-    }
-
-    private void deleteChipset() 
-    {
-    }
-
-    private void updateChipset() 
-    {
-    }
-
-    private void addCPU() 
-    {
-    }
-
-    private void deleteCPU() 
-    {
-    }
-
-    private void updateCPU() 
-    {
-    }
-
-    private void addGPU() 
-    {
-    }
-
-    private void deleteGPU() 
-    {
-    }
-
-    private void updateGPU() 
-    {
-    }
-
-    private void addMotherboard() 
-    {
-    }
-
-    private void deleteMotherboard() 
-    {
-    }
-
-    private void updateMotherboard() 
-    {
-    }
-
-    private void addSocket() 
-    {
-    }
-
-    private void deleteSocket() 
-    {
-    }
-
-    private void updateSocket() 
-    {
-    }
-
-    private void addSocketToChipset() 
-    {
-    }
-
-    private void deleteSocketToChipset() 
-    {
-    }
-
-    private void updateSocketToChipset() 
-    {
-    }
-
-
+    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //   ______    ______   __       __  __       __  ______  ________         ______   __    __   ______   __    __   ______   ________   ______   //
     //  /      \  /      \ /  \     /  |/  \     /  |/      |/        |       /      \ /  |  /  | /      \ /  \  /  | /      \ /        | /      \  //
