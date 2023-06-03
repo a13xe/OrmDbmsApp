@@ -60,7 +60,10 @@ import al.exe.HibernateUtil;
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 public class DBMSApp extends JFrame 
-{   // Hibernate
+{   
+    private static final Logger LOGGER = Logger.getLogger(DBMSApp.class.getName());
+    private static FileHandler fileHandler;
+    // Hibernate
     private Session session;
     private Transaction transaction;
     private SessionFactory sessionFactory;
@@ -69,13 +72,13 @@ public class DBMSApp extends JFrame
     private JTable brandTable, chipsetTable, cpuTable, gpuTable, pcbTable, socketTable, socketToChipsetTable;
     private DefaultTableModel brandTableModel, chipsetTableModel, cpuTableModel, gpuTableModel, pcbTableModel, socketTableModel, socketToChipsetTableModel;
     // Buttons
-    private JButton addCPUButton, deleteCPUButton, updateCPUButton, commitCPUButton;
-    private JButton addGPUButton, deleteGPUButton, updateGPUButton, commitGPUButton;
-    private JButton addPCBButton, deletePCBButton, updatePCBButton, commitPCBButton;
-    private JButton addBrandButton, deleteBrandButton, updateBrandButton, commitBrandButton;
-    private JButton addSocketButton, deleteSocketButton, updateSocketButton, commitSocketButton;
-    private JButton addChipsetButton, deleteChipsetButton, updateChipsetButton, commitChipsetButton;
-    private JButton addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton, commitSocketToChipsetButton;
+    private JButton addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton, commitCPUButton;
+    private JButton addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton, commitGPUButton;
+    private JButton addPCBButton, deletePCBButton, updatePCBButton, pdfExportPCBButton, commitPCBButton;
+    private JButton addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton, commitBrandButton;
+    private JButton addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton, commitSocketButton;
+    private JButton addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton, commitChipsetButton;
+    private JButton addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton, pdfExportSocketToChipsetButton, commitSocketToChipsetButton;
     // CPU Fields
     private JTextField cpuModelField;
     private JTextField cpuPriceField;
@@ -106,6 +109,22 @@ public class DBMSApp extends JFrame
     // SocketToShipset Fields
     private JComboBox<String> compatibilitySocketComboBox;
     private JComboBox<String> compatibilityChipsetComboBox;
+
+    //exception class
+    private class TextFieldException extends Exception 
+    {
+        public TextFieldException() 
+        {
+            super ("Fill all text fields!");
+        }
+    }
+    // exception function
+    public void checkIfEmpty (JTextField field) throws TextFieldException,NullPointerException
+    {
+        String sName = field.getText();
+        if (sName.isBlank()) throw new TextFieldException();
+        if (sName.length() == 0) throw new NullPointerException();
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,40 +190,47 @@ public class DBMSApp extends JFrame
         JScrollPane socketToChipsetScrollPane = new JScrollPane(socketToChipsetTable);
 
         // Create buttons
-        addBrandButton = new JButton("Add Brand");
-        deleteBrandButton = new JButton("Delete Brand");
-        updateBrandButton = new JButton("Update Brand");
+        addBrandButton = new JButton("Add");
+        deleteBrandButton = new JButton("Delete");
+        updateBrandButton = new JButton("Update");
+        pdfExportBrandButton = new JButton("PDF");
         commitBrandButton = new JButton("Commit changes");
 
 
-        addChipsetButton = new JButton("Add Chipset");
-        deleteChipsetButton = new JButton("Delete Chipset");
-        updateChipsetButton = new JButton("Update Chipset");
+        addChipsetButton = new JButton("Add");
+        deleteChipsetButton = new JButton("Delete");
+        updateChipsetButton = new JButton("Update");
+        pdfExportChipsetButton = new JButton("PDF");
         commitChipsetButton = new JButton("Commit changes");
 
-        addCPUButton = new JButton("Add CPU");
-        deleteCPUButton = new JButton("Delete CPU");
-        updateCPUButton = new JButton("Update CPU");
+        addCPUButton = new JButton("Add");
+        deleteCPUButton = new JButton("Delete");
+        updateCPUButton = new JButton("Update");
+        pdfExportCPUButton = new JButton("PDF");
         commitCPUButton = new JButton("Commit changes");
 
-        addGPUButton = new JButton("Add GPU");
-        deleteGPUButton = new JButton("Delete GPU");
-        updateGPUButton = new JButton("Update GPU");
+        addGPUButton = new JButton("Add");
+        deleteGPUButton = new JButton("Delete");
+        updateGPUButton = new JButton("Update");
+        pdfExportGPUButton = new JButton("PDF");
         commitGPUButton = new JButton("Commit changes");
 
-        addPCBButton = new JButton("Add PCB");
-        deletePCBButton = new JButton("Delete PCB");
-        updatePCBButton = new JButton("Update PCB");
+        addPCBButton = new JButton("Add");
+        deletePCBButton = new JButton("Delete");
+        updatePCBButton = new JButton("Update");
+        pdfExportPCBButton = new JButton("PDF");
         commitPCBButton = new JButton("Commit changes");
 
-        addSocketButton = new JButton("Add Socket");
-        deleteSocketButton = new JButton("Delete Socket");
-        updateSocketButton = new JButton("Update Socket");
+        addSocketButton = new JButton("Add");
+        deleteSocketButton = new JButton("Delete");
+        updateSocketButton = new JButton("Update");
+        pdfExportSocketButton = new JButton("PDF");
         commitSocketButton = new JButton("Commit changes");
 
-        addSocketToChipsetButton = new JButton("Add Socket to Chipset");
-        deleteSocketToChipsetButton = new JButton("Delete Socket to Chipset");
-        updateSocketToChipsetButton = new JButton("Update Socket to Chipset");
+        addSocketToChipsetButton = new JButton("Add");
+        deleteSocketToChipsetButton = new JButton("Delete");
+        updateSocketToChipsetButton = new JButton("Update");
+        pdfExportSocketToChipsetButton = new JButton("PDF");
         commitSocketToChipsetButton = new JButton("Commit changes");
 
         /////////////////////////////////////////
@@ -350,13 +376,13 @@ public class DBMSApp extends JFrame
         //    Button panels    //
         //                     //
         /////////////////////////
-        JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton, commitCPUButton);
-        JPanel gpuButtonPanel = createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton, commitGPUButton);
-        JPanel pcbButtonPanel = createButtonPanel(addPCBButton, deletePCBButton, updatePCBButton, commitPCBButton);
-        JPanel brandButtonPanel = createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton, commitBrandButton);
-        JPanel socketButtonPanel = createButtonPanel(addSocketButton, deleteSocketButton, updateSocketButton, commitSocketButton);
-        JPanel chipsetButtonPanel = createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton, commitChipsetButton);
-        JPanel socketToChipsetButtonPanel = createButtonPanel(addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton, commitSocketToChipsetButton);
+        JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton, commitCPUButton);
+        JPanel gpuButtonPanel = createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton, commitGPUButton);
+        JPanel pcbButtonPanel = createButtonPanel(addPCBButton, deletePCBButton, updatePCBButton, pdfExportPCBButton, commitPCBButton);
+        JPanel brandButtonPanel = createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton, commitBrandButton);
+        JPanel socketButtonPanel = createButtonPanel(addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton, commitSocketButton);
+        JPanel chipsetButtonPanel = createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton, commitChipsetButton);
+        JPanel socketToChipsetButtonPanel = createButtonPanel(addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton, pdfExportSocketToChipsetButton, commitSocketToChipsetButton);
 
         ////////////////////////////////////////////
         //                                        //
@@ -416,6 +442,244 @@ public class DBMSApp extends JFrame
         add(tabbedPane);
         // Populate tables
         populateTables();
+
+        
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //   ______   _______   _______        __  _______   ________  __        ________  ________  ________        __  __    __  _______   _______    ______   ________  ________        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        //  /      \ /       \ /       \      /  |/       \ /        |/  |      /        |/        |/        |      /  |/  |  /  |/       \ /       \  /      \ /        |/        |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // /$$$$$$  |$$$$$$$  |$$$$$$$  |    /$$/ $$$$$$$  |$$$$$$$$/ $$ |      $$$$$$$$/ $$$$$$$$/ $$$$$$$$/      /$$/ $$ |  $$ |$$$$$$$  |$$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$$$/       $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ |__$$ |$$ |  $$ |$$ |  $$ |   /$$/  $$ |  $$ |$$ |__    $$ |      $$ |__       $$ |   $$ |__        /$$/  $$ |  $$ |$$ |__$$ |$$ |  $$ |$$ |__$$ |   $$ |   $$ |__          $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$    $$ |$$ |  $$ |$$ |  $$ |  /$$/   $$ |  $$ |$$    |   $$ |      $$    |      $$ |   $$    |      /$$/   $$ |  $$ |$$    $$/ $$ |  $$ |$$    $$ |   $$ |   $$    |         $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$$$$$$$ |$$ |  $$ |$$ |  $$ | /$$/    $$ |  $$ |$$$$$/    $$ |      $$$$$/       $$ |   $$$$$/      /$$/    $$ |  $$ |$$$$$$$/  $$ |  $$ |$$$$$$$$ |   $$ |   $$$$$/          $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ |  $$ |$$ |__$$ |$$ |__$$ |/$$/     $$ |__$$ |$$ |_____ $$ |_____ $$ |_____    $$ |   $$ |_____  /$$/     $$ \__$$ |$$ |      $$ |__$$ |$$ |  $$ |   $$ |   $$ |_____       $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$ |  $$ |$$    $$/ $$    $$//$$/      $$    $$/ $$       |$$       |$$       |   $$ |   $$       |/$$/      $$    $$/ $$ |      $$    $$/ $$ |  $$ |   $$ |   $$       |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        // $$/   $$/ $$$$$$$/  $$$$$$$/ $$/       $$$$$$$/  $$$$$$$$/ $$$$$$$$/ $$$$$$$$/    $$/    $$$$$$$$/ $$/        $$$$$$/  $$/       $$$$$$$/  $$/   $$/    $$/    $$$$$$$$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                                                                                                                                         //
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Add CPU listener
+        addCPUButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to add new data to the table");
+                if (cpuModelField.getText().isBlank() || cpuPriceField.getText().isBlank() || cpuFrequencyField.getText().isBlank() || cpuCoresField.getText().isBlank() || cpuThreadsField.getText().isBlank())
+                {
+                    JOptionPane.showMessageDialog(cpuPanel, "You must fill all text fields first!");
+                }
+                else
+                {
+                    String model = cpuModelField.getText();
+                    double price = Double.parseDouble(cpuPriceField.getText());
+                    int cores = Integer.parseInt(cpuCoresField.getText());
+                    int threads = Integer.parseInt(cpuThreadsField.getText());
+                    int frequency = Integer.parseInt(cpuFrequencyField.getText());
+                    String brand = cpuBrandComboBox.getSelectedItem().toString();
+                    String socket = cpuSocketComboBox.getSelectedItem().toString();
+                    Object[] rowData = {model, price, cores, threads, frequency, brand, socket};
+                    cpuTableModel.addRow(rowData);
+                }
+            }
+        });
+        // Update CPU listener
+        updateCPUButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to update data");
+                int row = cpuTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(cpuPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        try 
+                        {
+                            checkIfEmpty(cpuModelField);
+                            checkIfEmpty(cpuPriceField);
+                            checkIfEmpty(cpuCoresField);
+                            checkIfEmpty(cpuThreadsField);
+                            checkIfEmpty(cpuFrequencyField);
+                            String model = cpuModelField.getText();
+                            String brand = cpuBrandComboBox.getSelectedItem().toString();
+                            double price = Double.parseDouble(cpuPriceField.getText());
+                            int cores = Integer.parseInt(cpuCoresField.getText());
+                            int threads = Integer.parseInt(cpuThreadsField.getText());
+                            int frequency = Integer.parseInt(cpuFrequencyField.getText());
+                            String socket = cpuSocketComboBox.getSelectedItem().toString();
+                            cpuTableModel.setValueAt(model, row, 0);
+                            cpuTableModel.setValueAt(brand, row, 1);
+                            cpuTableModel.setValueAt(price, row, 2);
+                            cpuTableModel.setValueAt(cores, row, 3);
+                            cpuTableModel.setValueAt(threads, row, 4);
+                            cpuTableModel.setValueAt(frequency, row, 5);
+                            cpuTableModel.setValueAt(socket, row, 6);
+                        }
+                        catch(NullPointerException ex) 
+                        {
+                            JOptionPane.showMessageDialog(cpuPanel, "You must fill all text fields first!");
+                        }
+                        catch(TextFieldException myEx) 
+                        {
+                            JOptionPane.showMessageDialog(cpuPanel, "You must fill all text fields first!");
+                        }
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(cpuPanel, "Сan't update any record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        // Delete CPU listener
+        deleteCPUButton.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to delete record in your table");
+                int row = cpuTable.getSelectedRow();
+                if (row != -1) 
+                {
+                    // create the popup window with yes/no options
+                    int choice = JOptionPane.showConfirmDialog(cpuPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    // handle the user's choice
+                    if (choice == JOptionPane.YES_OPTION) 
+                    {
+                        System.out.println("User clicked YES");
+                        cpuTableModel.removeRow(row);
+                    } 
+                    else 
+                    {
+                        System.out.println("User clicked NO");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(cpuPanel, "Сan't delete record! Please select one!", "Error", row);
+                }
+            }
+        });
+
+        // CPU data PDF export listener
+        pdfExportCPUButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LOGGER.addHandler(fileHandler);
+                LOGGER.info("Trying to export data to PDF document");
+                try 
+                {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // Set default folder to current directory
+                    fileChooser.setCurrentDirectory(new File("."));
+                    // Set default file name
+                    fileChooser.setSelectedFile(new File("../../../../../ExportedPDFs/cpu_exp.pdf"));
+                    int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) 
+                    {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String fileName = selectedFile.getAbsolutePath();
+                        // Append .pdf extension if necessary
+                        if (!fileName.endsWith(".pdf")) 
+                        {
+                            fileName += ".pdf";
+                        }
+                        Document document = new Document();
+                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        document.open();
+                        PdfPTable pdfTable = new PdfPTable(cpuTable.getColumnCount());
+                        
+                        // Create font for table headers
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        String[] headersPdfExport = {"\nModel\n\n", "\nPrice", "\nCores", "\nThreads", "\nFrequency", "\nBrand", "\nSocket"};
+
+                        // Set column headers
+                        for (int i = 0; i < cpuTable.getColumnCount(); i++) 
+                        {
+                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
+                            header.setBackgroundColor(BaseColor.ORANGE);
+                            header.setBorderWidth(2);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            // Give more weight to the first row
+                            pdfTable.addCell(header);
+                        }
+                        
+                        // Create font for table data
+                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
+                        
+                        // Set custom widths for each row 
+                        float[] columnWidths = {0.25f, 0.12f, 0.1f, 0.12f, 0.15f, 0.1f, 0.2f};
+                        pdfTable.setWidths(columnWidths);
+                        
+                        // Add table data
+                        for (int i = 0; i < cpuTable.getRowCount(); i++) 
+                        {
+                            for (int j = 0; j < cpuTable.getColumnCount(); j++) 
+                            {
+                                PdfPCell data = new PdfPCell(new Phrase(cpuTable.getValueAt(i, j).toString(), dataFont));
+                                if (i % 2 == 1)
+                                {
+                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                                }
+                                else
+                                {
+                                    data.setBackgroundColor(BaseColor.WHITE);
+                                }
+                                data.setBorderWidth(1);
+                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                pdfTable.addCell(data);
+                            }
+                        }
+                        document.add(pdfTable);
+                        document.close();
+                        JOptionPane.showMessageDialog(null, "Exported table data to " + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error exporting table data to PDF");
+                }
+            }
+        });
+
+        
+        commitCPUButton.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                // Export CPU data from the JTable to the database
+                int rowCount = cpuTableModel.getRowCount();
+                for (int i = 0; i < rowCount; i++) 
+                {
+                    String model = (String) cpuTableModel.getValueAt(i, 0);
+                    double price = (double) cpuTableModel.getValueAt(i, 1);
+                    int cores = (int) cpuTableModel.getValueAt(i, 2);
+                    int threads = (int) cpuTableModel.getValueAt(i, 3);
+                    int frequency = (int) cpuTableModel.getValueAt(i, 4);
+                    int brandId = (int) cpuTableModel.getValueAt(i, 5);
+                    int socketId = (int) cpuTableModel.getValueAt(i, 6);
+                    // Export the CPU data to the database
+                }
+
+                // Display a message indicating that the data has been committed
+                JOptionPane.showMessageDialog(null, "CPU table has been committed to the database.");
+            }
+        });
+
+
         
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1223,35 +1487,42 @@ public class DBMSApp extends JFrame
     {
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //   ______    ______   __       __  _______    ______   _______    ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
-    //  /      \  /      \ /  \     /  |/       \  /      \ /       \  /      \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
-    // /$$$$$$  |/$$$$$$  |$$  \   /$$ |$$$$$$$  |/$$$$$$  |$$$$$$$  |/$$$$$$  |$$ |  $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
-    // $$ |  $$/ $$ |  $$ |$$$  \ /$$$ |$$ |__$$ |$$ |  $$ |$$ |__$$ |$$ |  $$ |$$  \/$$/       $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
-    // $$ |      $$ |  $$ |$$$$  /$$$$ |$$    $$< $$ |  $$ |$$    $$< $$ |  $$ | $$  $$<        $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
-    // $$ |   __ $$ |  $$ |$$ $$ $$/$$ |$$$$$$$  |$$ |  $$ |$$$$$$$  |$$ |  $$ |  $$$$  \       $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
-    // $$ \__/  |$$ \__$$ |$$ |$$$/ $$ |$$ |__$$ |$$ \__$$ |$$ |__$$ |$$ \__$$ | $$ /$$  |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
-    // $$    $$/ $$    $$/ $$ | $/  $$ |$$    $$/ $$    $$/ $$    $$/ $$    $$/ $$ |  $$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
-    //  $$$$$$/   $$$$$$/  $$/      $$/ $$$$$$$/   $$$$$$/  $$$$$$$/   $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
-    //                                                                                                                                                                                   //
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //   ______    ______   __       __  __       __  ______  ________         ______   __    __   ______   __    __   ______   ________   ______   //
+    //  /      \  /      \ /  \     /  |/  \     /  |/      |/        |       /      \ /  |  /  | /      \ /  \  /  | /      \ /        | /      \  //
+    // /$$$$$$  |/$$$$$$  |$$  \   /$$ |$$  \   /$$ |$$$$$$/ $$$$$$$$/       /$$$$$$  |$$ |  $$ |/$$$$$$  |$$  \ $$ |/$$$$$$  |$$$$$$$$/ /$$$$$$  | //
+    // $$ |  $$/ $$ |  $$ |$$$  \ /$$$ |$$$  \ /$$$ |  $$ |     $$ |         $$ |  $$/ $$ |__$$ |$$ |__$$ |$$$  \$$ |$$ | _$$/ $$ |__    $$ \__$$/  //
+    // $$ |      $$ |  $$ |$$$$  /$$$$ |$$$$  /$$$$ |  $$ |     $$ |         $$ |      $$    $$ |$$    $$ |$$$$  $$ |$$ |/    |$$    |   $$      \  //
+    // $$ |   __ $$ |  $$ |$$ $$ $$/$$ |$$ $$ $$/$$ |  $$ |     $$ |         $$ |   __ $$$$$$$$ |$$$$$$$$ |$$ $$ $$ |$$ |$$$$ |$$$$$/     $$$$$$  | //
+    // $$ \__/  |$$ \__$$ |$$ |$$$/ $$ |$$ |$$$/ $$ | _$$ |_    $$ |         $$ \__/  |$$ |  $$ |$$ |  $$ |$$ |$$$$ |$$ \__$$ |$$ |_____ /  \__$$ | //
+    // $$    $$/ $$    $$/ $$ | $/  $$ |$$ | $/  $$ |/ $$   |   $$ |         $$    $$/ $$ |  $$ |$$ |  $$ |$$ | $$$ |$$    $$/ $$       |$$    $$/  //
+    //  $$$$$$/   $$$$$$/  $$/      $$/ $$/      $$/ $$$$$$/    $$/           $$$$$$/  $$/   $$/ $$/   $$/ $$/   $$/  $$$$$$/  $$$$$$$$/  $$$$$$/   //
+    //                                                                                                                                              //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void commitCPUData() 
+    {
+        // Export CPU data from the JTable to the database
+        // You need to implement the necessary logic to export data to the database
+        int rowCount = cpuTableModel.getRowCount();
+        for (int i = 0; i < rowCount; i++) 
+        {
+            String model = (String) cpuTableModel.getValueAt(i, 0);
+            double price = (double) cpuTableModel.getValueAt(i, 1);
+            int cores = (int) cpuTableModel.getValueAt(i, 2);
+            int threads = (int) cpuTableModel.getValueAt(i, 3);
+            int frequency = (int) cpuTableModel.getValueAt(i, 4);
+            int brandId = (int) cpuTableModel.getValueAt(i, 5);
+            int socketId = (int) cpuTableModel.getValueAt(i, 6);
+            // Export the CPU data to the database
+            // You need to implement the necessary logic to export data to the database
+        }
 
+        // Display a message indicating that the data has been committed
+        JOptionPane.showMessageDialog(this, "CPU data has been committed to the database.");
+    }
+    
 
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    //  _______   _______         ________  __    __  _______    ______   _______   ________  //
-    // /       \ /       \       /        |/  |  /  |/       \  /      \ /       \ /        | //
-    // $$$$$$$  |$$$$$$$  |      $$$$$$$$/ $$ |  $$ |$$$$$$$  |/$$$$$$  |$$$$$$$  |$$$$$$$$/  //
-    // $$ |  $$ |$$ |__$$ |      $$ |__    $$  \/$$/ $$ |__$$ |$$ |  $$ |$$ |__$$ |   $$ |    //
-    // $$ |  $$ |$$    $$<       $$    |    $$  $$<  $$    $$/ $$ |  $$ |$$    $$<    $$ |    //
-    // $$ |  $$ |$$$$$$$  |      $$$$$/      $$$$  \ $$$$$$$/  $$ |  $$ |$$$$$$$  |   $$ |    //
-    // $$ |__$$ |$$ |__$$ |      $$ |_____  $$ /$$  |$$ |      $$ \__$$ |$$ |  $$ |   $$ |    //
-    // $$    $$/ $$    $$/       $$       |$$ |  $$ |$$ |      $$    $$/ $$ |  $$ |   $$ |    //
-    // $$$$$$$/  $$$$$$$/        $$$$$$$$/ $$/   $$/ $$/        $$$$$$/  $$/   $$/    $$/     //
-    //                                                                                        //
-    ////////////////////////////////////////////////////////////////////////////////////////////
     private void commitChanges() 
     {
         commitBrandChanges();
@@ -1368,13 +1639,14 @@ public class DBMSApp extends JFrame
     }
 
     // Helper method to create a panel with buttons
-    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton, JButton commitButton) 
+    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton,  JButton pdfExportButton, JButton commitButton) 
     {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(updateButton);
-        buttonPanel.add(commitButton);
+        buttonPanel.add(pdfExportButton);
+        // buttonPanel.add(commitButton);
         return buttonPanel;
     }
 
@@ -1425,9 +1697,25 @@ public class DBMSApp extends JFrame
     // $$/   $$/  $$$$$$/  $$/   $$/ $$/       $$$$$$$/  $$$$$$$$/ $$$$$$$/   $$$$$$/   $$$$$$/        $$/       $$/   $$/  $$$$$$/   $$$$$$/  $$/   $$/ $$/   $$/ $$/      $$/  //
     //                                                                                                                                                                           //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+    public static void main(String[] args) 
+    {
+        SwingUtilities.invokeLater(new Runnable() 
+        {
+            public void run() 
+            {
+                try 
+                {
+                    fileHandler = new FileHandler("Logs.log"); // Initialize the file handler
+                    fileHandler.setFormatter(new SimpleFormatter()); // Set the formatter for the file handler
+                    LOGGER.addHandler(fileHandler); // Add the file handler to the logger
+                    LOGGER.info("Logging started"); // Log some messages
+                    // LOGGER.warning("This is a warning message");
+                    // LOGGER.severe("This is a severe error message");
+                } 
+                catch (IOException e) 
+                {
+                    e.printStackTrace();
+                }
                 new DBMSApp();
             }
         });
