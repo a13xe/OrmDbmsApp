@@ -4,38 +4,43 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "brand")
-public class ClassBrand {
+public class ClassBrand 
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-
     @Column(name = "name")
     private String name;
 
-    public ClassBrand() {
-        // Default constructor
+    // Default constructor
+    public ClassBrand() 
+    {
     }
-
-    public ClassBrand(String name) {
+    
+    // Parameterized constructor
+    public ClassBrand(String name) 
+    {
         this.name = name;
     }
 
-    // Getters and Setters
-
-    public int getId() {
+    // Getters
+    public int getId() 
+    {
         return id;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
+    public String getName() 
+    {
         return name;
     }
 
-    public void setName(String name) {
+    // Setters
+    public void setId(int id) 
+    {
+        this.id = id;
+    }
+    public void setName(String name) 
+    {
         this.name = name;
     }
 }

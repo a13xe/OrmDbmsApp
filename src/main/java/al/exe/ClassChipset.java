@@ -4,38 +4,43 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "chipset")
-public class ClassChipset {
+public class ClassChipset 
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-
     @Column(name = "name")
     private String name;
 
-    public ClassChipset() {
-        // Default constructor required by Hibernate
+    // Default constructor
+    public ClassChipset() 
+    {
     }
-
-    public ClassChipset(String name) {
+    
+    // Parameterized constructor
+    public ClassChipset(String name) 
+    {
         this.name = name;
     }
 
-    // Getters and setters
-
-    public int getId() {
+    // Getters
+    public int getId() 
+    {
         return id;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
+    public String getName() 
+    {
         return name;
     }
 
-    public void setName(String name) {
+    // Setters
+    public void setId(int id) 
+    {
+        this.id = id;
+    }
+    public void setName(String name) 
+    {
         this.name = name;
     }
 }
