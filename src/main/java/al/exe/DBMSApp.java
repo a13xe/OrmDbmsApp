@@ -44,7 +44,6 @@ import al.exe.ClassPCB;
 import al.exe.ClassBrand;
 import al.exe.ClassSocket;
 import al.exe.ClassChipset;
-import al.exe.ClassSocketToChipset;
 import al.exe.HibernateUtil;
 
 
@@ -70,8 +69,8 @@ public class DBMSApp extends JFrame
     private SessionFactory sessionFactory;
     // Swing gui components
     private JTabbedPane tabbedPane;
-    private JTable brandTable, chipsetTable, cpuTable, gpuTable, pcbTable, socketTable, socketToChipsetTable;
-    private DefaultTableModel brandTableModel, chipsetTableModel, cpuTableModel, gpuTableModel, pcbTableModel, socketTableModel, socketToChipsetTableModel;
+    private JTable brandTable, chipsetTable, cpuTable, gpuTable, pcbTable, socketTable;
+    private DefaultTableModel brandTableModel, chipsetTableModel, cpuTableModel, gpuTableModel, pcbTableModel, socketTableModel;
     // Buttons
     private JButton addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton, commitCPUButton;
     private JButton addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton, commitGPUButton;
@@ -79,7 +78,6 @@ public class DBMSApp extends JFrame
     private JButton addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton, commitBrandButton;
     private JButton addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton, commitSocketButton;
     private JButton addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton, commitChipsetButton;
-    private JButton addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton, pdfExportSocketToChipsetButton, commitSocketToChipsetButton;
     // CPU Fields
     private JTextField cpuModelField;
     private JTextField cpuPriceField;
@@ -107,9 +105,6 @@ public class DBMSApp extends JFrame
     private JTextField socketNameField;
     // Chipset Fields
     private JTextField chipsetNameField;
-    // SocketToShipset Fields
-    private JComboBox<String> compatibilitySocketComboBox;
-    private JComboBox<String> compatibilityChipsetComboBox;
 
     //exception class
     private class TextFieldException extends Exception 
@@ -163,7 +158,6 @@ public class DBMSApp extends JFrame
         brandTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
         socketTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
         chipsetTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
-        socketToChipsetTableModel = new DefaultTableModel(new Object[]{"Socket ID", "Chipset"}, 0);
 
         // Create tables
         cpuTable = new JTable(cpuTableModel);
@@ -172,14 +166,12 @@ public class DBMSApp extends JFrame
         brandTable = new JTable(brandTableModel);
         socketTable = new JTable(socketTableModel);
         chipsetTable = new JTable(chipsetTableModel);
-        socketToChipsetTable = new JTable(socketToChipsetTableModel);
         cpuTable.setDefaultEditor(Object.class, null);
         gpuTable.setDefaultEditor(Object.class, null);
         pcbTable.setDefaultEditor(Object.class, null);
         brandTable.setDefaultEditor(Object.class, null);
         socketTable.setDefaultEditor(Object.class, null);
         chipsetTable.setDefaultEditor(Object.class, null);
-        socketToChipsetTable.setDefaultEditor(Object.class, null);
 
         // Add tables to scroll panes
         JScrollPane cpuScrollPane = new JScrollPane(cpuTable);
@@ -188,7 +180,6 @@ public class DBMSApp extends JFrame
         JScrollPane brandScrollPane = new JScrollPane(brandTable);
         JScrollPane socketScrollPane = new JScrollPane(socketTable);
         JScrollPane chipsetScrollPane = new JScrollPane(chipsetTable);
-        JScrollPane socketToChipsetScrollPane = new JScrollPane(socketToChipsetTable);
 
         // Create buttons
         addBrandButton = new JButton("Add");
@@ -228,12 +219,6 @@ public class DBMSApp extends JFrame
         pdfExportSocketButton = new JButton("PDF");
         commitSocketButton = new JButton("Commit changes");
 
-        addSocketToChipsetButton = new JButton("Add");
-        deleteSocketToChipsetButton = new JButton("Delete");
-        updateSocketToChipsetButton = new JButton("Update");
-        pdfExportSocketToChipsetButton = new JButton("PDF");
-        commitSocketToChipsetButton = new JButton("Commit changes");
-
         /////////////////////////////////////////
         //                                     //
         //    Create Fields and Combo Boxes    //
@@ -266,9 +251,6 @@ public class DBMSApp extends JFrame
         socketNameField = new JTextField(255);
         // Create Chipset fields
         chipsetNameField = new JTextField(255);
-        // Create SocketToChipset fields
-        compatibilitySocketComboBox = new JComboBox<>();
-        compatibilityChipsetComboBox = new JComboBox<>();
 
         ////////////////////////
         //                    //
@@ -357,20 +339,6 @@ public class DBMSApp extends JFrame
         JPanel chipsetInputPanel = new JPanel(new GridLayout(1, 2));
         chipsetInputPanel.add(new JLabel("Chipset Name:"));
         chipsetInputPanel.add(chipsetNameField);
-        // compatibility panel
-        JPanel socketToChipsetInputPanel = new JPanel(new GridLayout(2, 2));
-        socketToChipsetInputPanel.add(new JLabel("Socket Name:"));
-        socketToChipsetInputPanel.add(compatibilitySocketComboBox);
-        socketToChipsetInputPanel.add(new JLabel("Chipset Name:"));
-        socketToChipsetInputPanel.add(compatibilityChipsetComboBox);
-        for (ClassSocket tempsocket : tempsockets) 
-        {
-            compatibilitySocketComboBox.addItem(tempsocket.getName());
-        }
-        for (ClassChipset tempchipset : tempchipsets) 
-        {
-            compatibilityChipsetComboBox.addItem(tempchipset.getName());
-        }
 
         /////////////////////////
         //                     //
@@ -383,7 +351,6 @@ public class DBMSApp extends JFrame
         JPanel brandButtonPanel = createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton, commitBrandButton);
         JPanel socketButtonPanel = createButtonPanel(addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton, commitSocketButton);
         JPanel chipsetButtonPanel = createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton, commitChipsetButton);
-        JPanel socketToChipsetButtonPanel = createButtonPanel(addSocketToChipsetButton, deleteSocketToChipsetButton, updateSocketToChipsetButton, pdfExportSocketToChipsetButton, commitSocketToChipsetButton);
 
         ////////////////////////////////////////////
         //                                        //
@@ -420,11 +387,6 @@ public class DBMSApp extends JFrame
         socketPanel.add(socketScrollPane, BorderLayout.CENTER);
         socketPanel.add(socketButtonPanel, BorderLayout.SOUTH);
         socketPanel.add(socketInputPanel, BorderLayout.NORTH);
-        // Add Compatibility panel
-        JPanel socketToChipsetPanel = new JPanel(new BorderLayout());
-        socketToChipsetPanel.add(socketToChipsetScrollPane, BorderLayout.CENTER);
-        socketToChipsetPanel.add(socketToChipsetButtonPanel, BorderLayout.SOUTH);
-        socketToChipsetPanel.add(socketToChipsetInputPanel, BorderLayout.NORTH);
 
         ////////////////////
         //                //
@@ -438,7 +400,6 @@ public class DBMSApp extends JFrame
         tabbedPane.addTab("Brands", brandPanel);
         tabbedPane.addTab("Sockets", socketPanel);
         tabbedPane.addTab("Chipsets", chipsetPanel);
-        tabbedPane.addTab("Compatible", socketToChipsetPanel);
         // Add tabbed pane to content pane
         add(tabbedPane);
         // Populate tables
@@ -1867,191 +1828,6 @@ public class DBMSApp extends JFrame
         });
         
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //   ______    ______    ______   __    __  ________  ________        ________  ______          ______   __    __  ______  _______    ______   ________  ________        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
-        //  /      \  /      \  /      \ /  |  /  |/        |/        |      /        |/      \        /      \ /  |  /  |/      |/       \  /      \ /        |/        |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
-        // /$$$$$$  |/$$$$$$  |/$$$$$$  |$$ | /$$/ $$$$$$$$/ $$$$$$$$/       $$$$$$$$//$$$$$$  |      /$$$$$$  |$$ |  $$ |$$$$$$/ $$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$$$/       $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
-        // $$ \__$$/ $$ |  $$ |$$ |  $$/ $$ |/$$/  $$ |__       $$ |            $$ |  $$ |  $$ |      $$ |  $$/ $$ |__$$ |  $$ |  $$ |__$$ |$$ \__$$/ $$ |__       $$ |         $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
-        // $$      \ $$ |  $$ |$$ |      $$  $$<   $$    |      $$ |            $$ |  $$ |  $$ |      $$ |      $$    $$ |  $$ |  $$    $$/ $$      \ $$    |      $$ |         $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
-        //  $$$$$$  |$$ |  $$ |$$ |   __ $$$$$  \  $$$$$/       $$ |            $$ |  $$ |  $$ |      $$ |   __ $$$$$$$$ |  $$ |  $$$$$$$/   $$$$$$  |$$$$$/       $$ |         $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
-        // /  \__$$ |$$ \__$$ |$$ \__/  |$$ |$$  \ $$ |_____    $$ |            $$ |  $$ \__$$ |      $$ \__/  |$$ |  $$ | _$$ |_ $$ |      /  \__$$ |$$ |_____    $$ |         $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
-        // $$    $$/ $$    $$/ $$    $$/ $$ | $$  |$$       |   $$ |            $$ |  $$    $$/       $$    $$/ $$ |  $$ |/ $$   |$$ |      $$    $$/ $$       |   $$ |         $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
-        //  $$$$$$/   $$$$$$/   $$$$$$/  $$/   $$/ $$$$$$$$/    $$/             $$/    $$$$$$/         $$$$$$/  $$/   $$/ $$$$$$/ $$/        $$$$$$/  $$$$$$$$/    $$/          $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
-        //                                                                                                                                                                                                                                                               //
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        addSocketToChipsetButton.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to add new data to the table PCB");
-                String socket = compatibilitySocketComboBox.getSelectedItem().toString();
-                String chipset= compatibilityChipsetComboBox.getSelectedItem().toString();
-                Object[] rowData = {socket, chipset};
-                socketToChipsetTableModel.addRow(rowData);
-            }
-        });
-
-        updateSocketToChipsetButton.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to update data");
-                int row = socketToChipsetTable.getSelectedRow();
-                if (row != -1) 
-                {
-                    // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(socketToChipsetPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                    // handle the user's choice
-                    if (choice == JOptionPane.YES_OPTION) 
-                    {
-                        try 
-                        {
-                            String socket = compatibilitySocketComboBox.getSelectedItem().toString();
-                            String chipset = compatibilityChipsetComboBox.getSelectedItem().toString();
-                            socketToChipsetTable.setValueAt(socket, row, 0);
-                            socketToChipsetTable.setValueAt(chipset, row, 1);
-                        }
-                        catch(NullPointerException ex) 
-                        {
-                            JOptionPane.showMessageDialog(socketToChipsetPanel, "You must fill all text fields first!");
-                        }
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
-                    }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(socketToChipsetPanel, "Сan't update any record! Please select one!", "Error", row);
-                }
-            }
-        });
-
-        deleteSocketToChipsetButton.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to delete record in your table");
-                int row = socketToChipsetTable.getSelectedRow();
-                if (row != -1) 
-                {
-                    // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(socketToChipsetPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                    // handle the user's choice
-                    if (choice == JOptionPane.YES_OPTION) 
-                    {
-                        System.out.println("User clicked YES");
-                        socketToChipsetTableModel.removeRow(row);
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
-                    }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(socketToChipsetPanel, "Сan't delete record! Please select one!", "Error", row);
-                }
-            }
-        });
-
-        pdfExportSocketToChipsetButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to export data to PDF document");
-                try 
-                {
-                    JFileChooser fileChooser = new JFileChooser();
-                    // Set default folder to current directory
-                    fileChooser.setCurrentDirectory(new File("."));
-                    // Set default file name
-                    fileChooser.setSelectedFile(new File("../../../../../exported_Compatibilities.pdf"));
-                    int result = fileChooser.showSaveDialog(null);
-                    if (result == JFileChooser.APPROVE_OPTION) 
-                    {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        String fileName = selectedFile.getAbsolutePath();
-                        // Append .pdf extension if necessary
-                        if (!fileName.endsWith(".pdf")) 
-                        {
-                            fileName += ".pdf";
-                        }
-                        Document document = new Document();
-                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
-                        document.open();
-                        PdfPTable pdfTable = new PdfPTable(socketToChipsetTable.getColumnCount());
-                        
-                        // Create font for table headers
-                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
-                        String[] headersPdfExport = {"\nSocket\n\n", "\nChipset"};
-
-                        // Set column headers
-                        for (int i = 0; i < socketToChipsetTable.getColumnCount(); i++) 
-                        {
-                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
-                            header.setBackgroundColor(BaseColor.ORANGE);
-                            header.setBorderWidth(2);
-                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
-                            // Give more weight to the first row
-                            pdfTable.addCell(header);
-                        }
-                        
-                        // Create font for table data
-                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
-                        
-                        // Set custom widths for each row 
-                        float[] columnWidths = {0.5f, 0.5f};
-                        pdfTable.setWidths(columnWidths);
-                        
-                        // Add table data
-                        for (int i = 0; i < socketToChipsetTable.getRowCount(); i++) 
-                        {
-                            for (int j = 0; j < socketToChipsetTable.getColumnCount(); j++) 
-                            {
-                                PdfPCell data = new PdfPCell(new Phrase(socketToChipsetTable.getValueAt(i, j).toString(), dataFont));
-                                if (i % 2 == 1)
-                                {
-                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                                }
-                                else
-                                {
-                                    data.setBackgroundColor(BaseColor.WHITE);
-                                }
-                                data.setBorderWidth(1);
-                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
-                                pdfTable.addCell(data);
-                            }
-                        }
-                        document.add(pdfTable);
-                        document.close();
-                        JOptionPane.showMessageDialog(socketToChipsetPanel, "Exported table data to " + fileName);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(socketToChipsetPanel, "Error exporting table data to PDF");
-                }
-            }
-        });
-        
-        commitSocketToChipsetButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            }
-        });
-
-
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  ________  __    __  _______                    ______    ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
         // /        |/  \  /  |/       \                  /      \  /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
@@ -2118,39 +1894,6 @@ public class DBMSApp extends JFrame
                 {
                     String name = chipsetTableModel.getValueAt(selectedRow, 0).toString();
                     chipsetNameField.setText(name);
-                }
-            }
-        });
-
-        socketToChipsetTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() 
-        {
-            @Override
-            public void valueChanged(ListSelectionEvent e) 
-            {
-                int selectedRow = socketToChipsetTable.getSelectedRow();
-                if (selectedRow != -1) 
-                {
-                    String socket = socketToChipsetTableModel.getValueAt(selectedRow, 0).toString();
-                    String chipset = socketToChipsetTableModel.getValueAt(selectedRow, 1).toString();
-                    // Set the selected item in the comboboxes
-                    for (int i = 0; i < compatibilitySocketComboBox.getItemCount(); i++) 
-                    {
-                        String item = compatibilitySocketComboBox.getItemAt(i).toString();
-                        if (item.equals(socket)) 
-                        {
-                            compatibilitySocketComboBox.setSelectedItem(item);
-                            break;
-                        }
-                    }
-                    for (int i = 0; i < compatibilityChipsetComboBox.getItemCount(); i++) 
-                    {
-                        String item = compatibilityChipsetComboBox.getItemAt(i).toString();
-                        if (item.equals(chipset)) 
-                        {
-                            compatibilityChipsetComboBox.setSelectedItem(item);
-                            break;
-                        }
-                    }
                 }
             }
         });
@@ -2320,11 +2063,6 @@ public class DBMSApp extends JFrame
             socketTableModel.addRow(new Object[]{socket.getName()});
         }
     
-        List<ClassSocketToChipset> socketToChipsets = retrieveSocketToChipsets();
-        for (ClassSocketToChipset socketToChipset : socketToChipsets) {
-            socketToChipsetTableModel.addRow(new Object[]{socketToChipset.getSocket().getName(), socketToChipset.getChipset().getName()});
-        }
-    
         List<ClassCPU> cpus = retrieveCPUs();
         for (ClassCPU cpu : cpus) {
             cpuTableModel.addRow(new Object[]{cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(), cpu.getFrequency(), cpu.getBrand().getName(), cpu.getSocket().getName()});
@@ -2471,26 +2209,6 @@ public class DBMSApp extends JFrame
             e.printStackTrace();
         }
         return sockets;
-    }
-
-    private List<ClassSocketToChipset> retrieveSocketToChipsets() 
-    {
-        List<ClassSocketToChipset> socketToChipsets = null;
-        try 
-        {
-            transaction = session.beginTransaction();
-            socketToChipsets = session.createQuery("FROM ClassSocketToChipset").list();
-            transaction.commit();
-        } 
-        catch (Exception e) 
-        {
-            if (transaction != null) 
-            {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return socketToChipsets;
     }
 
 

@@ -21,6 +21,5 @@
         <mapping class="al.exe.ClassBrand" />
         <mapping class="al.exe.ClassSocket" />
         <mapping class="al.exe.ClassChipset" />
-        <mapping class="al.exe.ClassSocketToChipset" />
     </session-factory>
 </hibernate-configuration>

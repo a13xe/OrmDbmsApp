@@ -152,29 +152,6 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
--- -----------------------------------------------------
--- Table `pc`.`socket_to_chipset`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pc`.`socket_to_chipset` ;
-
-CREATE TABLE IF NOT EXISTS `pc`.`socket_to_chipset` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `socket_id` INT NOT NULL,
-  `chipset_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_socket_to_chipset_socket1_idx` (`socket_id` ASC) VISIBLE,
-  INDEX `fk_socket_to_chipset_chipset1_idx` (`chipset_id` ASC) VISIBLE,
-  CONSTRAINT `fk_socket_to_chipset_chipset1`
-    FOREIGN KEY (`chipset_id`)
-    REFERENCES `pc`.`chipset` (`id`),
-  CONSTRAINT `fk_socket_to_chipset_socket1`
-    FOREIGN KEY (`socket_id`)
-    REFERENCES `pc`.`socket` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -213,15 +190,6 @@ VALUES
   (1, 'LGA 1151'),
   (2, 'AM4'),
   (3, 'TR4');
-  
-INSERT INTO socket_to_chipset (id, socket_id, chipset_id)
-VALUES
-  (1, 1, 1),
-  (2, 2, 2),
-  (3, 1, 3),
-  (4, 2, 4),
-  (5, 3, 5),
-  (6, 3, 6);
   
 INSERT INTO cpu (id, model, price, cores, threads, frequency, brand_id, socket_id)
 VALUES

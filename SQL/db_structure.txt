@@ -38,8 +38,3 @@ table `mbrd`:
 table `socket`:
 - id (INT)
 - name (VARCHAR(255))
-
-table `socket_to_chipset`:
-- id (INT)
-- socket_id (INT)
-- chipset_id (INT)
