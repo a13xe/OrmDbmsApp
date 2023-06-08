@@ -11,7 +11,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Vector;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.util.logging.Logger;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
@@ -20,6 +22,8 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -94,8 +98,8 @@ public class DBMSApp extends JFrame
     // Chipset Fields
     private JTextField chipsetNameField;
     // Create filter components
-    private JComboBox<String> filterComboBox;
-    private JTextField filterTextField;
+    private JComboBox<String> filterCPUComboBox, filterPCBComboBox, filterGPUComboBox;
+    private JTextField filterCPUTextField, filterPCBTextField, filterGPUTextField;
 
     //exception class
     private class TextFieldException extends Exception 
@@ -241,15 +245,31 @@ public class DBMSApp extends JFrame
         //    Filter Components    //
         //                         //
         /////////////////////////////
-        // Create filter components for CPU
-        filterComboBox = new JComboBox<>(new String[]{"Model", "Price", "Cores", "Threads", "Frequency", "Brand ID", "Socket ID"});
-        filterTextField = new JTextField();
-        // Create filter panel
-        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        filterPanel.add(new JLabel("Filter By:"));
-        filterPanel.add(filterComboBox);
-        filterPanel.add(new JLabel("Value:"));
-        filterPanel.add(filterTextField);
+        // Create filter components
+        filterCPUComboBox = new JComboBox<>(new String[]{"Model", "Price", "Cores", "Threads", "Frequency", "Brand", "Socket"});
+        filterCPUTextField = new JTextField(16);
+        filterGPUComboBox = new JComboBox<>(new String[]{"Model", "Price", "Cores", "Memory", "Frequency", "Brand"});
+        filterGPUTextField = new JTextField(16);
+        filterPCBComboBox = new JComboBox<>(new String[]{"Model", "Price", "Brand", "Socket", "Chipset"});
+        filterPCBTextField = new JTextField(16);
+        // Add elements to the panel
+        JPanel filterCPUPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        filterCPUPanel.add(new JLabel("Filter By:"));
+        filterCPUPanel.add(filterCPUComboBox);
+        filterCPUPanel.add(new JLabel("Value:"));
+        filterCPUPanel.add(filterCPUTextField);
+        // Add elements to the panel
+        JPanel filterGPUPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        filterGPUPanel.add(new JLabel("Filter By:"));
+        filterGPUPanel.add(filterGPUComboBox);
+        filterGPUPanel.add(new JLabel("Value:"));
+        filterGPUPanel.add(filterGPUTextField);
+        // Add elements to the panel
+        JPanel filterPCBPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        filterPCBPanel.add(new JLabel("Filter By:"));
+        filterPCBPanel.add(filterPCBComboBox);
+        filterPCBPanel.add(new JLabel("Value:"));
+        filterPCBPanel.add(filterPCBTextField);
 
         ////////////////////////
         //                    //
@@ -346,9 +366,11 @@ public class DBMSApp extends JFrame
         /////////////////////////
 
         JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton);
-        cpuButtonPanel.add(filterPanel, BorderLayout.NORTH);
+        cpuButtonPanel.add(filterCPUPanel, BorderLayout.NORTH);
         JPanel gpuButtonPanel = createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton);
+        gpuButtonPanel.add(filterGPUPanel, BorderLayout.NORTH);
         JPanel pcbButtonPanel = createButtonPanel(addPCBButton, deletePCBButton, updatePCBButton, pdfExportPCBButton);
+        pcbButtonPanel.add(filterPCBPanel, BorderLayout.NORTH);
         JPanel brandButtonPanel = createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton);
         JPanel socketButtonPanel = createButtonPanel(addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton);
         JPanel chipsetButtonPanel = createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton);
@@ -407,6 +429,91 @@ public class DBMSApp extends JFrame
         populateTables();
 
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  ________  ______  __     ________  ________  _______         __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        // /        |/      |/  |   /        |/        |/       \       /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // $$$$$$$$/ $$$$$$/ $$ |   $$$$$$$$/ $$$$$$$$/ $$$$$$$  |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ |__      $$ |  $$ |      $$ |   $$ |__    $$ |__$$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$    |     $$ |  $$ |      $$ |   $$    |   $$    $$<       $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$$$$/      $$ |  $$ |      $$ |   $$$$$/    $$$$$$$  |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ |       _$$ |_ $$ |_____ $$ |   $$ |_____ $$ |  $$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$ |      / $$   |$$       |$$ |   $$       |$$ |  $$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        // $$/       $$$$$$/ $$$$$$$$/ $$/    $$$$$$$$/ $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                                       //
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        filterCPUComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                applyCPUFilter();
+            }
+        });
+
+         filterCPUTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override   
+            public void insertUpdate(DocumentEvent e) {
+                applyCPUFilter();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                applyCPUFilter();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                applyCPUFilter();
+            }
+        });
+
+        filterGPUComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                applyGPUFilter();
+            }
+        });
+
+         filterGPUTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override   
+            public void insertUpdate(DocumentEvent e) {
+                applyGPUFilter();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                applyGPUFilter();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                applyGPUFilter();
+            }
+        });
+
+        filterPCBComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                applyPCBFilter();
+            }
+        });
+
+        filterPCBTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override   
+            public void insertUpdate(DocumentEvent e) {
+                applyPCBFilter();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                applyPCBFilter();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                applyPCBFilter();
+            }
+        });
+
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //   ______   _______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
         //  /      \ /       \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
@@ -419,6 +526,7 @@ public class DBMSApp extends JFrame
         //  $$$$$$/  $$/        $$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                              //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        {
         addCPUButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
@@ -1773,7 +1881,6 @@ public class DBMSApp extends JFrame
                 }
             }
         });
-        
         socketTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) 
@@ -1915,6 +2022,7 @@ public class DBMSApp extends JFrame
         tabbedPane.setSelectedIndex(0);
         setVisible(true);
     }
+    } 
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1939,12 +2047,7 @@ public class DBMSApp extends JFrame
         cpuTableModel.setRowCount(0);
         gpuTableModel.setRowCount(0);
         pcbTableModel.setRowCount(0);
-        // Populate the tables with data from the database
-
-        // List<ClassBrand> brands = retrieveBrands();
-        // for (ClassBrand brand : brands) {
-        //     brandTableModel.addRow(new Object[]{brand.getName()});
-        // }    
+        // Populate the tables with data from the database  
         try (Session session = getSession()) {
             List<ClassBrand> brands = session.createQuery("FROM ClassBrand", ClassBrand.class).list();
             for (ClassBrand brand : brands) {
@@ -1953,11 +2056,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // List<ClassChipset> chipsets = retrieveChipsets();
-        // for (ClassChipset chipset : chipsets) {
-        //     chipsetTableModel.addRow(new Object[]{chipset.getName()});
-        // }
         try (Session session = getSession()) {
             List<ClassChipset> chipsets = session.createQuery("FROM ClassChipset", ClassChipset.class).list();
             for (ClassChipset chipset : chipsets) {
@@ -1966,11 +2064,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // List<ClassSocket> sockets = retrieveSockets();
-        // for (ClassSocket socket : sockets) {
-        //     socketTableModel.addRow(new Object[]{socket.getName()});
-        // }
         try (Session session = getSession()) {
             List<ClassSocket> sockets = session.createQuery("FROM ClassSocket", ClassSocket.class).list();
             for (ClassSocket socket : sockets) {
@@ -1979,11 +2072,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
-        // List<ClassCPU> cpus = retrieveCPUs();
-        // for (ClassCPU cpu : cpus) {
-        //     cpuTableModel.addRow(new Object[]{cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(), cpu.getFrequency(), cpu.getBrand().getName(), cpu.getSocket().getName()});
-        // }
         try (Session session = getSession()) {
             List<ClassCPU> cpus = session.createQuery("FROM ClassCPU", ClassCPU.class).list();
             for (ClassCPU cpu : cpus) {
@@ -1992,11 +2080,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // List<ClassGPU> gpus = retrieveGPUs();
-        // for (ClassGPU gpu : gpus) {
-        //     gpuTableModel.addRow(new Object[]{gpu.getModel(), gpu.getPrice(), gpu.getCores(), gpu.getMemory(), gpu.getFrequency(), gpu.getBrand().getName()});
-        // }
         try (Session session = getSession()) {
             List<ClassGPU> gpus = session.createQuery("FROM ClassGPU", ClassGPU.class).list();
             for (ClassGPU gpu : gpus) {
@@ -2005,10 +2088,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
-        // List<ClassPCB> motherboards = retrievePCBs();
-        // for (ClassPCB motherboard : motherboards) {pcbTableModel.addRow(new Object[]{motherboard.getModel(), motherboard.getPrice(), motherboard.getBrand().getName(), motherboard.getSocket().getName(), motherboard.getChipset().getName()});
-        // }
         try (Session session = getSession()) {
             List<ClassPCB> motherboards = session.createQuery("FROM ClassPCB", ClassPCB.class).list();
             for (ClassPCB motherboard : motherboards) {
@@ -2189,13 +2268,6 @@ public class DBMSApp extends JFrame
         pcbBrandComboBox .removeAllItems();
         pcbSocketComboBox.removeAllItems();
         pcbChipsetComboBox.removeAllItems();
-        // List<ClassBrand> tempbrands = retrieveBrands();
-        // List<ClassSocket> tempsockets = retrieveSockets();
-        // List<ClassChipset> tempchipsets = retrieveChipsets();
-        // for (ClassBrand tempbrand : tempbrands) 
-        // {
-        //     cpuBrandComboBox.addItem(tempbrand.getName());
-        // }
         try (Session session = getSession()) {
             List<ClassBrand> brands = session.createQuery("FROM ClassBrand", ClassBrand.class).list();
             for (ClassBrand brand : brands) {
@@ -2204,11 +2276,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // for (ClassSocket tempsocket : tempsockets) 
-        // {
-        //     cpuSocketComboBox.addItem(tempsocket.getName());
-        // }
         try (Session session = getSession()) {
             List<ClassSocket> sockets = session.createQuery("FROM ClassSocket", ClassSocket.class).list();
             for (ClassSocket socket : sockets) {
@@ -2217,11 +2284,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // for (ClassBrand tempbrand : tempbrands) 
-        // {
-        //     gpuBrandComboBox.addItem(tempbrand.getName());
-        // }
         try (Session session = getSession()) {
             List<ClassBrand> brands = session.createQuery("FROM ClassBrand", ClassBrand.class).list();
             for (ClassBrand brand : brands) {
@@ -2230,11 +2292,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // for (ClassBrand tempbrand : tempbrands) 
-        // {
-        //     pcbBrandComboBox.addItem(tempbrand.getName());
-        // }
         try (Session session = getSession()) {
             List<ClassBrand> brands = session.createQuery("FROM ClassBrand", ClassBrand.class).list();
             for (ClassBrand brand : brands) {
@@ -2243,11 +2300,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // for (ClassSocket tempsocket : tempsockets) 
-        // {
-        //     pcbSocketComboBox.addItem(tempsocket.getName());
-        // }
         try (Session session = getSession()) {
             List<ClassSocket> sockets = session.createQuery("FROM ClassSocket", ClassSocket.class).list();
             for (ClassSocket socket : sockets) {
@@ -2256,11 +2308,6 @@ public class DBMSApp extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // for (ClassChipset tempchipset : tempchipsets) 
-        // {
-        //     pcbChipsetComboBox.addItem(tempchipset.getName());
-        // }
         try (Session session = getSession()) {
             List<ClassChipset> chipsets = session.createQuery("FROM ClassChipset", ClassChipset.class).list();
             for (ClassChipset chipset : chipsets) {
@@ -2271,6 +2318,146 @@ public class DBMSApp extends JFrame
         }
     }
     
+    private void applyCPUFilter() {
+        String column = filterCPUComboBox.getSelectedItem().toString();
+        String value = filterCPUTextField.getText(); // .getText().trim();
+
+        if (column.isEmpty() || value.isEmpty()) {
+            // If either the column or value is empty, show all rows
+            showAllRows(cpuTable, cpuTableModel);
+        } else {
+            // Filter the rows based on the selected column and value
+            List<Integer> filteredRows = new ArrayList<>();
+            for (int i = 0; i < cpuTableModel.getRowCount(); i++) 
+            {
+                Object cellValue = cpuTableModel.getValueAt(i, getCPUColumnIndex(column));
+                if (cellValue != null && cellValue.toString().toLowerCase().contains(value.toLowerCase())) 
+                {
+                    filteredRows.add(i);
+                }
+            }
+            // Show only the filtered rows
+            showFilteredRows(cpuTable, filteredRows);
+        }
+    }
+    
+    private void applyGPUFilter() {
+        String column = filterGPUComboBox.getSelectedItem().toString();
+        String value = filterGPUTextField.getText(); // .getText().trim();
+
+        if (column.isEmpty() || value.isEmpty()) {
+            // If either the column or value is empty, show all rows
+            showAllRows(gpuTable, gpuTableModel);
+        } else {
+            // Filter the rows based on the selected column and value
+            List<Integer> filteredRows = new ArrayList<>();
+            for (int i = 0; i < gpuTableModel.getRowCount(); i++) 
+            {
+                Object cellValue = gpuTableModel.getValueAt(i, getGPUColumnIndex(column));
+                if (cellValue != null && cellValue.toString().toLowerCase().contains(value.toLowerCase())) 
+                {
+                    filteredRows.add(i);
+                }
+            }
+            // Show only the filtered rows
+            showFilteredRows(gpuTable, filteredRows);
+        }
+    }
+    
+    private void applyPCBFilter() {
+        String column = filterPCBComboBox.getSelectedItem().toString();
+        String value = filterPCBTextField.getText(); // .getText().trim();
+
+        if (column.isEmpty() || value.isEmpty()) {
+            // If either the column or value is empty, show all rows
+            showAllRows(pcbTable, pcbTableModel);
+        } else {
+            // Filter the rows based on the selected column and value
+            List<Integer> filteredRows = new ArrayList<>();
+            for (int i = 0; i < pcbTableModel.getRowCount(); i++) 
+            {
+                Object cellValue = pcbTableModel.getValueAt(i, getPCBColumnIndex(column));
+                if (cellValue != null && cellValue.toString().toLowerCase().contains(value.toLowerCase())) 
+                {
+                    filteredRows.add(i);
+                }
+            }
+            // Show only the filtered rows
+            showFilteredRows(pcbTable, filteredRows);
+        }
+    }
+
+    private int getCPUColumnIndex(String column) {
+        switch (column) {
+            case "Model":
+                return 0;
+            case "Price":
+                return 1;
+            case "Cores":
+                return 2;
+            case "Threads":
+                return 3;
+            case "Frequency":
+                return 4;
+            case "Brand":
+                return 5;
+            case "Socket":
+                return 6;
+            default:
+                return -1; // Return -1 for unknown options
+        }
+    }
+    
+    private int getGPUColumnIndex(String column) {
+        switch (column) {
+            case "Model":
+                return 0;
+            case "Price":
+                return 1;
+            case "Cores":
+                return 2;
+            case "Memory":
+                return 3;
+            case "Frequency":
+                return 4;
+            case "Brand":
+                return 5;
+            default:
+                return -1; // Return -1 for unknown options
+        }
+    }
+    
+    private int getPCBColumnIndex(String column) {
+        switch (column) {
+            case "Model":
+                return 0;
+            case "Price":
+                return 1;
+            case "Brand":
+                return 2;
+            case "Socket":
+                return 3;
+            case "Chipset":
+                return 4;
+            default:
+                return -1; // Return -1 for unknown options
+        }
+    }
+
+    private void showAllRows(JTable table, DefaultTableModel model) {
+        table.clearSelection();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            table.addRowSelectionInterval(i, i);
+        }
+    }
+
+    private void showFilteredRows(JTable table, List<Integer> rows) {
+        table.clearSelection();
+        for (int row : rows) {
+            table.addRowSelectionInterval(row, row);
+        }
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //  _______   __    __  __    __        __  _______   ________  _______   __    __   ______         _______   _______    ______    ______   _______    ______   __       __  //
