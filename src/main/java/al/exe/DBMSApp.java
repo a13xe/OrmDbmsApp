@@ -105,6 +105,9 @@ public class DBMSApp extends JFrame
     private JTextField socketNameField;
     // Chipset Fields
     private JTextField chipsetNameField;
+    // Create filter components
+    private JComboBox<String> filterComboBox;
+    private JTextField filterTextField;
 
     //exception class
     private class TextFieldException extends Exception 
@@ -188,7 +191,6 @@ public class DBMSApp extends JFrame
         pdfExportBrandButton = new JButton("PDF");
         commitBrandButton = new JButton("Commit changes");
 
-
         addChipsetButton = new JButton("Add");
         deleteChipsetButton = new JButton("Delete");
         updateChipsetButton = new JButton("Update");
@@ -251,6 +253,21 @@ public class DBMSApp extends JFrame
         socketNameField = new JTextField(255);
         // Create Chipset fields
         chipsetNameField = new JTextField(255);
+
+        /////////////////////////////
+        //                         //
+        //    Filter Components    //
+        //                         //
+        /////////////////////////////
+        // Create filter components for CPU
+        filterComboBox = new JComboBox<>(new String[]{"Model", "Price", "Cores", "Threads", "Frequency", "Brand ID", "Socket ID"});
+        filterTextField = new JTextField();
+        // Create filter panel
+        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        filterPanel.add(new JLabel("Filter By:"));
+        filterPanel.add(filterComboBox);
+        filterPanel.add(new JLabel("Value:"));
+        filterPanel.add(filterTextField);
 
         ////////////////////////
         //                    //
@@ -345,7 +362,9 @@ public class DBMSApp extends JFrame
         //    Button panels    //
         //                     //
         /////////////////////////
+
         JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton, commitCPUButton);
+        cpuButtonPanel.add(filterPanel, BorderLayout.NORTH);
         JPanel gpuButtonPanel = createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton, commitGPUButton);
         JPanel pcbButtonPanel = createButtonPanel(addPCBButton, deletePCBButton, updatePCBButton, pdfExportPCBButton, commitPCBButton);
         JPanel brandButtonPanel = createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton, commitBrandButton);
@@ -1069,8 +1088,6 @@ public class DBMSApp extends JFrame
         {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to add new data to the table PCB");
                 if (brandNameField.getText().isBlank())
                 {
                     JOptionPane.showMessageDialog(brandPanel, "You must fill all text fields first!");
@@ -1079,7 +1096,22 @@ public class DBMSApp extends JFrame
                 {
                     String name = brandNameField.getText();
                     Object[] rowData = {name};
-                    brandTableModel.addRow(rowData);
+                    ClassBrand brand = new ClassBrand();
+                    brand.setName(name);
+                    try (Session session = getSession())
+                    {
+                        Transaction transaction = session.beginTransaction();
+                        session.save(brand);
+                        transaction.commit();
+                        brandTableModel.addRow(rowData);
+                        JOptionPane.showMessageDialog(null, "Brand added successfully.");
+                        updateAllDropBoxes();
+                    } 
+                    catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Failed to add brand: "+ex);
+                    }
                 }
             }
         });
@@ -1087,39 +1119,50 @@ public class DBMSApp extends JFrame
         updateBrandButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
-            {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to update data");
+            {         
                 int row = brandTable.getSelectedRow();
                 if (row != -1) 
                 {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        try 
-                        {
-                            checkIfEmpty(brandNameField);
-                            String name = brandNameField.getText();
-                            brandTable.setValueAt(name, row, 0);
+                        int selectedRow = brandTable.getSelectedRow();
+
+                        if (selectedRow != -1) {
+                            String oldBrandName = (String) brandTableModel.getValueAt(selectedRow, 0);
+                            String newBrandName = brandNameField.getText();
+                    
+                            if (newBrandName != null && !newBrandName.isEmpty()) {
+                                try (Session session = getSession()) {
+                                    Transaction transaction = session.beginTransaction();
+                                    ClassBrand brand = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", oldBrandName).uniqueResult();
+                                    if (brand != null) {
+                                        brand.setName(newBrandName);
+                                        session.update(brand);
+                                        populateTables();
+                                        transaction.commit();
+                                        populateTables();
+                                        updateAllDropBoxes();
+                                        JOptionPane.showMessageDialog(null, "Brand updated successfully.");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Brand not found.");
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    JOptionPane.showMessageDialog(null, "Failed to update brand.");
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Invalid brand name.");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No brand selected.");
                         }
-                        catch(NullPointerException ex) 
-                        {
-                            JOptionPane.showMessageDialog(brandPanel, "You must fill all text fields first!");
-                        }
-                        catch(TextFieldException myEx) 
-                        {
-                            JOptionPane.showMessageDialog(brandPanel, "You must fill all text fields first!");
-                        }
-                    } 
-                    else 
-                    {
+                    } else {
                         System.out.println("User clicked NO");
                     }
-                }
-                else
-                {
+                } else {
                     JOptionPane.showMessageDialog(brandPanel, "Сan't update any record! Please select one!", "Error", row);
                 }
             }
@@ -1129,28 +1172,54 @@ public class DBMSApp extends JFrame
         {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to delete record in your table");
-                int row = brandTable.getSelectedRow();
-                if (row != -1) 
-                {
+                
+                
+                int selectedRow = brandTable.getSelectedRow();
+
+                if (selectedRow != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        System.out.println("User clicked YES");
-                        brandTableModel.removeRow(row);
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
+                        String brandName = (String) brandTableModel.getValueAt(selectedRow, 0);
+                
+                        try (Session session = getSession()) {
+                            Transaction transaction = session.beginTransaction();
+                            ClassBrand brand = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brandName).uniqueResult();
+                            if (brand != null) {
+                                session.delete(brand);
+                                transaction.commit();
+                                populateTables(); // Refresh the table data after deleting the brand
+                                updateAllDropBoxes();
+                                JOptionPane.showMessageDialog(null, "Brand deleted successfully.");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Brand not found.");
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to delete brand.");
+                        }
                     }
+                } else {
+                    JOptionPane.showMessageDialog(null, "No brand selected.");
                 }
-                else
-                {
-                    JOptionPane.showMessageDialog(brandPanel, "Сan't delete record! Please select one!", "Error", row);
-                }
+
+                // int row = brandTable.getSelectedRow();
+                // if (row != -1) 
+                // {
+                //     // create the popup window with yes/no options
+                //     int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                //     // handle the user's choice
+                //     if (choice == JOptionPane.YES_OPTION) 
+                //     {
+                //         brandTableModel.removeRow(row);
+                //     } 
+                // }
+                // else
+                // {
+                //     JOptionPane.showMessageDialog(brandPanel, "Сan't delete record! Please select one!", "Error", row);
+                // }
             }
         });
 
@@ -2045,36 +2114,92 @@ public class DBMSApp extends JFrame
     //                                                                                                                                                                                                                                  //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Populate the tables with data from the database
-    private void populateTables() {
+    private void populateTables() 
+    {
+        // Clear tables
+        brandTableModel.setRowCount(0);
+        socketTableModel.setRowCount(0);
+        chipsetTableModel.setRowCount(0);
+        cpuTableModel.setRowCount(0);
+        gpuTableModel.setRowCount(0);
+        pcbTableModel.setRowCount(0);
         // Populate the tables with data from the database
-        // You need to implement the necessary methods to retrieve data from the database
-        List<ClassBrand> brands = retrieveBrands();
-        for (ClassBrand brand : brands) {
-            brandTableModel.addRow(new Object[]{brand.getName()});
-        }
-    
-        List<ClassChipset> chipsets = retrieveChipsets();
-        for (ClassChipset chipset : chipsets) {
-            chipsetTableModel.addRow(new Object[]{chipset.getName()});
-        }
-    
-        List<ClassSocket> sockets = retrieveSockets();
-        for (ClassSocket socket : sockets) {
-            socketTableModel.addRow(new Object[]{socket.getName()});
-        }
-    
-        List<ClassCPU> cpus = retrieveCPUs();
-        for (ClassCPU cpu : cpus) {
-            cpuTableModel.addRow(new Object[]{cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(), cpu.getFrequency(), cpu.getBrand().getName(), cpu.getSocket().getName()});
+
+        // List<ClassBrand> brands = retrieveBrands();
+        // for (ClassBrand brand : brands) {
+        //     brandTableModel.addRow(new Object[]{brand.getName()});
+        // }    
+        try (Session session = getSession()) {
+            List<ClassBrand> brands = session.createQuery("FROM ClassBrand", ClassBrand.class).list();
+            for (ClassBrand brand : brands) {
+                brandTableModel.addRow(new Object[]{brand.getName()});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        List<ClassGPU> gpus = retrieveGPUs();
-        for (ClassGPU gpu : gpus) {
-            gpuTableModel.addRow(new Object[]{gpu.getModel(), gpu.getPrice(), gpu.getCores(), gpu.getMemory(), gpu.getFrequency(), gpu.getBrand().getName()});
+        // List<ClassChipset> chipsets = retrieveChipsets();
+        // for (ClassChipset chipset : chipsets) {
+        //     chipsetTableModel.addRow(new Object[]{chipset.getName()});
+        // }
+        try (Session session = getSession()) {
+            List<ClassChipset> chipsets = session.createQuery("FROM ClassChipset", ClassChipset.class).list();
+            for (ClassChipset chipset : chipsets) {
+                chipsetTableModel.addRow(new Object[]{chipset.getName()});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // List<ClassSocket> sockets = retrieveSockets();
+        // for (ClassSocket socket : sockets) {
+        //     socketTableModel.addRow(new Object[]{socket.getName()});
+        // }
+        try (Session session = getSession()) {
+            List<ClassSocket> sockets = session.createQuery("FROM ClassSocket", ClassSocket.class).list();
+            for (ClassSocket socket : sockets) {
+                socketTableModel.addRow(new Object[]{socket.getName()});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     
-        List<ClassPCB> motherboards = retrievePCBs();
-        for (ClassPCB motherboard : motherboards) {pcbTableModel.addRow(new Object[]{motherboard.getModel(), motherboard.getPrice(), motherboard.getBrand().getName(), motherboard.getSocket().getName(), motherboard.getChipset().getName()});
+        // List<ClassCPU> cpus = retrieveCPUs();
+        // for (ClassCPU cpu : cpus) {
+        //     cpuTableModel.addRow(new Object[]{cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(), cpu.getFrequency(), cpu.getBrand().getName(), cpu.getSocket().getName()});
+        // }
+        try (Session session = getSession()) {
+            List<ClassCPU> cpus = session.createQuery("FROM ClassCPU", ClassCPU.class).list();
+            for (ClassCPU cpu : cpus) {
+                cpuTableModel.addRow(new Object[]{cpu.getModel(), cpu.getPrice(), cpu.getCores(), cpu.getThreads(), cpu.getFrequency(), cpu.getBrand().getName(), cpu.getSocket().getName()});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // List<ClassGPU> gpus = retrieveGPUs();
+        // for (ClassGPU gpu : gpus) {
+        //     gpuTableModel.addRow(new Object[]{gpu.getModel(), gpu.getPrice(), gpu.getCores(), gpu.getMemory(), gpu.getFrequency(), gpu.getBrand().getName()});
+        // }
+        try (Session session = getSession()) {
+            List<ClassGPU> gpus = session.createQuery("FROM ClassGPU", ClassGPU.class).list();
+            for (ClassGPU gpu : gpus) {
+                gpuTableModel.addRow(new Object[]{gpu.getModel(), gpu.getPrice(), gpu.getCores(), gpu.getMemory(), gpu.getFrequency(), gpu.getBrand().getName()});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        // List<ClassPCB> motherboards = retrievePCBs();
+        // for (ClassPCB motherboard : motherboards) {pcbTableModel.addRow(new Object[]{motherboard.getModel(), motherboard.getPrice(), motherboard.getBrand().getName(), motherboard.getSocket().getName(), motherboard.getChipset().getName()});
+        // }
+        try (Session session = getSession()) {
+            List<ClassPCB> motherboards = session.createQuery("FROM ClassPCB", ClassPCB.class).list();
+            for (ClassPCB motherboard : motherboards) {
+                pcbTableModel.addRow(new Object[]{motherboard.getModel(), motherboard.getPrice(), motherboard.getBrand().getName(), motherboard.getSocket().getName(), motherboard.getChipset().getName()});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -2097,7 +2222,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            brands = session.createQuery("FROM ClassBrand").list();
+            brands = session.createQuery("FROM ClassBrand", ClassBrand.class).list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -2117,7 +2242,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            chipsets = session.createQuery("FROM ClassChipset").list();
+            chipsets = session.createQuery("FROM ClassChipset", ClassChipset.class).list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -2137,7 +2262,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            cpus = session.createQuery("FROM ClassCPU").list();
+            cpus = session.createQuery("FROM ClassCPU", ClassCPU.class).list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -2157,7 +2282,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            gpus = session.createQuery("FROM ClassGPU").list();
+            gpus = session.createQuery("FROM ClassGPU", ClassGPU.class).list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -2177,7 +2302,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            pcbs = session.createQuery("FROM ClassPCB").list();
+            pcbs = session.createQuery("FROM ClassPCB", ClassPCB.class).list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -2197,7 +2322,7 @@ public class DBMSApp extends JFrame
         try 
         {
             transaction = session.beginTransaction();
-            sockets = session.createQuery("FROM ClassSocket").list();
+            sockets = session.createQuery("FROM ClassSocket", ClassSocket.class).list();
             transaction.commit();
         } 
         catch (Exception e) 
@@ -2234,6 +2359,109 @@ public class DBMSApp extends JFrame
         buttonPanel.add(pdfExportButton);
         // buttonPanel.add(commitButton);
         return buttonPanel;
+    }
+
+    // Helper method to retrieve Hibernate session
+    private Session getSession() {
+        Configuration configuration = new Configuration().configure();
+        SessionFactory sessionFactory = configuration.buildSessionFactory();
+        return sessionFactory.openSession();
+    }
+
+    // Helper method to retrieve a brand by name
+    private int retrieveBrandByName(Session session, String name) 
+    {
+        return session.createQuery("id FROM brand where name = :name", int.class).setParameter("name", name).uniqueResult();
+    }
+
+    private void updateAllDropBoxes()
+    {
+        cpuBrandComboBox.removeAllItems();
+        cpuSocketComboBox.removeAllItems();
+        gpuBrandComboBox.removeAllItems();
+        pcbBrandComboBox .removeAllItems();
+        pcbSocketComboBox.removeAllItems();
+        pcbChipsetComboBox.removeAllItems();
+        // List<ClassBrand> tempbrands = retrieveBrands();
+        // List<ClassSocket> tempsockets = retrieveSockets();
+        // List<ClassChipset> tempchipsets = retrieveChipsets();
+        // for (ClassBrand tempbrand : tempbrands) 
+        // {
+        //     cpuBrandComboBox.addItem(tempbrand.getName());
+        // }
+        try (Session session = getSession()) {
+            List<ClassBrand> brands = session.createQuery("FROM ClassBrand", ClassBrand.class).list();
+            for (ClassBrand brand : brands) {
+                cpuBrandComboBox.addItem(brand.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // for (ClassSocket tempsocket : tempsockets) 
+        // {
+        //     cpuSocketComboBox.addItem(tempsocket.getName());
+        // }
+        try (Session session = getSession()) {
+            List<ClassSocket> sockets = session.createQuery("FROM ClassSocket", ClassSocket.class).list();
+            for (ClassSocket socket : sockets) {
+                cpuSocketComboBox.addItem(socket.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // for (ClassBrand tempbrand : tempbrands) 
+        // {
+        //     gpuBrandComboBox.addItem(tempbrand.getName());
+        // }
+        try (Session session = getSession()) {
+            List<ClassBrand> brands = session.createQuery("FROM ClassBrand", ClassBrand.class).list();
+            for (ClassBrand brand : brands) {
+                gpuBrandComboBox.addItem(brand.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // for (ClassBrand tempbrand : tempbrands) 
+        // {
+        //     pcbBrandComboBox.addItem(tempbrand.getName());
+        // }
+        try (Session session = getSession()) {
+            List<ClassBrand> brands = session.createQuery("FROM ClassBrand", ClassBrand.class).list();
+            for (ClassBrand brand : brands) {
+                pcbBrandComboBox.addItem(brand.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // for (ClassSocket tempsocket : tempsockets) 
+        // {
+        //     pcbSocketComboBox.addItem(tempsocket.getName());
+        // }
+        try (Session session = getSession()) {
+            List<ClassSocket> sockets = session.createQuery("FROM ClassSocket", ClassSocket.class).list();
+            for (ClassSocket socket : sockets) {
+                pcbSocketComboBox.addItem(socket.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // for (ClassChipset tempchipset : tempchipsets) 
+        // {
+        //     pcbChipsetComboBox.addItem(tempchipset.getName());
+        // }
+        try (Session session = getSession()) {
+            List<ClassChipset> chipsets = session.createQuery("FROM ClassChipset", ClassChipset.class).list();
+            for (ClassChipset chipset : chipsets) {
+                pcbChipsetComboBox.addItem(chipset.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
 
