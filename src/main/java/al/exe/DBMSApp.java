@@ -47,20 +47,8 @@ import al.exe.ClassChipset;
 import al.exe.HibernateUtil;
 
 
-///////////////////////////////////////////////////////////////////////////////
-//  _______   _______   __       __   ______    ______   _______   _______   //
-// /       \ /       \ /  \     /  | /      \  /      \ /       \ /       \  //
-// $$$$$$$  |$$$$$$$  |$$  \   /$$ |/$$$$$$  |/$$$$$$  |$$$$$$$  |$$$$$$$  | //
-// $$ |  $$ |$$ |__$$ |$$$  \ /$$$ |$$ \__$$/ $$ |__$$ |$$ |__$$ |$$ |__$$ | //
-// $$ |  $$ |$$    $$< $$$$  /$$$$ |$$      \ $$    $$ |$$    $$/ $$    $$/  //
-// $$ |  $$ |$$$$$$$  |$$ $$ $$/$$ | $$$$$$  |$$$$$$$$ |$$$$$$$/  $$$$$$$/   //
-// $$ |__$$ |$$ |__$$ |$$ |$$$/ $$ |/  \__$$ |$$ |  $$ |$$ |      $$ |       //
-// $$    $$/ $$    $$/ $$ | $/  $$ |$$    $$/ $$ |  $$ |$$ |      $$ |       //
-// $$$$$$$/  $$$$$$$/  $$/      $$/  $$$$$$/  $$/   $$/ $$/       $$/        //
-//                                                                           //
-///////////////////////////////////////////////////////////////////////////////
 public class DBMSApp extends JFrame 
-{   
+{
     private static final Logger LOGGER = Logger.getLogger(DBMSApp.class.getName());
     private static FileHandler fileHandler;
     // Hibernate
@@ -72,12 +60,12 @@ public class DBMSApp extends JFrame
     private JTable brandTable, chipsetTable, cpuTable, gpuTable, pcbTable, socketTable;
     private DefaultTableModel brandTableModel, chipsetTableModel, cpuTableModel, gpuTableModel, pcbTableModel, socketTableModel;
     // Buttons
-    private JButton addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton, commitCPUButton;
-    private JButton addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton, commitGPUButton;
-    private JButton addPCBButton, deletePCBButton, updatePCBButton, pdfExportPCBButton, commitPCBButton;
-    private JButton addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton, commitBrandButton;
-    private JButton addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton, commitSocketButton;
-    private JButton addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton, commitChipsetButton;
+    private JButton addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton;
+    private JButton addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton;
+    private JButton addPCBButton, deletePCBButton, updatePCBButton, pdfExportPCBButton;
+    private JButton addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton;
+    private JButton addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton;
+    private JButton addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton;
     // CPU Fields
     private JTextField cpuModelField;
     private JTextField cpuPriceField;
@@ -189,37 +177,31 @@ public class DBMSApp extends JFrame
         deleteBrandButton = new JButton("Delete");
         updateBrandButton = new JButton("Update");
         pdfExportBrandButton = new JButton("PDF");
-        commitBrandButton = new JButton("Commit changes");
 
         addChipsetButton = new JButton("Add");
         deleteChipsetButton = new JButton("Delete");
         updateChipsetButton = new JButton("Update");
         pdfExportChipsetButton = new JButton("PDF");
-        commitChipsetButton = new JButton("Commit changes");
 
         addCPUButton = new JButton("Add");
         deleteCPUButton = new JButton("Delete");
         updateCPUButton = new JButton("Update");
         pdfExportCPUButton = new JButton("PDF");
-        commitCPUButton = new JButton("Commit changes");
 
         addGPUButton = new JButton("Add");
         deleteGPUButton = new JButton("Delete");
         updateGPUButton = new JButton("Update");
         pdfExportGPUButton = new JButton("PDF");
-        commitGPUButton = new JButton("Commit changes");
 
         addPCBButton = new JButton("Add");
         deletePCBButton = new JButton("Delete");
         updatePCBButton = new JButton("Update");
         pdfExportPCBButton = new JButton("PDF");
-        commitPCBButton = new JButton("Commit changes");
 
         addSocketButton = new JButton("Add");
         deleteSocketButton = new JButton("Delete");
         updateSocketButton = new JButton("Update");
         pdfExportSocketButton = new JButton("PDF");
-        commitSocketButton = new JButton("Commit changes");
 
         /////////////////////////////////////////
         //                                     //
@@ -363,13 +345,13 @@ public class DBMSApp extends JFrame
         //                     //
         /////////////////////////
 
-        JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton, commitCPUButton);
+        JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton);
         cpuButtonPanel.add(filterPanel, BorderLayout.NORTH);
-        JPanel gpuButtonPanel = createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton, commitGPUButton);
-        JPanel pcbButtonPanel = createButtonPanel(addPCBButton, deletePCBButton, updatePCBButton, pdfExportPCBButton, commitPCBButton);
-        JPanel brandButtonPanel = createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton, commitBrandButton);
-        JPanel socketButtonPanel = createButtonPanel(addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton, commitSocketButton);
-        JPanel chipsetButtonPanel = createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton, commitChipsetButton);
+        JPanel gpuButtonPanel = createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton);
+        JPanel pcbButtonPanel = createButtonPanel(addPCBButton, deletePCBButton, updatePCBButton, pdfExportPCBButton);
+        JPanel brandButtonPanel = createButtonPanel(addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton);
+        JPanel socketButtonPanel = createButtonPanel(addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton);
+        JPanel chipsetButtonPanel = createButtonPanel(addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton);
 
         ////////////////////////////////////////////
         //                                        //
@@ -425,20 +407,6 @@ public class DBMSApp extends JFrame
         populateTables();
 
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //   ______   ________  ______   _______   ________                   ______    ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
-        //  /      \ /        |/      \ /       \ /        |                 /      \  /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
-        // /$$$$$$  |$$$$$$$$//$$$$$$  |$$$$$$$  |$$$$$$$$/        __       /$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$/ /$$$$$$  |$$  \ $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
-        // $$ \__$$/    $$ |  $$ |__$$ |$$ |__$$ |   $$ |         /  |      $$ |__$$ |$$ |  $$/    $$ |     $$ |  $$ |  $$ |$$$  \$$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
-        // $$      \    $$ |  $$    $$ |$$    $$<    $$ |         $$/       $$    $$ |$$ |         $$ |     $$ |  $$ |  $$ |$$$$  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
-        //  $$$$$$  |   $$ |  $$$$$$$$ |$$$$$$$  |   $$ |          __       $$$$$$$$ |$$ |   __    $$ |     $$ |  $$ |  $$ |$$ $$ $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
-        // /  \__$$ |   $$ |  $$ |  $$ |$$ |  $$ |   $$ |         /  |      $$ |  $$ |$$ \__/  |   $$ |    _$$ |_ $$ \__$$ |$$ |$$$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
-        // $$    $$/    $$ |  $$ |  $$ |$$ |  $$ |   $$ |         $$/       $$ |  $$ |$$    $$/    $$ |   / $$   |$$    $$/ $$ | $$$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
-        //  $$$$$$/     $$/   $$/   $$/ $$/   $$/    $$/                    $$/   $$/  $$$$$$/     $$/    $$$$$$/  $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
-        //                                                                                                                                                                                                                           //
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //   ______   _______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
         //  /      \ /       \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
@@ -451,13 +419,10 @@ public class DBMSApp extends JFrame
         //  $$$$$$/  $$/        $$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                              //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        addCPUButton.addActionListener(new ActionListener() 
-        {
+        addCPUButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to add new data to the table");
-                if (cpuModelField.getText().isBlank() || cpuPriceField.getText().isBlank() || cpuFrequencyField.getText().isBlank() || cpuCoresField.getText().isBlank() || cpuThreadsField.getText().isBlank())
+                if (cpuModelField.getText().isBlank())
                 {
                     JOptionPane.showMessageDialog(cpuPanel, "You must fill all text fields first!");
                 }
@@ -470,100 +435,136 @@ public class DBMSApp extends JFrame
                     int frequency = Integer.parseInt(cpuFrequencyField.getText());
                     String brand = cpuBrandComboBox.getSelectedItem().toString();
                     String socket = cpuSocketComboBox.getSelectedItem().toString();
+                    
+                    ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                    ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
+                    
                     Object[] rowData = {model, price, cores, threads, frequency, brand, socket};
-                    cpuTableModel.addRow(rowData);
+                    ClassCPU cpu = new ClassCPU();
+                    cpu.setModel(model);
+                    cpu.setPrice(price);
+                    cpu.setCores(cores);
+                    cpu.setThreads(threads);
+                    cpu.setFrequency(frequency);
+                    cpu.setBrand(brandObj);
+                    cpu.setSocket(socketObj);
+                    try (Session session = getSession())
+                    {
+                        Transaction transaction = session.beginTransaction();
+                        session.save(cpu);
+                        transaction.commit();
+                        cpuTableModel.addRow(rowData);
+                        JOptionPane.showMessageDialog(null, "cpu added successfully.");
+                        updateAllDropBoxes();
+                    } 
+                    catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Failed to add cpu: " + ex);
+                    }
                 }
             }
         });
 
-        updateCPUButton.addActionListener(new ActionListener() 
-        {
+        updateCPUButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to update data");
                 int row = cpuTable.getSelectedRow();
-                if (row != -1) 
-                {
+                if (row != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(cpuPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(cpuPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
-                    if (choice == JOptionPane.YES_OPTION) 
+                    if (choice == JOptionPane.YES_OPTION)
                     {
-                        try
-                        {
-                            checkIfEmpty(cpuModelField);
-                            checkIfEmpty(cpuPriceField);
-                            checkIfEmpty(cpuCoresField);
-                            checkIfEmpty(cpuThreadsField);
-                            checkIfEmpty(cpuFrequencyField);
+                        int selectedRow = cpuTable.getSelectedRow();
+                        if (selectedRow != -1) {
+                            String oldModelName = (String) cpuTableModel.getValueAt(selectedRow, 0);
                             String model = cpuModelField.getText();
-                            String brand = cpuBrandComboBox.getSelectedItem().toString();
                             double price = Double.parseDouble(cpuPriceField.getText());
                             int cores = Integer.parseInt(cpuCoresField.getText());
                             int threads = Integer.parseInt(cpuThreadsField.getText());
                             int frequency = Integer.parseInt(cpuFrequencyField.getText());
+                            String brand = cpuBrandComboBox.getSelectedItem().toString();
                             String socket = cpuSocketComboBox.getSelectedItem().toString();
-                            cpuTableModel.setValueAt(model, row, 0);
-                            cpuTableModel.setValueAt(price, row, 1);
-                            cpuTableModel.setValueAt(cores, row, 2);
-                            cpuTableModel.setValueAt(threads, row, 3);
-                            cpuTableModel.setValueAt(frequency, row, 4);
-                            cpuTableModel.setValueAt(brand, row, 5);
-                            cpuTableModel.setValueAt(socket, row, 6);
+                            
+                            ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                            ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
+
+                            if (model != null && !model.isEmpty()) {
+                                try (Session session = getSession()) {
+                                    Transaction transaction = session.beginTransaction();
+                                    ClassCPU cpu = (ClassCPU) session.createQuery("FROM ClassCPU WHERE model = :model").setParameter("model", oldModelName).uniqueResult();
+                                    if (cpu != null) {
+                                        cpu.setModel(model);
+                                        cpu.setPrice(price);
+                                        cpu.setCores(cores);
+                                        cpu.setThreads(threads);
+                                        cpu.setFrequency(frequency);
+                                        cpu.setBrand(brandObj);
+                                        cpu.setSocket(socketObj);
+                                        session.update(cpu);
+                                        populateTables();
+                                        transaction.commit();
+                                        populateTables();
+                                        updateAllDropBoxes();
+                                        JOptionPane.showMessageDialog(null, "cpu updated successfully.");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "cpu not found.");
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    JOptionPane.showMessageDialog(null, "Failed to update cpu: " + ex);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Invalid cpu name.");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No cpu selected.");
                         }
-                        catch(NullPointerException ex) 
-                        {
-                            JOptionPane.showMessageDialog(cpuPanel, "You must fill all text fields first!");
-                        }
-                        catch(TextFieldException myEx) 
-                        {
-                            JOptionPane.showMessageDialog(cpuPanel, "You must fill all text fields first!");
-                        }
-                    } 
-                    else 
-                    {
+                    } else {
                         System.out.println("User clicked NO");
                     }
-                }
-                else
-                {
+                } else {
                     JOptionPane.showMessageDialog(cpuPanel, "Сan't update any record! Please select one!", "Error", row);
                 }
             }
         });
 
-        deleteCPUButton.addActionListener(new ActionListener() 
-        {
+        deleteCPUButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to delete record in your table");
-                int row = cpuTable.getSelectedRow();
-                if (row != -1) 
-                {
+                int selectedRow = cpuTable.getSelectedRow();
+                if (selectedRow != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(cpuPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(cpuPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        System.out.println("User clicked YES");
-                        cpuTableModel.removeRow(row);
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
+                        String cpuModel = (String) cpuTableModel.getValueAt(selectedRow, 0);
+                        try (Session session = getSession()) {
+                            Transaction transaction = session.beginTransaction();
+                            ClassCPU cpu = (ClassCPU) session.createQuery("FROM ClassCPU WHERE model = :model").setParameter("model", cpuModel).uniqueResult();
+                            if (cpu != null) {
+                                session.delete(cpu);
+                                transaction.commit();
+                                populateTables(); // Refresh the table data after deleting the cpu
+                                updateAllDropBoxes();
+                                JOptionPane.showMessageDialog(null, "cpu deleted successfully.");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "cpu not found.");
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to delete cpu: " + ex);
+                        }
                     }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(cpuPanel, "Сan't delete record! Please select one!", "Error", row);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No cpu selected.");
                 }
             }
         });
 
-        pdfExportCPUButton.addActionListener(new ActionListener() 
-        {
+        pdfExportCPUButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
@@ -645,13 +646,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        commitCPUButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            }
-        });
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //   ______   _______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
@@ -665,13 +659,10 @@ public class DBMSApp extends JFrame
         //  $$$$$$/  $$/        $$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                              //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        addGPUButton.addActionListener(new ActionListener() 
-        {
+        addGPUButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to add new data to the table GPU");
-                if (gpuModelField.getText().isBlank() || gpuPriceField.getText().isBlank() || gpuFrequencyField.getText().isBlank() || gpuCoresField.getText().isBlank() || gpuMemoryField.getText().isBlank())
+                if (gpuModelField.getText().isBlank())
                 {
                     JOptionPane.showMessageDialog(gpuPanel, "You must fill all text fields first!");
                 }
@@ -683,98 +674,132 @@ public class DBMSApp extends JFrame
                     int memory = Integer.parseInt(gpuMemoryField.getText());
                     int frequency = Integer.parseInt(gpuFrequencyField.getText());
                     String brand = gpuBrandComboBox.getSelectedItem().toString();
+                    
+                    ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                    
                     Object[] rowData = {model, price, cores, memory, frequency, brand};
-                    gpuTableModel.addRow(rowData);
+                    ClassGPU gpu = new ClassGPU();
+                    gpu.setModel(model);
+                    gpu.setPrice(price);
+                    gpu.setCores(cores);
+                    gpu.setMemory(memory);
+                    gpu.setFrequency(frequency);
+                    gpu.setBrand(brandObj);
+                    try (Session session = getSession())
+                    {
+                        Transaction transaction = session.beginTransaction();
+                        session.save(gpu);
+                        transaction.commit();
+                        gpuTableModel.addRow(rowData);
+                        JOptionPane.showMessageDialog(null, "gpu added successfully.");
+                        updateAllDropBoxes();
+                    } 
+                    catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Failed to add gpu: " + ex);
+                    }
                 }
             }
         });
 
-        updateGPUButton.addActionListener(new ActionListener() 
-        {
+        updateGPUButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to update data");
                 int row = gpuTable.getSelectedRow();
-                if (row != -1) 
-                {
+                if (row != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(gpuPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(gpuPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
-                    if (choice == JOptionPane.YES_OPTION) 
+                    if (choice == JOptionPane.YES_OPTION)
                     {
-                        try 
-                        {
-                            checkIfEmpty(gpuModelField);
-                            checkIfEmpty(gpuPriceField);
-                            checkIfEmpty(gpuCoresField);
-                            checkIfEmpty(gpuMemoryField);
-                            checkIfEmpty(gpuFrequencyField);
+                        int selectedRow = gpuTable.getSelectedRow();
+                        if (selectedRow != -1) {
+                            String oldModelName = (String) gpuTableModel.getValueAt(selectedRow, 0);
                             String model = gpuModelField.getText();
-                            String brand = gpuBrandComboBox.getSelectedItem().toString();
                             double price = Double.parseDouble(gpuPriceField.getText());
                             int cores = Integer.parseInt(gpuCoresField.getText());
                             int memory = Integer.parseInt(gpuMemoryField.getText());
                             int frequency = Integer.parseInt(gpuFrequencyField.getText());
-                            gpuTable.setValueAt(model, row, 0);
-                            gpuTable.setValueAt(price, row, 1);
-                            gpuTable.setValueAt(cores, row, 2);
-                            gpuTable.setValueAt(memory, row, 3);
-                            gpuTable.setValueAt(frequency, row, 4);
-                            gpuTable.setValueAt(brand, row, 5);
+                            String brand = gpuBrandComboBox.getSelectedItem().toString();
+
+                            ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+
+                            if (model != null && !model.isEmpty()) {
+                                try (Session session = getSession()) {
+                                    Transaction transaction = session.beginTransaction();
+                                    ClassGPU gpu = (ClassGPU) session.createQuery("FROM ClassGPU WHERE model = :model").setParameter("model", oldModelName).uniqueResult();
+                                    if (gpu != null) {
+                                        gpu.setModel(model);
+                                        gpu.setPrice(price);
+                                        gpu.setCores(cores);
+                                        gpu.setMemory(memory);
+                                        gpu.setFrequency(frequency);
+                                        gpu.setBrand(brandObj);
+                                        session.update(gpu);
+                                        populateTables();
+                                        transaction.commit();
+                                        populateTables();
+                                        updateAllDropBoxes();
+                                        JOptionPane.showMessageDialog(null, "gpu updated successfully.");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "gpu not found.");
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    JOptionPane.showMessageDialog(null, "Failed to update gpu: " + ex);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Invalid gpu name.");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No gpu selected.");
                         }
-                        catch(NullPointerException ex) 
-                        {
-                            JOptionPane.showMessageDialog(gpuPanel, "You must fill all text fields first!");
-                        }
-                        catch(TextFieldException myEx) 
-                        {
-                            JOptionPane.showMessageDialog(gpuPanel, "You must fill all text fields first!");
-                        }
-                    } 
-                    else 
-                    {
+                    } else {
                         System.out.println("User clicked NO");
                     }
-                }
-                else
-                {
+                } else {
                     JOptionPane.showMessageDialog(gpuPanel, "Сan't update any record! Please select one!", "Error", row);
                 }
             }
         });
 
-        deleteGPUButton.addActionListener(new ActionListener() 
-        {
+        deleteGPUButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to delete record in your table");
-                int row = gpuTable.getSelectedRow();
-                if (row != -1) 
-                {
+                int selectedRow = gpuTable.getSelectedRow();
+                if (selectedRow != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(gpuPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(gpuPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        System.out.println("User clicked YES");
-                        gpuTableModel.removeRow(row);
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
+                        String gpuModel = (String) gpuTableModel.getValueAt(selectedRow, 0);
+                
+                        try (Session session = getSession()) {
+                            Transaction transaction = session.beginTransaction();
+                            ClassGPU gpu = (ClassGPU) session.createQuery("FROM ClassGPU WHERE model = :model").setParameter("model", gpuModel).uniqueResult();
+                            if (gpu != null) {
+                                session.delete(gpu);
+                                transaction.commit();
+                                populateTables(); // Refresh the table data after deleting the gpu
+                                updateAllDropBoxes();
+                                JOptionPane.showMessageDialog(null, "gpu deleted successfully.");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "gpu not found.");
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to delete gpu: " + ex);
+                        }
                     }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(gpuPanel, "Сan't delete record! Please select one!", "Error", row);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No gpu selected.");
                 }
             }
         });
-
-        pdfExportGPUButton.addActionListener(new ActionListener() 
-        {
+        
+        pdfExportGPUButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
@@ -856,15 +881,6 @@ public class DBMSApp extends JFrame
             }
         });
 
-        
-        commitGPUButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            }
-        });
-
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  _______    ______   _______         __        ______   ______   ________  ________  __    __  ________  _______    ______   //
@@ -878,13 +894,10 @@ public class DBMSApp extends JFrame
         // $$/        $$$$$$/  $$$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                              //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        addPCBButton.addActionListener(new ActionListener() 
-        {
+        addPCBButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to add new data to the table PCB");
-                if (pcbModelField.getText().isBlank() || pcbPriceField.getText().isBlank())
+                if (pcbModelField.getText().isBlank())
                 {
                     JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
                 }
@@ -895,93 +908,131 @@ public class DBMSApp extends JFrame
                     String brand = pcbBrandComboBox.getSelectedItem().toString();
                     String socket = pcbSocketComboBox.getSelectedItem().toString();
                     String chipset= pcbChipsetComboBox.getSelectedItem().toString();
+                    
+                    ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                    ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
+                    ClassChipset chipsetObj = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", chipset).uniqueResult();
+                    
                     Object[] rowData = {model, price, brand, socket, chipset};
-                    pcbTableModel.addRow(rowData);
+                    ClassPCB pcb = new ClassPCB();
+                    pcb.setModel(model);
+                    pcb.setPrice(price);
+                    pcb.setBrand(brandObj);
+                    pcb.setSocket(socketObj);
+                    pcb.setChipset(chipsetObj);
+                    try (Session session = getSession())
+                    {
+                        Transaction transaction = session.beginTransaction();
+                        session.save(pcb);
+                        transaction.commit();
+                        pcbTableModel.addRow(rowData);
+                        JOptionPane.showMessageDialog(null, "pcb added successfully.");
+                        updateAllDropBoxes();
+                    } 
+                    catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Failed to add pcb: " + ex);
+                    }
                 }
             }
         });
 
-        updatePCBButton.addActionListener(new ActionListener() 
-        {
+        updatePCBButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to update data");
                 int row = pcbTable.getSelectedRow();
-                if (row != -1) 
-                {
+                if (row != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        try 
-                        {
-                            checkIfEmpty(pcbModelField);
-                            checkIfEmpty(pcbPriceField);
+                        int selectedRow = pcbTable.getSelectedRow();
+                        if (selectedRow != -1) {
+                            String oldModelName = (String) pcbTableModel.getValueAt(selectedRow, 0);
                             String model = pcbModelField.getText();
                             double price = Double.parseDouble(pcbPriceField.getText());
                             String brand = pcbBrandComboBox.getSelectedItem().toString();
                             String socket = pcbSocketComboBox.getSelectedItem().toString();
-                            String chipset = pcbChipsetComboBox.getSelectedItem().toString();
-                            pcbTable.setValueAt(model, row, 0);
-                            pcbTable.setValueAt(price, row, 1);
-                            pcbTable.setValueAt(brand, row, 2);
-                            pcbTable.setValueAt(socket, row, 3);
-                            pcbTable.setValueAt(chipset, row, 4);
+                            String chipset= pcbChipsetComboBox.getSelectedItem().toString();
+                            ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                            ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
+                            ClassChipset chipsetObj = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", chipset).uniqueResult();
+                            if (model != null && !model.isEmpty()) {
+                                try (Session session = getSession()) {
+                                    Transaction transaction = session.beginTransaction();
+                                    ClassPCB pcb = (ClassPCB) session.createQuery("FROM ClassPCB WHERE model = :model").setParameter("model", oldModelName).uniqueResult();
+                                    if (pcb != null) {
+                                        pcb.setModel(model);
+                                        pcb.setPrice(price);
+                                        pcb.setBrand(brandObj);
+                                        pcb.setSocket(socketObj);
+                                        pcb.setChipset(chipsetObj);
+                                        session.update(pcb);
+                                        populateTables();
+                                        transaction.commit();
+                                        populateTables();
+                                        updateAllDropBoxes();
+                                        JOptionPane.showMessageDialog(null, "pcb updated successfully.");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "pcb not found.");
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    JOptionPane.showMessageDialog(null, "Failed to update pcb: " + ex);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Invalid pcb name.");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No pcb selected.");
                         }
-                        catch(NullPointerException ex) 
-                        {
-                            JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
-                        }
-                        catch(TextFieldException myEx) 
-                        {
-                            JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
-                        }
-                    } 
-                    else 
-                    {
+                    } else {
                         System.out.println("User clicked NO");
                     }
-                }
-                else
-                {
+                } else {
                     JOptionPane.showMessageDialog(pcbPanel, "Сan't update any record! Please select one!", "Error", row);
                 }
             }
         });
 
-        deletePCBButton.addActionListener(new ActionListener() 
-        {
+        deletePCBButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to delete record in your table");
-                int row = pcbTable.getSelectedRow();
-                if (row != -1) 
-                {
+                int selectedRow = pcbTable.getSelectedRow();
+                if (selectedRow != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        System.out.println("User clicked YES");
-                        pcbTableModel.removeRow(row);
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
+                        String pcbModel = (String) pcbTableModel.getValueAt(selectedRow, 0);
+                
+                        try (Session session = getSession()) {
+                            Transaction transaction = session.beginTransaction();
+                            ClassPCB pcb = (ClassPCB) session.createQuery("FROM ClassPCB WHERE model = :model").setParameter("model", pcbModel).uniqueResult();
+                            if (pcb != null) {
+                                session.delete(pcb);
+                                transaction.commit();
+                                populateTables(); // Refresh the table data after deleting the pcb
+                                updateAllDropBoxes();
+                                JOptionPane.showMessageDialog(null, "pcb deleted successfully.");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "pcb not found.");
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to delete pcb: " + ex);
+                        }
                     }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(pcbPanel, "Сan't delete record! Please select one!", "Error", row);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No pcb selected.");
                 }
             }
         });
 
-        pdfExportPCBButton.addActionListener(new ActionListener() 
-        {
+        pdfExportPCBButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
@@ -1062,14 +1113,6 @@ public class DBMSApp extends JFrame
                 }
             }
         });
-        
-        commitPCBButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            }
-        });
 
         
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1084,8 +1127,7 @@ public class DBMSApp extends JFrame
         // $$$$$$$/  $$/   $$/ $$/   $$/ $$/   $$/ $$$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                                                  //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        addBrandButton.addActionListener(new ActionListener() 
-        {
+        addBrandButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
                 if (brandNameField.getText().isBlank())
@@ -1110,19 +1152,16 @@ public class DBMSApp extends JFrame
                     catch (Exception ex)
                     {
                         ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Failed to add brand: "+ex);
+                        JOptionPane.showMessageDialog(null, "Failed to add brand: " + ex);
                     }
                 }
             }
         });
 
-        updateBrandButton.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {         
+        updateBrandButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {         
                 int row = brandTable.getSelectedRow();
-                if (row != -1) 
-                {
+                if (row != -1) {
                     // create the popup window with yes/no options
                     int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
@@ -1151,7 +1190,7 @@ public class DBMSApp extends JFrame
                                     }
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
-                                    JOptionPane.showMessageDialog(null, "Failed to update brand.");
+                                    JOptionPane.showMessageDialog(null, "Failed to update brand: " + ex);
                                 }
                             } else {
                                 JOptionPane.showMessageDialog(null, "Invalid brand name.");
@@ -1168,14 +1207,10 @@ public class DBMSApp extends JFrame
             }
         });
 
-        deleteBrandButton.addActionListener(new ActionListener() 
-        {
+        deleteBrandButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                
-                
                 int selectedRow = brandTable.getSelectedRow();
-
                 if (selectedRow != -1) {
                     // create the popup window with yes/no options
                     int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
@@ -1198,33 +1233,16 @@ public class DBMSApp extends JFrame
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
-                            JOptionPane.showMessageDialog(null, "Failed to delete brand.");
+                            JOptionPane.showMessageDialog(null, "Failed to delete brand: " + ex);
                         }
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "No brand selected.");
                 }
-
-                // int row = brandTable.getSelectedRow();
-                // if (row != -1) 
-                // {
-                //     // create the popup window with yes/no options
-                //     int choice = JOptionPane.showConfirmDialog(brandPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                //     // handle the user's choice
-                //     if (choice == JOptionPane.YES_OPTION) 
-                //     {
-                //         brandTableModel.removeRow(row);
-                //     } 
-                // }
-                // else
-                // {
-                //     JOptionPane.showMessageDialog(brandPanel, "Сan't delete record! Please select one!", "Error", row);
-                // }
             }
         });
 
-        pdfExportBrandButton.addActionListener(new ActionListener() 
-        {
+        pdfExportBrandButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
@@ -1305,14 +1323,6 @@ public class DBMSApp extends JFrame
                 }
             }
         });
-        
-        commitBrandButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            }
-        });
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1327,97 +1337,123 @@ public class DBMSApp extends JFrame
         //  $$$$$$/   $$$$$$/   $$$$$$/  $$/   $$/ $$$$$$$$/    $$/          $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                                                            //
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        addSocketButton.addActionListener(new ActionListener() 
-        {
+        addSocketButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to add new data to the table PCB");
                 if (socketNameField.getText().isBlank())
                 {
-                    JOptionPane.showMessageDialog(socketPanel, "You must fill all text fields first!");
+                    JOptionPane.showMessageDialog(null, "You must fill all text fields first!");
                 }
                 else
                 {
                     String name = socketNameField.getText();
                     Object[] rowData = {name};
-                    socketTableModel.addRow(rowData);
+                    ClassSocket socket = new ClassSocket();
+                    socket.setName(name);
+                    try (Session session = getSession())
+                    {
+                        Transaction transaction = session.beginTransaction();
+                        session.save(socket);
+                        transaction.commit();
+                        socketTableModel.addRow(rowData);
+                        JOptionPane.showMessageDialog(null, "Socket added successfully.");
+                        updateAllDropBoxes();
+                    } 
+                    catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Failed to add socket: " + ex);
+                    }
                 }
             }
         });
 
-        updateSocketButton.addActionListener(new ActionListener() 
-        {
+        updateSocketButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to update data");
                 int row = socketTable.getSelectedRow();
-                if (row != -1) 
-                {
+                if (row != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(socketPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(socketPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        try 
-                        {
-                            checkIfEmpty(socketNameField);
-                            String name = socketNameField.getText();
-                            socketTable.setValueAt(name, row, 0);
+                        int selectedRow = socketTable.getSelectedRow();
+
+                        if (selectedRow != -1) {
+                            String oldSocketName = (String) socketTableModel.getValueAt(selectedRow, 0);
+                            String newSocketName = socketNameField.getText();
+                    
+                            if (newSocketName != null && !newSocketName.isEmpty()) {
+                                try (Session session = getSession()) {
+                                    Transaction transaction = session.beginTransaction();
+                                    ClassSocket socket = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", oldSocketName).uniqueResult();
+                                    if (socket != null) {
+                                        socket.setName(newSocketName);
+                                        session.update(socket);
+                                        populateTables();
+                                        transaction.commit();
+                                        populateTables();
+                                        updateAllDropBoxes();
+                                        JOptionPane.showMessageDialog(null, "socket updated successfully.");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "socket not found.");
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    JOptionPane.showMessageDialog(null, "Failed to update socket: " + ex);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Invalid socket name.");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No socket selected.");
                         }
-                        catch(NullPointerException ex) 
-                        {
-                            JOptionPane.showMessageDialog(socketPanel, "You must fill all text fields first!");
-                        }
-                        catch(TextFieldException myEx) 
-                        {
-                            JOptionPane.showMessageDialog(socketPanel, "You must fill all text fields first!");
-                        }
-                    } 
-                    else 
-                    {
+                    } else {
                         System.out.println("User clicked NO");
                     }
-                }
-                else
-                {
+                } else {
                     JOptionPane.showMessageDialog(socketPanel, "Сan't update any record! Please select one!", "Error", row);
                 }
             }
         });
 
-        deleteSocketButton.addActionListener(new ActionListener() 
-        {
+        deleteSocketButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to delete record in your table");
-                int row = socketTable.getSelectedRow();
-                if (row != -1) 
-                {
+                int selectedRow = socketTable.getSelectedRow();
+                if (selectedRow != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(socketPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(socketPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        System.out.println("User clicked YES");
-                        socketTableModel.removeRow(row);
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
+                        String socketName = (String) socketTableModel.getValueAt(selectedRow, 0);
+                
+                        try (Session session = getSession()) {
+                            Transaction transaction = session.beginTransaction();
+                            ClassSocket socket = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socketName).uniqueResult();
+                            if (socket != null) {
+                                session.delete(socket);
+                                transaction.commit();
+                                populateTables(); // Refresh the table data after deleting the brand
+                                updateAllDropBoxes();
+                                JOptionPane.showMessageDialog(null, "socket deleted successfully.");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "socket not found.");
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to delete socket: " + ex);
+                        }
                     }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(socketPanel, "Сan't delete record! Please select one!", "Error", row);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No socket selected.");
                 }
             }
         });
 
-        pdfExportSocketButton.addActionListener(new ActionListener() 
-        {
+        pdfExportSocketButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
@@ -1498,14 +1534,6 @@ public class DBMSApp extends JFrame
                 }
             }
         });
-        
-        commitSocketButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            }
-        });
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1520,97 +1548,123 @@ public class DBMSApp extends JFrame
         //  $$$$$$/  $$/   $$/ $$$$$$/ $$/        $$$$$$/  $$$$$$$$/    $$/          $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                                                                    //
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        addChipsetButton.addActionListener(new ActionListener() 
-        {
+        addChipsetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to add new data to the table PCB");
                 if (chipsetNameField.getText().isBlank())
                 {
-                    JOptionPane.showMessageDialog(chipsetPanel, "You must fill all text fields first!");
+                    JOptionPane.showMessageDialog(null, "You must fill all text fields first!");
                 }
                 else
                 {
                     String name = chipsetNameField.getText();
                     Object[] rowData = {name};
-                    chipsetTableModel.addRow(rowData);
+                    ClassChipset chipset = new ClassChipset();
+                    chipset.setName(name);
+                    try (Session session = getSession())
+                    {
+                        Transaction transaction = session.beginTransaction();
+                        session.save(chipset);
+                        transaction.commit();
+                        chipsetTableModel.addRow(rowData);
+                        JOptionPane.showMessageDialog(null, "chipset added successfully.");
+                        updateAllDropBoxes();
+                    } 
+                    catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Failed to add chipset: " + ex);
+                    }
                 }
             }
         });
 
-        updateChipsetButton.addActionListener(new ActionListener() 
-        {
+        updateChipsetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to update data");
                 int row = chipsetTable.getSelectedRow();
-                if (row != -1) 
-                {
+                if (row != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(chipsetPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(chipsetPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        try 
-                        {
-                            checkIfEmpty(chipsetNameField);
-                            String name = chipsetNameField.getText();
-                            chipsetTable.setValueAt(name, row, 0);
+                        int selectedRow = chipsetTable.getSelectedRow();
+
+                        if (selectedRow != -1) {
+                            String oldChipsetName = (String) chipsetTableModel.getValueAt(selectedRow, 0);
+                            String newChipsetName = chipsetNameField.getText();
+                    
+                            if (newChipsetName != null && !newChipsetName.isEmpty()) {
+                                try (Session session = getSession()) {
+                                    Transaction transaction = session.beginTransaction();
+                                    ClassChipset chipset = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", oldChipsetName).uniqueResult();
+                                    if (chipset != null) {
+                                        chipset.setName(newChipsetName);
+                                        session.update(chipset);
+                                        populateTables();
+                                        transaction.commit();
+                                        populateTables();
+                                        updateAllDropBoxes();
+                                        JOptionPane.showMessageDialog(null, "chipset updated successfully.");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "chipset not found.");
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    JOptionPane.showMessageDialog(null, "Failed to update chipset: " + ex);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Invalid chipset name.");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No chipset selected.");
                         }
-                        catch(NullPointerException ex) 
-                        {
-                            JOptionPane.showMessageDialog(chipsetPanel, "You must fill all text fields first!");
-                        }
-                        catch(TextFieldException myEx) 
-                        {
-                            JOptionPane.showMessageDialog(chipsetPanel, "You must fill all text fields first!");
-                        }
-                    } 
-                    else 
-                    {
+                    } else {
                         System.out.println("User clicked NO");
                     }
-                }
-                else
-                {
+                } else {
                     JOptionPane.showMessageDialog(chipsetPanel, "Сan't update any record! Please select one!", "Error", row);
                 }
             }
         });
 
-        deleteChipsetButton.addActionListener(new ActionListener() 
-        {
+        deleteChipsetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to delete record in your table");
-                int row = chipsetTable.getSelectedRow();
-                if (row != -1) 
-                {
+                int selectedRow = chipsetTable.getSelectedRow();
+                if (selectedRow != -1) {
                     // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(chipsetPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(chipsetPanel, "Do you wish to continue? ", "Confirmation", JOptionPane.YES_NO_OPTION);
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        System.out.println("User clicked YES");
-                        chipsetTableModel.removeRow(row);
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
+                        String chipsetName = (String) chipsetTableModel.getValueAt(selectedRow, 0);
+                
+                        try (Session session = getSession()) {
+                            Transaction transaction = session.beginTransaction();
+                            ClassChipset chipset = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", chipsetName).uniqueResult();
+                            if (chipset != null) {
+                                session.delete(chipset);
+                                transaction.commit();
+                                populateTables(); // Refresh the table data after deleting the brand
+                                updateAllDropBoxes();
+                                JOptionPane.showMessageDialog(null, "chipset deleted successfully.");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "chipset not found.");
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to delete chipset: " + ex);
+                        }
                     }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(chipsetPanel, "Сan't delete record! Please select one!", "Error", row);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No chipset selected.");
                 }
             }
         });
 
-        pdfExportChipsetButton.addActionListener(new ActionListener() 
-        {
+        pdfExportChipsetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
@@ -1691,224 +1745,6 @@ public class DBMSApp extends JFrame
                 }
             }
         });
-        
-        commitChipsetButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            }
-        });
-
-
-
-        
-        addPCBButton.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to add new data to the table PCB");
-                if (pcbModelField.getText().isBlank() || pcbPriceField.getText().isBlank())
-                {
-                    JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
-                }
-                else
-                {
-                    String model = pcbModelField.getText();
-                    double price = Double.parseDouble(pcbPriceField.getText());
-                    String brand = pcbBrandComboBox.getSelectedItem().toString();
-                    String socket = pcbSocketComboBox.getSelectedItem().toString();
-                    String chipset= pcbChipsetComboBox.getSelectedItem().toString();
-                    Object[] rowData = {model, price, brand, socket, chipset};
-                    pcbTableModel.addRow(rowData);
-                }
-            }
-        });
-
-        updatePCBButton.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to update data");
-                int row = pcbTable.getSelectedRow();
-                if (row != -1) 
-                {
-                    // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                    // handle the user's choice
-                    if (choice == JOptionPane.YES_OPTION) 
-                    {
-                        try 
-                        {
-                            checkIfEmpty(pcbModelField);
-                            checkIfEmpty(pcbPriceField);
-                            String model = pcbModelField.getText();
-                            double price = Double.parseDouble(pcbPriceField.getText());
-                            String brand = pcbBrandComboBox.getSelectedItem().toString();
-                            String socket = pcbSocketComboBox.getSelectedItem().toString();
-                            String chipset = pcbChipsetComboBox.getSelectedItem().toString();
-                            pcbTable.setValueAt(model, row, 0);
-                            pcbTable.setValueAt(price, row, 1);
-                            pcbTable.setValueAt(brand, row, 2);
-                            pcbTable.setValueAt(socket, row, 3);
-                            pcbTable.setValueAt(chipset, row, 4);
-                        }
-                        catch(NullPointerException ex) 
-                        {
-                            JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
-                        }
-                        catch(TextFieldException myEx) 
-                        {
-                            JOptionPane.showMessageDialog(pcbPanel, "You must fill all text fields first!");
-                        }
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
-                    }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(pcbPanel, "Сan't update any record! Please select one!", "Error", row);
-                }
-            }
-        });
-
-        deletePCBButton.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to delete record in your table");
-                int row = pcbTable.getSelectedRow();
-                if (row != -1) 
-                {
-                    // create the popup window with yes/no options
-                    int choice = JOptionPane.showConfirmDialog(pcbPanel, "Do you wish to continue?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                    // handle the user's choice
-                    if (choice == JOptionPane.YES_OPTION) 
-                    {
-                        System.out.println("User clicked YES");
-                        pcbTableModel.removeRow(row);
-                    } 
-                    else 
-                    {
-                        System.out.println("User clicked NO");
-                    }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(pcbPanel, "Сan't delete record! Please select one!", "Error", row);
-                }
-            }
-        });
-
-        pdfExportPCBButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                LOGGER.addHandler(fileHandler);
-                LOGGER.info("Trying to export data to PDF document");
-                try 
-                {
-                    JFileChooser fileChooser = new JFileChooser();
-                    // Set default folder to current directory
-                    fileChooser.setCurrentDirectory(new File("."));
-                    // Set default file name
-                    fileChooser.setSelectedFile(new File("../../../../../exported_PCBs.pdf"));
-                    int result = fileChooser.showSaveDialog(null);
-                    if (result == JFileChooser.APPROVE_OPTION) 
-                    {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        String fileName = selectedFile.getAbsolutePath();
-                        // Append .pdf extension if necessary
-                        if (!fileName.endsWith(".pdf")) 
-                        {
-                            fileName += ".pdf";
-                        }
-                        Document document = new Document();
-                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
-                        document.open();
-                        PdfPTable pdfTable = new PdfPTable(pcbTable.getColumnCount());
-                        
-                        // Create font for table headers
-                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
-                        String[] headersPdfExport = {"\nModel\n\n", "\nPrice", "\nBrand", "\nSocket", "\nChipset"};
-
-                        // Set column headers
-                        for (int i = 0; i < pcbTable.getColumnCount(); i++) 
-                        {
-                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
-                            header.setBackgroundColor(BaseColor.ORANGE);
-                            header.setBorderWidth(2);
-                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
-                            // Give more weight to the first row
-                            pdfTable.addCell(header);
-                        }
-                        
-                        // Create font for table data
-                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
-                        
-                        // Set custom widths for each row 
-                        float[] columnWidths = {0.26f, 0.13f, 0.11f, 0.13f, 0.16f};
-                        pdfTable.setWidths(columnWidths);
-                        
-                        // Add table data
-                        for (int i = 0; i < pcbTable.getRowCount(); i++) 
-                        {
-                            for (int j = 0; j < pcbTable.getColumnCount(); j++) 
-                            {
-                                PdfPCell data = new PdfPCell(new Phrase(pcbTable.getValueAt(i, j).toString(), dataFont));
-                                if (i % 2 == 1)
-                                {
-                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                                }
-                                else
-                                {
-                                    data.setBackgroundColor(BaseColor.WHITE);
-                                }
-                                data.setBorderWidth(1);
-                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
-                                pdfTable.addCell(data);
-                            }
-                        }
-                        document.add(pdfTable);
-                        document.close();
-                        JOptionPane.showMessageDialog(pcbPanel, "Exported table data to " + fileName);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(pcbPanel, "Error exporting table data to PDF");
-                }
-            }
-        });
-        
-        commitPCBButton.addActionListener(new ActionListener() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            }
-        });
-        
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //  ________  __    __  _______                    ______    ______   ________  ______   ______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
-        // /        |/  \  /  |/       \                  /      \  /      \ /        |/      | /      \ /  \  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
-        // $$$$$$$$/ $$  \ $$ |$$$$$$$  |       __       /$$$$$$  |/$$$$$$  |$$$$$$$$/ $$$$$$/ /$$$$$$  |$$  \ $$ |      $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
-        // $$ |__    $$$  \$$ |$$ |  $$ |      /  |      $$ |__$$ |$$ |  $$/    $$ |     $$ |  $$ |  $$ |$$$  \$$ |      $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
-        // $$    |   $$$$  $$ |$$ |  $$ |      $$/       $$    $$ |$$ |         $$ |     $$ |  $$ |  $$ |$$$$  $$ |      $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
-        // $$$$$/    $$ $$ $$ |$$ |  $$ |       __       $$$$$$$$ |$$ |   __    $$ |     $$ |  $$ |  $$ |$$ $$ $$ |      $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
-        // $$ |_____ $$ |$$$$ |$$ |__$$ |      /  |      $$ |  $$ |$$ \__/  |   $$ |    _$$ |_ $$ \__$$ |$$ |$$$$ |      $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
-        // $$       |$$ | $$$ |$$    $$/       $$/       $$ |  $$ |$$    $$/    $$ |   / $$   |$$    $$/ $$ | $$$ |      $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
-        // $$$$$$$$/ $$/   $$/ $$$$$$$/                  $$/   $$/  $$$$$$/     $$/    $$$$$$/  $$$$$$/  $$/   $$/       $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
-        //                                                                                                                                                                                                        //
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1925,8 +1761,7 @@ public class DBMSApp extends JFrame
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Set table selection listeners
 
-        brandTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() 
-        {
+        brandTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) 
             {
@@ -1939,8 +1774,7 @@ public class DBMSApp extends JFrame
             }
         });
         
-        socketTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() 
-        {
+        socketTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) 
             {
@@ -1953,8 +1787,7 @@ public class DBMSApp extends JFrame
             }
         });
 
-        chipsetTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() 
-        {
+        chipsetTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) 
             {
@@ -1967,8 +1800,7 @@ public class DBMSApp extends JFrame
             }
         });
 
-        cpuTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() 
-        {
+        cpuTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) 
             {
@@ -2006,8 +1838,7 @@ public class DBMSApp extends JFrame
             }
         });
 
-        gpuTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() 
-        {
+        gpuTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) 
             {
@@ -2035,8 +1866,7 @@ public class DBMSApp extends JFrame
             }
         });
 
-        pcbTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() 
-        {
+        pcbTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) 
             {
@@ -2085,20 +1915,6 @@ public class DBMSApp extends JFrame
         tabbedPane.setSelectedIndex(0);
         setVisible(true);
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //  ________  __    __  _______          ______   ________         ______   __         ______    ______    ______   //
-    // /        |/  \  /  |/       \        /      \ /        |       /      \ /  |       /      \  /      \  /      \  //
-    // $$$$$$$$/ $$  \ $$ |$$$$$$$  |      /$$$$$$  |$$$$$$$$/       /$$$$$$  |$$ |      /$$$$$$  |/$$$$$$  |/$$$$$$  | //
-    // $$ |__    $$$  \$$ |$$ |  $$ |      $$ |  $$ |$$ |__          $$ |  $$/ $$ |      $$ |__$$ |$$ \__$$/ $$ \__$$/  //
-    // $$    |   $$$$  $$ |$$ |  $$ |      $$ |  $$ |$$    |         $$ |      $$ |      $$    $$ |$$      \ $$      \  //
-    // $$$$$/    $$ $$ $$ |$$ |  $$ |      $$ |  $$ |$$$$$/          $$ |   __ $$ |      $$$$$$$$ | $$$$$$  | $$$$$$  | //
-    // $$ |_____ $$ |$$$$ |$$ |__$$ |      $$ \__$$ |$$ |            $$ \__/  |$$ |_____ $$ |  $$ |/  \__$$ |/  \__$$ | //
-    // $$       |$$ | $$$ |$$    $$/       $$    $$/ $$ |            $$    $$/ $$       |$$ |  $$ |$$    $$/ $$    $$/  //
-    // $$$$$$$$/ $$/   $$/ $$$$$$$/         $$$$$$/  $$/              $$$$$$/  $$$$$$$$/ $$/   $$/  $$$$$$/   $$$$$$/   //
-    //                                                                                                                  //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2350,14 +2166,12 @@ public class DBMSApp extends JFrame
     //                                                                                                                                             //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Helper method to create a panel with buttons
-    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton,  JButton pdfExportButton, JButton commitButton) 
-    {
+    private JPanel createButtonPanel(JButton addButton, JButton deleteButton, JButton updateButton,  JButton pdfExportButton) {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(pdfExportButton);
-        // buttonPanel.add(commitButton);
         return buttonPanel;
     }
 
@@ -2368,14 +2182,7 @@ public class DBMSApp extends JFrame
         return sessionFactory.openSession();
     }
 
-    // Helper method to retrieve a brand by name
-    private int retrieveBrandByName(Session session, String name) 
-    {
-        return session.createQuery("id FROM brand where name = :name", int.class).setParameter("name", name).uniqueResult();
-    }
-
-    private void updateAllDropBoxes()
-    {
+    private void updateAllDropBoxes() {
         cpuBrandComboBox.removeAllItems();
         cpuSocketComboBox.removeAllItems();
         gpuBrandComboBox.removeAllItems();
