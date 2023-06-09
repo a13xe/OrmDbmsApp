@@ -1,0 +1,123 @@
+'left to right direction
+
+skinparam{
+componentStyle uml2
+classAttributeIconSize 0
+handwritten false
+backgroundcolor #c9efa3-fff1a0
+}
+
+
+
+class Brand {
+    - id: int
+    - name: String
+
+    + getId(): int
+    + setId(id: int): void
+    + getName(): String
+    + setName(name: String): void
+}
+
+class Chipset {
+    - id: int
+    - name: String
+
+    + getId(): int
+    + setId(id: int): void
+    + getName(): String
+    + setName(name: String): void
+}
+
+class CPU {
+    - id: int
+    - model: String
+    - price: double
+    - cores: int
+    - threads: int
+    - frequency: int
+    - brandId: int
+    - socketId: int
+
+    + getId(): int
+    + setId(id: int): void
+    + getModel(): String
+    + setModel(model: String): void
+    + getPrice(): double
+    + setPrice(price: double): void
+    + getCores(): int
+    + setCores(cores: int): void
+    + getThreads(): int
+    + setThreads(threads: int): void
+    + getFrequency(): int
+    + setFrequency(frequency: int): void
+    + getBrandId(): int
+    + setBrandId(brandId: int): void
+    + getSocketId(): int
+    + setSocketId(socketId: int): void
+}
+
+class GPU {
+    - id: int
+    - model: String
+    - price: double
+    - cores: int
+    - memory: int
+    - frequency: int
+    - brandId: int
+
+    + getId(): int
+    + setId(id: int): void
+    + getModel(): String
+    + setModel(model: String): void
+    + getPrice(): double
+    + setPrice(price: double): void
+    + getCores(): int
+    + setCores(cores: int): void
+    + getMemory(): int
+    + setMemory(memory: int): void
+    + getFrequency(): int
+    + setFrequency(frequency: int): void
+    + getBrandId(): int
+    + setBrandId(brandId: int): void
+}
+
+class Motherboard {
+    - id: int
+    - model: String
+    - price: double
+    - brandId: int
+    - socketId: int
+    - chipsetId: int
+
+    + getId(): int
+    + setId(id: int): void
+    + getModel(): String
+    + setModel(model: String): void
+    + getPrice(): double
+    + setPrice(price: double): void
+    + getBrandId(): int
+    + setBrandId(brandId: int): void
+    + getSocketId(): int
+    + setSocketId(socketId: int): void
+    + getChipsetId(): int
+    + setChipsetId(chipsetId: int): void
+}
+
+class Socket {
+    - id: int
+    - name: String
+
+    + getId(): int
+    + setId(id: int): void
+    + getName(): String
+    + setName(name: String): void
+}
+
+Brand "1" -- "many" CPU : has
+Brand "1" -- "many" GPU : has
+Brand "1" -- "many" Motherboard : has
+Brand "1" -- "many" Chipset : has
+Socket "1" -- "many" CPU : has
+Socket "1" -- "many" Motherboard : has
+Chipset "1" -- "many" Motherboard : has
