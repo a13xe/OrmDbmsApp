@@ -100,6 +100,23 @@ public class DBMSApp extends JFrame
     // Create filter components
     private JComboBox<String> filterCPUComboBox, filterPCBComboBox, filterGPUComboBox;
     private JTextField filterCPUTextField, filterPCBTextField, filterGPUTextField;
+    // Create regular expression
+
+        // Explanation of the pattern:
+        // ^                indicates the start of the string.
+        // [A-Za-z0-9\\s]   matches any uppercase or lowercase letter, digit, or whitespace character.
+        // +                ensures that there is at least one or more of the preceding characters.
+        // $                indicates the end of the string.
+        
+    private String modelRegex = "^[A-Z][a-zA-Z0-9\\s-+]*$";
+    private String priceRegex = "\\d+(\\.\\d{1,2})?";
+    private String coresRegex = "\\d+";
+    private String threadsRegex = "\\d+";
+    private String frequencyRegex = "\\d+";
+    private String memoryRegex = "\\d+";
+    private String brandNameRegex = "^[A-Z][a-zA-Z0-9\\s-+]*$";
+    private String socketNameRegex = "^[A-Z][a-zA-Z0-9\\s-+]*$";
+    private String chipsetNameRegex = "^[A-Z][a-zA-Z0-9\\s-+]*$";
 
     //exception class
     private class TextFieldException extends Exception 
@@ -536,39 +553,46 @@ public class DBMSApp extends JFrame
                 }
                 else
                 {
-                    String model = cpuModelField.getText();
-                    double price = Double.parseDouble(cpuPriceField.getText());
-                    int cores = Integer.parseInt(cpuCoresField.getText());
-                    int threads = Integer.parseInt(cpuThreadsField.getText());
-                    int frequency = Integer.parseInt(cpuFrequencyField.getText());
-                    String brand = cpuBrandComboBox.getSelectedItem().toString();
-                    String socket = cpuSocketComboBox.getSelectedItem().toString();
-                    
-                    ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
-                    ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
-                    
-                    Object[] rowData = {model, price, cores, threads, frequency, brand, socket};
-                    ClassCPU cpu = new ClassCPU();
-                    cpu.setModel(model);
-                    cpu.setPrice(price);
-                    cpu.setCores(cores);
-                    cpu.setThreads(threads);
-                    cpu.setFrequency(frequency);
-                    cpu.setBrand(brandObj);
-                    cpu.setSocket(socketObj);
-                    try (Session session = getSession())
+                    if (cpuModelField.getText().matches(modelRegex) && cpuPriceField.getText().matches(priceRegex) && cpuCoresField.getText().matches(coresRegex) && cpuThreadsField.getText().matches(threadsRegex) && cpuFrequencyField.getText().matches(frequencyRegex)) 
                     {
-                        Transaction transaction = session.beginTransaction();
-                        session.save(cpu);
-                        transaction.commit();
-                        cpuTableModel.addRow(rowData);
-                        JOptionPane.showMessageDialog(null, "cpu added successfully.");
-                        updateAllDropBoxes();
-                    } 
-                    catch (Exception ex)
+                        String model = cpuModelField.getText();
+                        double price = Double.parseDouble(cpuPriceField.getText());
+                        int cores = Integer.parseInt(cpuCoresField.getText());
+                        int threads = Integer.parseInt(cpuThreadsField.getText());
+                        int frequency = Integer.parseInt(cpuFrequencyField.getText());
+                        String brand = cpuBrandComboBox.getSelectedItem().toString();
+                        String socket = cpuSocketComboBox.getSelectedItem().toString();
+                        
+                        ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                        ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
+                        
+                        Object[] rowData = {model, price, cores, threads, frequency, brand, socket};
+                        ClassCPU cpu = new ClassCPU();
+                        cpu.setModel(model);
+                        cpu.setPrice(price);
+                        cpu.setCores(cores);
+                        cpu.setThreads(threads);
+                        cpu.setFrequency(frequency);
+                        cpu.setBrand(brandObj);
+                        cpu.setSocket(socketObj);
+                        try (Session session = getSession())
+                        {
+                            Transaction transaction = session.beginTransaction();
+                            session.save(cpu);
+                            transaction.commit();
+                            cpuTableModel.addRow(rowData);
+                            JOptionPane.showMessageDialog(null, "New cpu added successfully!");
+                            updateAllDropBoxes();
+                        } 
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to add cpu: " + ex);
+                        }
+                    }
+                    else
                     {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Failed to add cpu: " + ex);
+                        JOptionPane.showMessageDialog(null, "Invalid data format!");
                     }
                 }
             }
@@ -584,50 +608,55 @@ public class DBMSApp extends JFrame
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION)
                     {
-                        int selectedRow = cpuTable.getSelectedRow();
-                        if (selectedRow != -1) {
-                            String oldModelName = (String) cpuTableModel.getValueAt(selectedRow, 0);
-                            String model = cpuModelField.getText();
-                            double price = Double.parseDouble(cpuPriceField.getText());
-                            int cores = Integer.parseInt(cpuCoresField.getText());
-                            int threads = Integer.parseInt(cpuThreadsField.getText());
-                            int frequency = Integer.parseInt(cpuFrequencyField.getText());
-                            String brand = cpuBrandComboBox.getSelectedItem().toString();
-                            String socket = cpuSocketComboBox.getSelectedItem().toString();
-                            
-                            ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
-                            ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
+                        if (cpuModelField.getText().matches(modelRegex) && cpuPriceField.getText().matches(priceRegex) && cpuCoresField.getText().matches(coresRegex) && cpuThreadsField.getText().matches(threadsRegex) && cpuFrequencyField.getText().matches(frequencyRegex)) 
+                        {
+                            int selectedRow = cpuTable.getSelectedRow();
+                            if (selectedRow != -1) {
+                                String oldModelName = (String) cpuTableModel.getValueAt(selectedRow, 0);
+                                String model = cpuModelField.getText();
+                                double price = Double.parseDouble(cpuPriceField.getText());
+                                int cores = Integer.parseInt(cpuCoresField.getText());
+                                int threads = Integer.parseInt(cpuThreadsField.getText());
+                                int frequency = Integer.parseInt(cpuFrequencyField.getText());
+                                String brand = cpuBrandComboBox.getSelectedItem().toString();
+                                String socket = cpuSocketComboBox.getSelectedItem().toString();
+                                
+                                ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                                ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
 
-                            if (model != null && !model.isEmpty()) {
-                                try (Session session = getSession()) {
-                                    Transaction transaction = session.beginTransaction();
-                                    ClassCPU cpu = (ClassCPU) session.createQuery("FROM ClassCPU WHERE model = :model").setParameter("model", oldModelName).uniqueResult();
-                                    if (cpu != null) {
-                                        cpu.setModel(model);
-                                        cpu.setPrice(price);
-                                        cpu.setCores(cores);
-                                        cpu.setThreads(threads);
-                                        cpu.setFrequency(frequency);
-                                        cpu.setBrand(brandObj);
-                                        cpu.setSocket(socketObj);
-                                        session.update(cpu);
-                                        populateTables();
-                                        transaction.commit();
-                                        populateTables();
-                                        updateAllDropBoxes();
-                                        JOptionPane.showMessageDialog(null, "cpu updated successfully.");
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "cpu not found.");
+                                if (model != null && !model.isEmpty()) {
+                                    try (Session session = getSession()) {
+                                        Transaction transaction = session.beginTransaction();
+                                        ClassCPU cpu = (ClassCPU) session.createQuery("FROM ClassCPU WHERE model = :model").setParameter("model", oldModelName).uniqueResult();
+                                        if (cpu != null) {
+                                            cpu.setModel(model);
+                                            cpu.setPrice(price);
+                                            cpu.setCores(cores);
+                                            cpu.setThreads(threads);
+                                            cpu.setFrequency(frequency);
+                                            cpu.setBrand(brandObj);
+                                            cpu.setSocket(socketObj);
+                                            session.update(cpu);
+                                            populateTables();
+                                            transaction.commit();
+                                            populateTables();
+                                            updateAllDropBoxes();
+                                            JOptionPane.showMessageDialog(null, "cpu updated successfully.");
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "cpu not found.");
+                                        }
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        JOptionPane.showMessageDialog(null, "Failed to update cpu: " + ex);
                                     }
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    JOptionPane.showMessageDialog(null, "Failed to update cpu: " + ex);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Invalid cpu name.");
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(null, "Invalid cpu name.");
+                                JOptionPane.showMessageDialog(null, "No cpu selected.");
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "No cpu selected.");
+                            JOptionPane.showMessageDialog(null, "Invalid data format!");
                         }
                     } else {
                         System.out.println("User clicked NO");
@@ -684,7 +713,7 @@ public class DBMSApp extends JFrame
                     // Set default folder to current directory
                     fileChooser.setCurrentDirectory(new File("."));
                     // Set default file name
-                    fileChooser.setSelectedFile(new File("../../../../../exported_CPUs.pdf"));
+                    fileChooser.setSelectedFile(new File("exported_CPUs.pdf"));
                     int result = fileChooser.showSaveDialog(null);
                     if (result == JFileChooser.APPROVE_OPTION) 
                     {
@@ -776,36 +805,41 @@ public class DBMSApp extends JFrame
                 }
                 else
                 {
-                    String model = gpuModelField.getText();
-                    double price = Double.parseDouble(gpuPriceField.getText());
-                    int cores = Integer.parseInt(gpuCoresField.getText());
-                    int memory = Integer.parseInt(gpuMemoryField.getText());
-                    int frequency = Integer.parseInt(gpuFrequencyField.getText());
-                    String brand = gpuBrandComboBox.getSelectedItem().toString();
-                    
-                    ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
-                    
-                    Object[] rowData = {model, price, cores, memory, frequency, brand};
-                    ClassGPU gpu = new ClassGPU();
-                    gpu.setModel(model);
-                    gpu.setPrice(price);
-                    gpu.setCores(cores);
-                    gpu.setMemory(memory);
-                    gpu.setFrequency(frequency);
-                    gpu.setBrand(brandObj);
-                    try (Session session = getSession())
+                    if (gpuModelField.getText().matches(modelRegex) && gpuPriceField.getText().matches(priceRegex) && gpuCoresField.getText().matches(coresRegex) && gpuMemoryField.getText().matches(memoryRegex) && gpuFrequencyField.getText().matches(frequencyRegex)) 
                     {
-                        Transaction transaction = session.beginTransaction();
-                        session.save(gpu);
-                        transaction.commit();
-                        gpuTableModel.addRow(rowData);
-                        JOptionPane.showMessageDialog(null, "gpu added successfully.");
-                        updateAllDropBoxes();
-                    } 
-                    catch (Exception ex)
-                    {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Failed to add gpu: " + ex);
+                        String model = gpuModelField.getText();
+                        double price = Double.parseDouble(gpuPriceField.getText());
+                        int cores = Integer.parseInt(gpuCoresField.getText());
+                        int memory = Integer.parseInt(gpuMemoryField.getText());
+                        int frequency = Integer.parseInt(gpuFrequencyField.getText());
+                        String brand = gpuBrandComboBox.getSelectedItem().toString();
+                        
+                        ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                        
+                        Object[] rowData = {model, price, cores, memory, frequency, brand};
+                        ClassGPU gpu = new ClassGPU();
+                        gpu.setModel(model);
+                        gpu.setPrice(price);
+                        gpu.setCores(cores);
+                        gpu.setMemory(memory);
+                        gpu.setFrequency(frequency);
+                        gpu.setBrand(brandObj);
+                        try (Session session = getSession())
+                        {
+                            Transaction transaction = session.beginTransaction();
+                            session.save(gpu);
+                            transaction.commit();
+                            gpuTableModel.addRow(rowData);
+                            JOptionPane.showMessageDialog(null, "gpu added successfully.");
+                            updateAllDropBoxes();
+                        } 
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to add gpu: " + ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid data format!");
                     }
                 }
             }
@@ -821,47 +855,52 @@ public class DBMSApp extends JFrame
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION)
                     {
-                        int selectedRow = gpuTable.getSelectedRow();
-                        if (selectedRow != -1) {
-                            String oldModelName = (String) gpuTableModel.getValueAt(selectedRow, 0);
-                            String model = gpuModelField.getText();
-                            double price = Double.parseDouble(gpuPriceField.getText());
-                            int cores = Integer.parseInt(gpuCoresField.getText());
-                            int memory = Integer.parseInt(gpuMemoryField.getText());
-                            int frequency = Integer.parseInt(gpuFrequencyField.getText());
-                            String brand = gpuBrandComboBox.getSelectedItem().toString();
+                        if (gpuModelField.getText().matches(modelRegex) && gpuPriceField.getText().matches(priceRegex) && gpuCoresField.getText().matches(coresRegex) && gpuMemoryField.getText().matches(memoryRegex) && gpuFrequencyField.getText().matches(frequencyRegex)) 
+                        {
+                            int selectedRow = gpuTable.getSelectedRow();
+                            if (selectedRow != -1) {
+                                String oldModelName = (String) gpuTableModel.getValueAt(selectedRow, 0);
+                                String model = gpuModelField.getText();
+                                double price = Double.parseDouble(gpuPriceField.getText());
+                                int cores = Integer.parseInt(gpuCoresField.getText());
+                                int memory = Integer.parseInt(gpuMemoryField.getText());
+                                int frequency = Integer.parseInt(gpuFrequencyField.getText());
+                                String brand = gpuBrandComboBox.getSelectedItem().toString();
 
-                            ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                                ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
 
-                            if (model != null && !model.isEmpty()) {
-                                try (Session session = getSession()) {
-                                    Transaction transaction = session.beginTransaction();
-                                    ClassGPU gpu = (ClassGPU) session.createQuery("FROM ClassGPU WHERE model = :model").setParameter("model", oldModelName).uniqueResult();
-                                    if (gpu != null) {
-                                        gpu.setModel(model);
-                                        gpu.setPrice(price);
-                                        gpu.setCores(cores);
-                                        gpu.setMemory(memory);
-                                        gpu.setFrequency(frequency);
-                                        gpu.setBrand(brandObj);
-                                        session.update(gpu);
-                                        populateTables();
-                                        transaction.commit();
-                                        populateTables();
-                                        updateAllDropBoxes();
-                                        JOptionPane.showMessageDialog(null, "gpu updated successfully.");
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "gpu not found.");
+                                if (model != null && !model.isEmpty()) {
+                                    try (Session session = getSession()) {
+                                        Transaction transaction = session.beginTransaction();
+                                        ClassGPU gpu = (ClassGPU) session.createQuery("FROM ClassGPU WHERE model = :model").setParameter("model", oldModelName).uniqueResult();
+                                        if (gpu != null) {
+                                            gpu.setModel(model);
+                                            gpu.setPrice(price);
+                                            gpu.setCores(cores);
+                                            gpu.setMemory(memory);
+                                            gpu.setFrequency(frequency);
+                                            gpu.setBrand(brandObj);
+                                            session.update(gpu);
+                                            populateTables();
+                                            transaction.commit();
+                                            populateTables();
+                                            updateAllDropBoxes();
+                                            JOptionPane.showMessageDialog(null, "gpu updated successfully.");
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "gpu not found.");
+                                        }
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        JOptionPane.showMessageDialog(null, "Failed to update gpu: " + ex);
                                     }
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    JOptionPane.showMessageDialog(null, "Failed to update gpu: " + ex);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Invalid gpu name.");
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(null, "Invalid gpu name.");
+                                JOptionPane.showMessageDialog(null, "No gpu selected.");
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "No gpu selected.");
+                            JOptionPane.showMessageDialog(null, "Invalid data format!");
                         }
                     } else {
                         System.out.println("User clicked NO");
@@ -919,7 +958,7 @@ public class DBMSApp extends JFrame
                     // Set default folder to current directory
                     fileChooser.setCurrentDirectory(new File("."));
                     // Set default file name
-                    fileChooser.setSelectedFile(new File("../../../../../exported_GPUs.pdf"));
+                    fileChooser.setSelectedFile(new File("exported_GPUs.pdf"));
                     int result = fileChooser.showSaveDialog(null);
                     if (result == JFileChooser.APPROVE_OPTION) 
                     {
@@ -1011,36 +1050,39 @@ public class DBMSApp extends JFrame
                 }
                 else
                 {
-                    String model = pcbModelField.getText();
-                    double price = Double.parseDouble(pcbPriceField.getText());
-                    String brand = pcbBrandComboBox.getSelectedItem().toString();
-                    String socket = pcbSocketComboBox.getSelectedItem().toString();
-                    String chipset= pcbChipsetComboBox.getSelectedItem().toString();
-                    
-                    ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
-                    ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
-                    ClassChipset chipsetObj = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", chipset).uniqueResult();
-                    
-                    Object[] rowData = {model, price, brand, socket, chipset};
-                    ClassPCB pcb = new ClassPCB();
-                    pcb.setModel(model);
-                    pcb.setPrice(price);
-                    pcb.setBrand(brandObj);
-                    pcb.setSocket(socketObj);
-                    pcb.setChipset(chipsetObj);
-                    try (Session session = getSession())
+                    if (pcbModelField.getText().matches(modelRegex) && pcbPriceField.getText().matches(priceRegex)) 
                     {
-                        Transaction transaction = session.beginTransaction();
-                        session.save(pcb);
-                        transaction.commit();
-                        pcbTableModel.addRow(rowData);
-                        JOptionPane.showMessageDialog(null, "pcb added successfully.");
-                        updateAllDropBoxes();
-                    } 
-                    catch (Exception ex)
-                    {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Failed to add pcb: " + ex);
+                        String model = pcbModelField.getText();
+                        double price = Double.parseDouble(pcbPriceField.getText());
+                        String brand = pcbBrandComboBox.getSelectedItem().toString();
+                        String socket = pcbSocketComboBox.getSelectedItem().toString();
+                        String chipset= pcbChipsetComboBox.getSelectedItem().toString();
+                        ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                        ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
+                        ClassChipset chipsetObj = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", chipset).uniqueResult();
+                        Object[] rowData = {model, price, brand, socket, chipset};
+                        ClassPCB pcb = new ClassPCB();
+                        pcb.setModel(model);
+                        pcb.setPrice(price);
+                        pcb.setBrand(brandObj);
+                        pcb.setSocket(socketObj);
+                        pcb.setChipset(chipsetObj);
+                        try (Session session = getSession())
+                        {
+                            Transaction transaction = session.beginTransaction();
+                            session.save(pcb);
+                            transaction.commit();
+                            pcbTableModel.addRow(rowData);
+                            JOptionPane.showMessageDialog(null, "pcb added successfully.");
+                            updateAllDropBoxes();
+                        } 
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to add pcb: " + ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid data format!");
                     }
                 }
             }
@@ -1056,45 +1098,50 @@ public class DBMSApp extends JFrame
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        int selectedRow = pcbTable.getSelectedRow();
-                        if (selectedRow != -1) {
-                            String oldModelName = (String) pcbTableModel.getValueAt(selectedRow, 0);
-                            String model = pcbModelField.getText();
-                            double price = Double.parseDouble(pcbPriceField.getText());
-                            String brand = pcbBrandComboBox.getSelectedItem().toString();
-                            String socket = pcbSocketComboBox.getSelectedItem().toString();
-                            String chipset= pcbChipsetComboBox.getSelectedItem().toString();
-                            ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
-                            ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
-                            ClassChipset chipsetObj = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", chipset).uniqueResult();
-                            if (model != null && !model.isEmpty()) {
-                                try (Session session = getSession()) {
-                                    Transaction transaction = session.beginTransaction();
-                                    ClassPCB pcb = (ClassPCB) session.createQuery("FROM ClassPCB WHERE model = :model").setParameter("model", oldModelName).uniqueResult();
-                                    if (pcb != null) {
-                                        pcb.setModel(model);
-                                        pcb.setPrice(price);
-                                        pcb.setBrand(brandObj);
-                                        pcb.setSocket(socketObj);
-                                        pcb.setChipset(chipsetObj);
-                                        session.update(pcb);
-                                        populateTables();
-                                        transaction.commit();
-                                        populateTables();
-                                        updateAllDropBoxes();
-                                        JOptionPane.showMessageDialog(null, "pcb updated successfully.");
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "pcb not found.");
+                        if (pcbModelField.getText().matches(modelRegex) && pcbPriceField.getText().matches(priceRegex)) 
+                        {
+                            int selectedRow = pcbTable.getSelectedRow();
+                            if (selectedRow != -1) {
+                                String oldModelName = (String) pcbTableModel.getValueAt(selectedRow, 0);
+                                String model = pcbModelField.getText();
+                                double price = Double.parseDouble(pcbPriceField.getText());
+                                String brand = pcbBrandComboBox.getSelectedItem().toString();
+                                String socket = pcbSocketComboBox.getSelectedItem().toString();
+                                String chipset= pcbChipsetComboBox.getSelectedItem().toString();
+                                ClassBrand brandObj = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", brand).uniqueResult();
+                                ClassSocket socketObj = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socket).uniqueResult();
+                                ClassChipset chipsetObj = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", chipset).uniqueResult();
+                                if (model != null && !model.isEmpty()) {
+                                    try (Session session = getSession()) {
+                                        Transaction transaction = session.beginTransaction();
+                                        ClassPCB pcb = (ClassPCB) session.createQuery("FROM ClassPCB WHERE model = :model").setParameter("model", oldModelName).uniqueResult();
+                                        if (pcb != null) {
+                                            pcb.setModel(model);
+                                            pcb.setPrice(price);
+                                            pcb.setBrand(brandObj);
+                                            pcb.setSocket(socketObj);
+                                            pcb.setChipset(chipsetObj);
+                                            session.update(pcb);
+                                            populateTables();
+                                            transaction.commit();
+                                            populateTables();
+                                            updateAllDropBoxes();
+                                            JOptionPane.showMessageDialog(null, "pcb updated successfully.");
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "pcb not found.");
+                                        }
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        JOptionPane.showMessageDialog(null, "Failed to update pcb: " + ex);
                                     }
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    JOptionPane.showMessageDialog(null, "Failed to update pcb: " + ex);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Invalid pcb name.");
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(null, "Invalid pcb name.");
+                                JOptionPane.showMessageDialog(null, "No pcb selected.");
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "No pcb selected.");
+                            JOptionPane.showMessageDialog(null, "Invalid data format!");
                         }
                     } else {
                         System.out.println("User clicked NO");
@@ -1149,10 +1196,10 @@ public class DBMSApp extends JFrame
                 try 
                 {
                     JFileChooser fileChooser = new JFileChooser();
-                    // Set default folder to current directory
+                    // Set default folder to current directorys
                     fileChooser.setCurrentDirectory(new File("."));
                     // Set default file name
-                    fileChooser.setSelectedFile(new File("../../../../../exported_PCBs.pdf"));
+                    fileChooser.setSelectedFile(new File("exported_PCBs.pdf"));
                     int result = fileChooser.showSaveDialog(null);
                     if (result == JFileChooser.APPROVE_OPTION) 
                     {
@@ -1244,23 +1291,28 @@ public class DBMSApp extends JFrame
                 }
                 else
                 {
-                    String name = brandNameField.getText();
-                    Object[] rowData = {name};
-                    ClassBrand brand = new ClassBrand();
-                    brand.setName(name);
-                    try (Session session = getSession())
+                    if (brandNameField.getText().matches(brandNameRegex)) 
                     {
-                        Transaction transaction = session.beginTransaction();
-                        session.save(brand);
-                        transaction.commit();
-                        brandTableModel.addRow(rowData);
-                        JOptionPane.showMessageDialog(null, "Brand added successfully.");
-                        updateAllDropBoxes();
-                    } 
-                    catch (Exception ex)
-                    {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Failed to add brand: " + ex);
+                        String name = brandNameField.getText();
+                        Object[] rowData = {name};
+                        ClassBrand brand = new ClassBrand();
+                        brand.setName(name);
+                        try (Session session = getSession())
+                        {
+                            Transaction transaction = session.beginTransaction();
+                            session.save(brand);
+                            transaction.commit();
+                            brandTableModel.addRow(rowData);
+                            JOptionPane.showMessageDialog(null, "Brand added successfully.");
+                            updateAllDropBoxes();
+                        } 
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to add brand: " + ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid data format!");
                     }
                 }
             }
@@ -1275,36 +1327,40 @@ public class DBMSApp extends JFrame
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        int selectedRow = brandTable.getSelectedRow();
-
-                        if (selectedRow != -1) {
-                            String oldBrandName = (String) brandTableModel.getValueAt(selectedRow, 0);
-                            String newBrandName = brandNameField.getText();
-                    
-                            if (newBrandName != null && !newBrandName.isEmpty()) {
-                                try (Session session = getSession()) {
-                                    Transaction transaction = session.beginTransaction();
-                                    ClassBrand brand = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", oldBrandName).uniqueResult();
-                                    if (brand != null) {
-                                        brand.setName(newBrandName);
-                                        session.update(brand);
-                                        populateTables();
-                                        transaction.commit();
-                                        populateTables();
-                                        updateAllDropBoxes();
-                                        JOptionPane.showMessageDialog(null, "Brand updated successfully.");
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "Brand not found.");
+                        if (brandNameField.getText().matches(brandNameRegex)) 
+                        {
+                            int selectedRow = brandTable.getSelectedRow();
+                            if (selectedRow != -1) {
+                                String oldBrandName = (String) brandTableModel.getValueAt(selectedRow, 0);
+                                String newBrandName = brandNameField.getText();
+                        
+                                if (newBrandName != null && !newBrandName.isEmpty()) {
+                                    try (Session session = getSession()) {
+                                        Transaction transaction = session.beginTransaction();
+                                        ClassBrand brand = (ClassBrand) session.createQuery("FROM ClassBrand WHERE name = :name").setParameter("name", oldBrandName).uniqueResult();
+                                        if (brand != null) {
+                                            brand.setName(newBrandName);
+                                            session.update(brand);
+                                            populateTables();
+                                            transaction.commit();
+                                            populateTables();
+                                            updateAllDropBoxes();
+                                            JOptionPane.showMessageDialog(null, "Brand updated successfully.");
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Brand not found.");
+                                        }
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        JOptionPane.showMessageDialog(null, "Failed to update brand: " + ex);
                                     }
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    JOptionPane.showMessageDialog(null, "Failed to update brand: " + ex);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Invalid brand name.");
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(null, "Invalid brand name.");
+                                JOptionPane.showMessageDialog(null, "No brand selected.");
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "No brand selected.");
+                            JOptionPane.showMessageDialog(null, "Invalid data format!");
                         }
                     } else {
                         System.out.println("User clicked NO");
@@ -1362,7 +1418,7 @@ public class DBMSApp extends JFrame
                     // Set default folder to current directory
                     fileChooser.setCurrentDirectory(new File("."));
                     // Set default file name
-                    fileChooser.setSelectedFile(new File("../../../../../exported_Brands.pdf"));
+                    fileChooser.setSelectedFile(new File("exported_Brands.pdf"));
                     int result = fileChooser.showSaveDialog(null);
                     if (result == JFileChooser.APPROVE_OPTION) 
                     {
@@ -1454,23 +1510,28 @@ public class DBMSApp extends JFrame
                 }
                 else
                 {
-                    String name = socketNameField.getText();
-                    Object[] rowData = {name};
-                    ClassSocket socket = new ClassSocket();
-                    socket.setName(name);
-                    try (Session session = getSession())
+                    if (socketNameField.getText().matches(socketNameRegex)) 
                     {
-                        Transaction transaction = session.beginTransaction();
-                        session.save(socket);
-                        transaction.commit();
-                        socketTableModel.addRow(rowData);
-                        JOptionPane.showMessageDialog(null, "Socket added successfully.");
-                        updateAllDropBoxes();
-                    } 
-                    catch (Exception ex)
-                    {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Failed to add socket: " + ex);
+                        String name = socketNameField.getText();
+                        Object[] rowData = {name};
+                        ClassSocket socket = new ClassSocket();
+                        socket.setName(name);
+                        try (Session session = getSession())
+                        {
+                            Transaction transaction = session.beginTransaction();
+                            session.save(socket);
+                            transaction.commit();
+                            socketTableModel.addRow(rowData);
+                            JOptionPane.showMessageDialog(null, "Socket added successfully.");
+                            updateAllDropBoxes();
+                        } 
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to add socket: " + ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid data format!");
                     }
                 }
             }
@@ -1486,36 +1547,41 @@ public class DBMSApp extends JFrame
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        int selectedRow = socketTable.getSelectedRow();
+                        if (socketNameField.getText().matches(socketNameRegex)) 
+                        {
+                            int selectedRow = socketTable.getSelectedRow();
 
-                        if (selectedRow != -1) {
-                            String oldSocketName = (String) socketTableModel.getValueAt(selectedRow, 0);
-                            String newSocketName = socketNameField.getText();
-                    
-                            if (newSocketName != null && !newSocketName.isEmpty()) {
-                                try (Session session = getSession()) {
-                                    Transaction transaction = session.beginTransaction();
-                                    ClassSocket socket = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", oldSocketName).uniqueResult();
-                                    if (socket != null) {
-                                        socket.setName(newSocketName);
-                                        session.update(socket);
-                                        populateTables();
-                                        transaction.commit();
-                                        populateTables();
-                                        updateAllDropBoxes();
-                                        JOptionPane.showMessageDialog(null, "socket updated successfully.");
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "socket not found.");
+                            if (selectedRow != -1) {
+                                String oldSocketName = (String) socketTableModel.getValueAt(selectedRow, 0);
+                                String newSocketName = socketNameField.getText();
+                        
+                                if (newSocketName != null && !newSocketName.isEmpty()) {
+                                    try (Session session = getSession()) {
+                                        Transaction transaction = session.beginTransaction();
+                                        ClassSocket socket = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", oldSocketName).uniqueResult();
+                                        if (socket != null) {
+                                            socket.setName(newSocketName);
+                                            session.update(socket);
+                                            populateTables();
+                                            transaction.commit();
+                                            populateTables();
+                                            updateAllDropBoxes();
+                                            JOptionPane.showMessageDialog(null, "socket updated successfully.");
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "socket not found.");
+                                        }
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        JOptionPane.showMessageDialog(null, "Failed to update socket: " + ex);
                                     }
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    JOptionPane.showMessageDialog(null, "Failed to update socket: " + ex);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Invalid socket name.");
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(null, "Invalid socket name.");
+                                JOptionPane.showMessageDialog(null, "No socket selected.");
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "No socket selected.");
+                            JOptionPane.showMessageDialog(null, "Invalid data format!");
                         }
                     } else {
                         System.out.println("User clicked NO");
@@ -1573,7 +1639,7 @@ public class DBMSApp extends JFrame
                     // Set default folder to current directory
                     fileChooser.setCurrentDirectory(new File("."));
                     // Set default file name
-                    fileChooser.setSelectedFile(new File("../../../../../exported_Sockets.pdf"));
+                    fileChooser.setSelectedFile(new File("exported_Sockets.pdf"));
                     int result = fileChooser.showSaveDialog(null);
                     if (result == JFileChooser.APPROVE_OPTION) 
                     {
@@ -1665,23 +1731,28 @@ public class DBMSApp extends JFrame
                 }
                 else
                 {
-                    String name = chipsetNameField.getText();
-                    Object[] rowData = {name};
-                    ClassChipset chipset = new ClassChipset();
-                    chipset.setName(name);
-                    try (Session session = getSession())
+                    if (chipsetNameField.getText().matches(chipsetNameRegex)) 
                     {
-                        Transaction transaction = session.beginTransaction();
-                        session.save(chipset);
-                        transaction.commit();
-                        chipsetTableModel.addRow(rowData);
-                        JOptionPane.showMessageDialog(null, "chipset added successfully.");
-                        updateAllDropBoxes();
-                    } 
-                    catch (Exception ex)
-                    {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Failed to add chipset: " + ex);
+                        String name = chipsetNameField.getText();
+                        Object[] rowData = {name};
+                        ClassChipset chipset = new ClassChipset();
+                        chipset.setName(name);
+                        try (Session session = getSession())
+                        {
+                            Transaction transaction = session.beginTransaction();
+                            session.save(chipset);
+                            transaction.commit();
+                            chipsetTableModel.addRow(rowData);
+                            JOptionPane.showMessageDialog(null, "chipset added successfully.");
+                            updateAllDropBoxes();
+                        } 
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Failed to add chipset: " + ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid data format!");
                     }
                 }
             }
@@ -1697,36 +1768,39 @@ public class DBMSApp extends JFrame
                     // handle the user's choice
                     if (choice == JOptionPane.YES_OPTION) 
                     {
-                        int selectedRow = chipsetTable.getSelectedRow();
-
-                        if (selectedRow != -1) {
-                            String oldChipsetName = (String) chipsetTableModel.getValueAt(selectedRow, 0);
-                            String newChipsetName = chipsetNameField.getText();
-                    
-                            if (newChipsetName != null && !newChipsetName.isEmpty()) {
-                                try (Session session = getSession()) {
-                                    Transaction transaction = session.beginTransaction();
-                                    ClassChipset chipset = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", oldChipsetName).uniqueResult();
-                                    if (chipset != null) {
-                                        chipset.setName(newChipsetName);
-                                        session.update(chipset);
-                                        populateTables();
-                                        transaction.commit();
-                                        populateTables();
-                                        updateAllDropBoxes();
-                                        JOptionPane.showMessageDialog(null, "chipset updated successfully.");
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "chipset not found.");
+                        if (chipsetNameField.getText().matches(chipsetNameRegex)) 
+                        {
+                            int selectedRow = chipsetTable.getSelectedRow();
+                            if (selectedRow != -1) {
+                                String oldChipsetName = (String) chipsetTableModel.getValueAt(selectedRow, 0);
+                                String newChipsetName = chipsetNameField.getText();
+                                if (newChipsetName != null && !newChipsetName.isEmpty()) {
+                                    try (Session session = getSession()) {
+                                        Transaction transaction = session.beginTransaction();
+                                        ClassChipset chipset = (ClassChipset) session.createQuery("FROM ClassChipset WHERE name = :name").setParameter("name", oldChipsetName).uniqueResult();
+                                        if (chipset != null) {
+                                            chipset.setName(newChipsetName);
+                                            session.update(chipset);
+                                            populateTables();
+                                            transaction.commit();
+                                            populateTables();
+                                            updateAllDropBoxes();
+                                            JOptionPane.showMessageDialog(null, "chipset updated successfully.");
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "chipset not found.");
+                                        }
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        JOptionPane.showMessageDialog(null, "Failed to update chipset: " + ex);
                                     }
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    JOptionPane.showMessageDialog(null, "Failed to update chipset: " + ex);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Invalid chipset name.");
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(null, "Invalid chipset name.");
+                                JOptionPane.showMessageDialog(null, "No chipset selected.");
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "No chipset selected.");
+                            JOptionPane.showMessageDialog(null, "Invalid data format!");
                         }
                     } else {
                         System.out.println("User clicked NO");
@@ -1784,7 +1858,7 @@ public class DBMSApp extends JFrame
                     // Set default folder to current directory
                     fileChooser.setCurrentDirectory(new File("."));
                     // Set default file name
-                    fileChooser.setSelectedFile(new File("../../../../../exported_Chipsets.pdf"));
+                    fileChooser.setSelectedFile(new File("exported_Chipsets.pdf"));
                     int result = fileChooser.showSaveDialog(null);
                     if (result == JFileChooser.APPROVE_OPTION) 
                     {
