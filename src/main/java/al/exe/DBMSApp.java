@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -54,6 +53,7 @@ public class DBMSApp extends JFrame
     private JButton addBrandButton, deleteBrandButton, updateBrandButton, pdfExportBrandButton;
     private JButton addSocketButton, deleteSocketButton, updateSocketButton, pdfExportSocketButton;
     private JButton addChipsetButton, deleteChipsetButton, updateChipsetButton, pdfExportChipsetButton;
+    private JButton pdfExportUnitButton;
     // CPU Fields
     private JTextField cpuModelField;
     private JTextField cpuPriceField;
@@ -97,7 +97,6 @@ public class DBMSApp extends JFrame
     private List<ClassCPU> cpus;
     private List<ClassGPU> gpus;
     private List<ClassSocket> sockets;
-    private Map<String, List<String>> pcbCompatibilityMap;
     // Create regular expression
     private String modelRegex = "^[A-Z][a-zA-Z0-9\\s-+]*$";
     private String priceRegex = "\\d+(\\.\\d{1,2})?";
@@ -434,10 +433,12 @@ public class DBMSApp extends JFrame
         // Create buttons
         addButton = new JButton("Add");
         removeButton = new JButton("Remove");
+        pdfExportUnitButton = new JButton("PDF");
         // Button panel
         JPanel unitButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         unitButtonPanel.add(addButton);
         unitButtonPanel.add(removeButton);
+        unitButtonPanel.add(pdfExportUnitButton);
         // ComboBox panel
         JPanel unitComboPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         unitComboPanel.add(socketComboBox);
@@ -500,6 +501,87 @@ public class DBMSApp extends JFrame
                 updateUnitComboBoxes(); // update PCB and CPU combo boxes
             }
         });
+
+        pdfExportUnitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try 
+                {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // Set default folder to current directory
+                    fileChooser.setCurrentDirectory(new File("."));
+                    // Set default file name
+                    fileChooser.setSelectedFile(new File("exported_Units.pdf"));
+                    int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) 
+                    {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String fileName = selectedFile.getAbsolutePath();
+                        // Append .pdf extension if necessary
+                        if (!fileName.endsWith(".pdf")) 
+                        {
+                            fileName += ".pdf";
+                        }
+                        Document document = new Document();
+                        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        document.open();
+                        PdfPTable pdfTable = new PdfPTable(unitTable.getColumnCount());
+                        
+                        // Create font for table headers
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        String[] headersPdfExport = {"\nPCB Model\n\n", "\nPCPU Model", "\nGPU Model", "\nCores", "\nMemory", "\nTotal Price"};
+
+                        // Set column headers
+                        for (int i = 0; i < unitTable.getColumnCount(); i++) 
+                        {
+                            PdfPCell header = new PdfPCell(new Phrase(headersPdfExport[i], headerFont));
+                            header.setBackgroundColor(BaseColor.ORANGE);
+                            header.setBorderWidth(2);
+                            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            // Give more weight to the first row
+                            pdfTable.addCell(header);
+                        }
+                        
+                        // Create font for table data
+                        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
+                        
+                        // Set custom widths for each row 
+                        float[] columnWidths = {0.2f, 0.2f, 0.2f, 0.12f, 0.12f, 0.16f};
+                        pdfTable.setWidths(columnWidths);
+                        
+                        // Add table data
+                        for (int i = 0; i < unitTable.getRowCount(); i++) 
+                        {
+                            for (int j = 0; j < unitTable.getColumnCount(); j++) 
+                            {
+                                PdfPCell data = new PdfPCell(new Phrase(unitTable.getValueAt(i, j).toString(), dataFont));
+                                if (i % 2 == 1)
+                                {
+                                    data.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                                }
+                                else
+                                {
+                                    data.setBackgroundColor(BaseColor.WHITE);
+                                }
+                                data.setBorderWidth(1);
+                                data.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                pdfTable.addCell(data);
+                            }
+                        }
+                        document.add(pdfTable);
+                        document.close();
+                        JOptionPane.showMessageDialog(cpuPanel, "Exported table data to " + fileName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(cpuPanel, "Error exporting table data to PDF");
+                }
+            }
+        });
+
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  ________  ______  __     ________  ________  _______         __        ______   ______   ________  ________  __    __  ________  _______    ______   //
@@ -2155,7 +2237,7 @@ public class DBMSApp extends JFrame
         tabbedPane.setSelectedIndex(0);
         setVisible(true);
     } // end of the class
-
+    
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //  _______    ______   _______   __    __  __         ______   ________  ________        ________  ______   _______   __        ________   ______         __       __  ________  ________  __    __   ______   _______    ______   //
