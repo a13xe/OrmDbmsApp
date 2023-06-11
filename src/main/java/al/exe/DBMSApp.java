@@ -161,7 +161,7 @@ public class DBMSApp extends JFrame
         brandTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
         socketTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
         chipsetTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
-        unitTableModel = new DefaultTableModel(new Object[]{"PCB Model", "CPU Model", "GPU Model", "CPU Cores", "GPU Memory", "Socket", "Total Price"}, 0);
+        unitTableModel = new DefaultTableModel(new Object[]{"PCB Model", "CPU Model", "GPU Model", "CPU Cores", "GPU Memory", "Total Price"}, 0);
 
         // Create tables
         cpuTable = new JTable(cpuTableModel);
@@ -2673,19 +2673,23 @@ public class DBMSApp extends JFrame
     }
 
     private void addUnit() {
-        DecimalFormat df = new DecimalFormat("#.##");
-        String pcbModel = (String) pcbComboBox.getSelectedItem();
-        String cpuModel = (String) cpuComboBox.getSelectedItem();
-        String gpuModel = (String) gpuComboBox.getSelectedItem();
-        // Get the selected PCB, CPU, and GPU objects from their respective lists
-        ClassPCB selectedPCB = getPCBByModel(pcbModel);
-        ClassCPU selectedCPU = getCPUByModel(cpuModel);
-        ClassGPU selectedGPU = getGPUByModel(gpuModel);
-        // Calculate the total price of the unit
-        double totalPrice = selectedPCB.getPrice() + selectedCPU.getPrice() + selectedGPU.getPrice();
-        String formattedPrice = df.format(totalPrice);
-        // Add the unit to the table
-        unitTableModel.addRow(new Object[]{pcbModel, cpuModel, gpuModel, selectedCPU.getCores(), selectedGPU.getMemory(), selectedPCB.getSocket(), formattedPrice});
+        if (socketComboBox.getItemCount() > 0 && pcbComboBox.getItemCount() > 0 && cpuComboBox.getItemCount() > 0 && gpuComboBox.getItemCount() > 0) {
+            DecimalFormat df = new DecimalFormat("#.##");
+            String pcbModel = (String) pcbComboBox.getSelectedItem();
+            String cpuModel = (String) cpuComboBox.getSelectedItem();
+            String gpuModel = (String) gpuComboBox.getSelectedItem();
+            // Get the selected PCB, CPU, and GPU objects from their respective lists
+            ClassPCB selectedPCB = getPCBByModel(pcbModel);
+            ClassCPU selectedCPU = getCPUByModel(cpuModel);
+            ClassGPU selectedGPU = getGPUByModel(gpuModel);
+            // Calculate the total price of the unit
+            double totalPrice = selectedPCB.getPrice() + selectedCPU.getPrice() + selectedGPU.getPrice();
+            String formattedPrice = df.format(totalPrice);
+            // Add the unit to the table
+            unitTableModel.addRow(new Object[]{pcbModel, cpuModel, gpuModel, selectedCPU.getCores(), selectedGPU.getMemory(), formattedPrice});
+        } else {
+            JOptionPane.showMessageDialog(null, "Combo boxes can't be empty. \nCheck if your db has required items.");
+        }
     }
 
     private void removeUnit() {
