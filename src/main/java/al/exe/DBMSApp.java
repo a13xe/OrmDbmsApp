@@ -1,27 +1,20 @@
 package al.exe;
 
 
-import java.io.*;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.BufferedReader;
+import java.text.DecimalFormat;
 import java.io.FileOutputStream;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 import java.util.List;
-import java.util.Vector;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.util.logging.Logger;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
 import javax.swing.*;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -36,19 +29,10 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-// Hibernate
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-// Necessary classes
-import al.exe.ClassCPU;
-import al.exe.ClassGPU;
-import al.exe.ClassPCB;
-import al.exe.ClassBrand;
-import al.exe.ClassSocket;
-import al.exe.ClassChipset;
-import al.exe.HibernateUtil;
 
 
 public class DBMSApp extends JFrame 
@@ -100,14 +84,21 @@ public class DBMSApp extends JFrame
     // Create filter components
     private JComboBox<String> filterCPUComboBox, filterPCBComboBox, filterGPUComboBox;
     private JTextField filterCPUTextField, filterPCBTextField, filterGPUTextField;
+    // unit tab
+    private JTable unitTable;
+    private DefaultTableModel unitTableModel;
+    private JComboBox<String> socketComboBox;
+    private JComboBox<String> pcbComboBox;
+    private JComboBox<String> cpuComboBox;
+    private JComboBox<String> gpuComboBox;
+    private JButton addButton;
+    private JButton removeButton;
+    private List<ClassPCB> pcbs;
+    private List<ClassCPU> cpus;
+    private List<ClassGPU> gpus;
+    private List<ClassSocket> sockets;
+    private Map<String, List<String>> pcbCompatibilityMap;
     // Create regular expression
-
-        // Explanation of the pattern:
-        // ^                indicates the start of the string.
-        // [A-Za-z0-9\\s]   matches any uppercase or lowercase letter, digit, or whitespace character.
-        // +                ensures that there is at least one or more of the preceding characters.
-        // $                indicates the end of the string.
-        
     private String modelRegex = "^[A-Z][a-zA-Z0-9\\s-+]*$";
     private String priceRegex = "\\d+(\\.\\d{1,2})?";
     private String coresRegex = "\\d+";
@@ -170,6 +161,7 @@ public class DBMSApp extends JFrame
         brandTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
         socketTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
         chipsetTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
+        unitTableModel = new DefaultTableModel(new Object[]{"PCB Model", "CPU Model", "GPU Model", "CPU Cores", "GPU Memory", "Socket", "Total Price"}, 0);
 
         // Create tables
         cpuTable = new JTable(cpuTableModel);
@@ -178,12 +170,14 @@ public class DBMSApp extends JFrame
         brandTable = new JTable(brandTableModel);
         socketTable = new JTable(socketTableModel);
         chipsetTable = new JTable(chipsetTableModel);
+        unitTable = new JTable(unitTableModel);
         cpuTable.setDefaultEditor(Object.class, null);
         gpuTable.setDefaultEditor(Object.class, null);
         pcbTable.setDefaultEditor(Object.class, null);
         brandTable.setDefaultEditor(Object.class, null);
         socketTable.setDefaultEditor(Object.class, null);
         chipsetTable.setDefaultEditor(Object.class, null);
+        unitTable.setDefaultEditor(Object.class, null);
 
         // Add tables to scroll panes
         JScrollPane cpuScrollPane = new JScrollPane(cpuTable);
@@ -381,7 +375,6 @@ public class DBMSApp extends JFrame
         //    Button panels    //
         //                     //
         /////////////////////////
-
         JPanel cpuButtonPanel = createButtonPanel(addCPUButton, deleteCPUButton, updateCPUButton, pdfExportCPUButton);
         cpuButtonPanel.add(filterCPUPanel, BorderLayout.NORTH);
         JPanel gpuButtonPanel = createButtonPanel(addGPUButton, deleteGPUButton, updateGPUButton, pdfExportGPUButton);
@@ -428,6 +421,35 @@ public class DBMSApp extends JFrame
         socketPanel.add(socketButtonPanel, BorderLayout.SOUTH);
         socketPanel.add(socketInputPanel, BorderLayout.NORTH);
 
+        //////////////////////
+        //                  //
+        //    Unit panel    //
+        //                  //
+        //////////////////////
+        // Create comboboxes
+        socketComboBox = new JComboBox<>();
+        pcbComboBox = new JComboBox<>();
+        cpuComboBox = new JComboBox<>();
+        gpuComboBox = new JComboBox<>();
+        // Create buttons
+        addButton = new JButton("Add");
+        removeButton = new JButton("Remove");
+        // Button panel
+        JPanel unitButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        unitButtonPanel.add(addButton);
+        unitButtonPanel.add(removeButton);
+        // ComboBox panel
+        JPanel unitComboPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        unitComboPanel.add(socketComboBox);
+        unitComboPanel.add(pcbComboBox);
+        unitComboPanel.add(cpuComboBox);
+        unitComboPanel.add(gpuComboBox);
+        // Add tables and buttons to panels
+        JPanel unitPanel = new JPanel(new BorderLayout());
+        unitPanel.add(unitComboPanel, BorderLayout.NORTH);
+        unitPanel.add(unitButtonPanel, BorderLayout.CENTER);
+        unitPanel.add(new JScrollPane(unitTable), BorderLayout.SOUTH);
+
         ////////////////////
         //                //
         //    Add tabs    //
@@ -440,11 +462,44 @@ public class DBMSApp extends JFrame
         tabbedPane.addTab("Brands", brandPanel);
         tabbedPane.addTab("Sockets", socketPanel);
         tabbedPane.addTab("Chipsets", chipsetPanel);
+        tabbedPane.addTab("Assemble Units", unitPanel);
         // Add tabbed pane to content pane
         add(tabbedPane);
         // Populate tables
         populateTables();
 
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  __    __  __    __  ______  ________        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
+        // /  |  /  |/  \  /  |/      |/        |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
+        // $$ |  $$ |$$  \ $$ |$$$$$$/ $$$$$$$$/       $$ |      $$$$$$/ /$$$$$$  |$$$$$$$$/ $$$$$$$$/ $$  \ $$ |$$$$$$$$/ $$$$$$$  |/$$$$$$  | //
+        // $$ |  $$ |$$$  \$$ |  $$ |     $$ |         $$ |        $$ |  $$ \__$$/    $$ |   $$ |__    $$$  \$$ |$$ |__    $$ |__$$ |$$ \__$$/  //
+        // $$ |  $$ |$$$$  $$ |  $$ |     $$ |         $$ |        $$ |  $$      \    $$ |   $$    |   $$$$  $$ |$$    |   $$    $$< $$      \  //
+        // $$ |  $$ |$$ $$ $$ |  $$ |     $$ |         $$ |        $$ |   $$$$$$  |   $$ |   $$$$$/    $$ $$ $$ |$$$$$/    $$$$$$$  | $$$$$$  | //
+        // $$ \__$$ |$$ |$$$$ | _$$ |_    $$ |         $$ |_____  _$$ |_ /  \__$$ |   $$ |   $$ |_____ $$ |$$$$ |$$ |_____ $$ |  $$ |/  \__$$ | //
+        // $$    $$/ $$ | $$$ |/ $$   |   $$ |         $$       |/ $$   |$$    $$/    $$ |   $$       |$$ | $$$ |$$       |$$ |  $$ |$$    $$/  //
+        //  $$$$$$/  $$/   $$/ $$$$$$/    $$/          $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
+        //                                                                                                                                      //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addUnit();
+            }
+        });
+
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeUnit();
+            }
+        });
+        
+        socketComboBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateUnitComboBoxes(); // update PCB and CPU combo boxes
+            }
+        });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  ________  ______  __     ________  ________  _______         __        ______   ______   ________  ________  __    __  ________  _______    ______   //
@@ -531,6 +586,7 @@ public class DBMSApp extends JFrame
         });
 
 
+{ // action listeners add/delete/update
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //   ______   _______   __    __        __        ______   ______   ________  ________  __    __  ________  _______    ______   //
         //  /      \ /       \ /  |  /  |      /  |      /      | /      \ /        |/        |/  \  /  |/        |/       \  /      \  //
@@ -543,7 +599,6 @@ public class DBMSApp extends JFrame
         //  $$$$$$/  $$/        $$$$$$/        $$$$$$$$/ $$$$$$/  $$$$$$/     $$/    $$$$$$$$/ $$/   $$/ $$$$$$$$/ $$/   $$/  $$$$$$/   //
         //                                                                                                                              //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        {
         addCPUButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) 
             {
@@ -2092,11 +2147,14 @@ public class DBMSApp extends JFrame
             }
         });
 
+} // action listeners (end)
+
+        // Populate comboboxes
+        populateComboboxes();
         // Set the selected tab to the first tab
         tabbedPane.setSelectedIndex(0);
         setVisible(true);
-    }
-    } 
+    } // end of the class
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2532,6 +2590,137 @@ public class DBMSApp extends JFrame
         }
     }
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  __    __  __    __  ______  ________        ________  ______   _______         __       __  ________  ________  __    __   ______   _______    ______   //
+    // /  |  /  |/  \  /  |/      |/        |      /        |/      \ /       \       /  \     /  |/        |/        |/  |  /  | /      \ /       \  /      \  //
+    // $$ |  $$ |$$  \ $$ |$$$$$$/ $$$$$$$$/       $$$$$$$$//$$$$$$  |$$$$$$$  |      $$  \   /$$ |$$$$$$$$/ $$$$$$$$/ $$ |  $$ |/$$$$$$  |$$$$$$$  |/$$$$$$  | //
+    // $$ |  $$ |$$$  \$$ |  $$ |     $$ |            $$ |  $$ |__$$ |$$ |__$$ |      $$$  \ /$$$ |$$ |__       $$ |   $$ |__$$ |$$ |  $$ |$$ |  $$ |$$ \__$$/  //
+    // $$ |  $$ |$$$$  $$ |  $$ |     $$ |            $$ |  $$    $$ |$$    $$<       $$$$  /$$$$ |$$    |      $$ |   $$    $$ |$$ |  $$ |$$ |  $$ |$$      \  //
+    // $$ |  $$ |$$ $$ $$ |  $$ |     $$ |            $$ |  $$$$$$$$ |$$$$$$$  |      $$ $$ $$/$$ |$$$$$/       $$ |   $$$$$$$$ |$$ |  $$ |$$ |  $$ | $$$$$$  | //
+    // $$ \__$$ |$$ |$$$$ | _$$ |_    $$ |            $$ |  $$ |  $$ |$$ |__$$ |      $$ |$$$/ $$ |$$ |_____    $$ |   $$ |  $$ |$$ \__$$ |$$ |__$$ |/  \__$$ | //
+    // $$    $$/ $$ | $$$ |/ $$   |   $$ |            $$ |  $$ |  $$ |$$    $$/       $$ | $/  $$ |$$       |   $$ |   $$ |  $$ |$$    $$/ $$    $$/ $$    $$/  //
+    //  $$$$$$/  $$/   $$/ $$$$$$/    $$/             $$/   $$/   $$/ $$$$$$$/        $$/      $$/ $$$$$$$$/    $$/    $$/   $$/  $$$$$$/  $$$$$$$/   $$$$$$/   //
+    //                                                                                                                                                          //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void populateComboboxes() {
+        // Populate the comboboxes with data from the database
+        sockets = retrieveSockets();
+        for (ClassSocket socket : sockets) {
+            socketComboBox.addItem(socket.getName());
+        }
+        gpus = retrieveGPUs();
+        for (ClassGPU gpu : gpus) {
+            gpuComboBox.addItem(gpu.getModel());
+        }
+        updateUnitComboBoxes(); // update PCB and CPU combo boxes
+    }
+
+    private void updateUnitComboBoxes() {
+        pcbComboBox.removeAllItems();
+        cpuComboBox.removeAllItems();
+        ClassSocket socket = (ClassSocket) session.createQuery("FROM ClassSocket WHERE name = :name").setParameter("name", socketComboBox.getSelectedItem()).uniqueResult();
+        pcbs = retrievePCBsBySocket(socket);
+        for (ClassPCB pcb : pcbs) {
+            pcbComboBox.addItem(pcb.getModel());
+        }
+        cpus = retrieveCPUsBySocket(socket);
+        for (ClassCPU cpu : cpus) {
+            cpuComboBox.addItem(cpu.getModel());
+        }
+    }
+
+    private List<ClassPCB> retrievePCBsBySocket(ClassSocket socket) 
+    {
+        List<ClassPCB> pcbs = null;
+        try 
+        {
+            transaction = session.beginTransaction();
+            // pcbs = session.createQuery("FROM ClassPCB", ClassPCB.class).list();
+            pcbs = session.createQuery("FROM ClassPCB WHERE socket_id = :socket", ClassPCB.class).setParameter("socket", socket).list();
+            transaction.commit();
+        } 
+        catch (Exception e) 
+        {
+            if (transaction != null) 
+            {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return pcbs;
+    }
+
+    private List<ClassCPU> retrieveCPUsBySocket(ClassSocket socket) 
+    {
+        List<ClassCPU> cpus = null;
+        try 
+        {
+            transaction = session.beginTransaction();
+            // cpus = session.createQuery("FROM ClassCPU", ClassCPU.class).list();
+            cpus = session.createQuery("FROM ClassCPU WHERE socket_id = :socket", ClassCPU.class).setParameter("socket", socket).list();
+            transaction.commit();
+        } 
+        catch (Exception e) 
+        {
+            if (transaction != null) 
+            {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return cpus;
+    }
+
+    private void addUnit() {
+        DecimalFormat df = new DecimalFormat("#.##");
+        String pcbModel = (String) pcbComboBox.getSelectedItem();
+        String cpuModel = (String) cpuComboBox.getSelectedItem();
+        String gpuModel = (String) gpuComboBox.getSelectedItem();
+        // Get the selected PCB, CPU, and GPU objects from their respective lists
+        ClassPCB selectedPCB = getPCBByModel(pcbModel);
+        ClassCPU selectedCPU = getCPUByModel(cpuModel);
+        ClassGPU selectedGPU = getGPUByModel(gpuModel);
+        // Calculate the total price of the unit
+        double totalPrice = selectedPCB.getPrice() + selectedCPU.getPrice() + selectedGPU.getPrice();
+        String formattedPrice = df.format(totalPrice);
+        // Add the unit to the table
+        unitTableModel.addRow(new Object[]{pcbModel, cpuModel, gpuModel, selectedCPU.getCores(), selectedGPU.getMemory(), selectedPCB.getSocket(), formattedPrice});
+    }
+
+    private void removeUnit() {
+        int selectedRow = unitTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            unitTableModel.removeRow(selectedRow);
+        }
+    }
+
+    // Methods to retrieve data from the database
+    // You need to implement these methods based on your database access code
+    private ClassCPU getCPUByModel(String cpuModel) {
+        for (ClassCPU cpu : cpus) {
+            if (cpu.getModel().equals(cpuModel)) {
+                return cpu;
+            }
+        }
+        return null;
+    }
+    private ClassGPU getGPUByModel(String gpuModel) {
+        for (ClassGPU gpu : gpus) {
+            if (gpu.getModel().equals(gpuModel)) {
+                return gpu;
+            }
+        }
+        return null;
+    }
+    private ClassPCB getPCBByModel(String pcbModel) {
+        for (ClassPCB pcb : pcbs) {
+            if (pcb.getModel().equals(pcbModel)) {
+                return pcb;
+            }
+        }
+        return null;
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //  _______   __    __  __    __        __  _______   ________  _______   __    __   ______         _______   _______    ______    ______   _______    ______   __       __  //
