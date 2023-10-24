@@ -6,8 +6,8 @@
 <img src="https://img.shields.io/github/downloads/a13xe/OrmDbmsApp/total"/>
 </div>
 <div align="center">
-<img src="https://tokei.rs/b1/github/a13xe/OrmDbmsApp?category=files"/>
-<img src="https://tokei.rs/b1/github/a13xe/OrmDbmsApp?category=lines"/> 
+<img src="https://tokei.rs/b1/github/a13xe/OrmDbmsApp?category=files" alt=""/>
+<img src="https://tokei.rs/b1/github/a13xe/OrmDbmsApp?category=lines" alt=""/> 
 </div>
 
 
